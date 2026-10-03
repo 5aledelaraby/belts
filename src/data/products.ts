@@ -139,3 +139,40 @@ export const textureName: Record<Product["texture"], string> = {
   snake: "جلد PU مستورد بنقشة ثعبان",
   ruffle: "جلد PU مستورد بكشكشة",
 };
+
+/** Looks: a styled photo plus the belts worn in it. Used for "Shop the Look" and the editorial block. */
+export interface Look {
+  id: string;
+  /** Image key from src/assets/site. */
+  image: string;
+  title: string;
+  tip: string;
+  products: string[];
+}
+
+export const looks: Look[] = [
+  {
+    id: "trio",
+    image: "hero",
+    title: "تلات أحزمة، تلات شخصيات",
+    tip: "على فستان أبيض أو أسود سادة: الطرف الطويل يدّي إحساس هادي، والفيونكة العريضة بتلفت النظر، والكشكشة بتضيف حركة.",
+    products: ["sash-cognac", "bow-white", "ruffle-black"],
+  },
+  {
+    id: "green",
+    image: "mood-green",
+    title: "لون واحد جريء",
+    tip: "خلي اللبس كله لون محايد، وسيبي الحزام الأخضر هو اللي يتكلم. اربطيه عقدة على جنب وسيبي الطرف نازل.",
+    products: ["sash-green"],
+  },
+  {
+    id: "lace",
+    image: "mood-lace",
+    title: "دانتيل للسهرة",
+    tip: "حزام الدانتيل بيحوّل الفستان الأسود البسيط لطقم سهرة. اربطيه فيونكة صغيرة في النص.",
+    products: ["lace-black"],
+  },
+];
+
+export const productUrl = (id: string) => `p/${id}/`;
+export const lookFor = (id: string) => looks.find((l) => l.products.includes(id)) ?? looks[0];

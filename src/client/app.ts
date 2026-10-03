@@ -46,12 +46,6 @@ function toast(msg: string) {
 
 /* ---------- layout metrics for sticky offsets ---------- */
 const header = $<HTMLElement>(".site-header")!;
-function setMetrics() {
-  html.style.setProperty("--bar-h", "34px");
-  html.style.setProperty("--header-h", `${header.offsetHeight}px`);
-}
-setMetrics();
-addEventListener("resize", setMetrics);
 
 /* ---------- smooth scroll ---------- */
 let lenis: any = null;
@@ -69,81 +63,147 @@ if (Lenis && !reduced) {
 const lockScroll = (on: boolean) => { if (lenis) on ? lenis.stop() : lenis.start(); document.body.style.overflow = on ? "hidden" : ""; };
 const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(header.offsetHeight + 60) }) : el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" }));
 
-/* ---------- header: transparent over hero, solid after ---------- */
-if (header.dataset.overHero === "true") {
-  const update = () => { header.dataset.solid = String(scrollY > innerHeight * 0.75); };
+/* ---------- header shadow once scrolled ---------- */
+{
+  const update = () => { header.dataset.scrolled = String(scrollY > 8); };
   update();
   addEventListener("scroll", update, { passive: true });
 }
 
-/* ---------- loader + entrance ---------- */
-function intro() {
-  const lines = $$("[data-hero-line]");
-  if (!motion) { html.classList.remove("is-loading"); return; }
-  const tl = gsap.timeline();
-  if (html.classList.contains("is-loading")) {
-    tl.from(".loader-word", { opacity: 0, y: 20, letterSpacing: "0.8em", duration: 1.1, ease: "power3.out" })
-      .from(".loader-line", { scaleX: 0, duration: 0.8, ease: "power3.inOut" }, "-=.5")
-      .to(".loader", { yPercent: -100, duration: 0.9, ease: "power4.inOut", delay: 0.2, onComplete: () => html.classList.remove("is-loading") });
-    try { sessionStorage.setItem("v-seen", "1"); } catch { /* ignore */ }
-  }
-  const media = $(".hero-media");
-  if (media) tl.from(media, { clipPath: "inset(100% 0 0 0)", duration: 1.4, ease: "power4.inOut" }, html.classList.contains("is-loading") ? "-=.6" : 0);
-  if (lines.length) tl.from(lines, { y: 40, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=.8");
-}
-
-/* ---------- scroll motion ---------- */
-function scrollMotion() {
-  if (!motion || !ScrollTrigger) return;
-  gsap.registerPlugin(ScrollTrigger);
-  $$("[data-reveal]").forEach((el) =>
-    gsap.from(el, { y: 50, opacity: 0, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
-  );
-  $$("[data-reveal-img]").forEach((el) =>
-    gsap.from(el, { clipPath: "inset(100% 0 0 0)", duration: 1.4, ease: "power4.inOut", scrollTrigger: { trigger: el, start: "top 85%", once: true } }),
-  );
-  const heroImg = $("[data-parallax] img");
-  if (heroImg) gsap.to(heroImg, { yPercent: 12, ease: "none", scrollTrigger: { trigger: "[data-hero]", start: "top top", end: "bottom top", scrub: true } });
-  $$("[data-parallax-img]").forEach((el) =>
-    gsap.fromTo(el, { yPercent: -8 }, { yPercent: 8, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } }),
-  );
-  ScrollTrigger.batch("[data-card]:not([hidden])", {
-    start: "top 92%", once: true,
-    onEnter: (els: Element[]) => gsap.from(els, { y: 40, opacity: 0, duration: 0.9, stagger: 0.08, ease: "power3.out", clearProps: "transform,opacity" }),
-  });
-}
-
-/* ---------- magnetic buttons ---------- */
-if (motion && finePointer) {
-  $$("[data-magnetic]").forEach((btn) => {
-    const xTo = gsap.quickTo(btn, "x", { duration: 0.6, ease: "elastic.out(1,.4)" });
-    const yTo = gsap.quickTo(btn, "y", { duration: 0.6, ease: "elastic.out(1,.4)" });
-    btn.addEventListener("pointermove", (e: PointerEvent) => {
-      const r = btn.getBoundingClientRect();
-      xTo((e.clientX - r.left - r.width / 2) * 0.3);
-      yTo((e.clientY - r.top - r.height / 2) * 0.35);
+/* ---------- visual effects (images, cards, buttons — never text) ---------- */
+function effects() {
+  if (!motion) return;
+  // hero photo leans gently toward the pointer
+  const tilt = $<HTMLElement>("[data-tilt]");
+  if (tilt && finePointer) {
+    const rx = gsap.quickTo(tilt, "rotationY", { duration: 0.8, ease: "power3" });
+    const ry = gsap.quickTo(tilt, "rotationX", { duration: 0.8, ease: "power3" });
+    gsap.set(tilt, { transformPerspective: 900 });
+    tilt.parentElement!.addEventListener("pointermove", (e: PointerEvent) => {
+      const r = tilt.getBoundingClientRect();
+      rx(((e.clientX - r.left) / r.width - 0.5) * 8);
+      ry(-((e.clientY - r.top) / r.height - 0.5) * 8);
     });
-    btn.addEventListener("pointerleave", () => { xTo(0); yTo(0); });
+    tilt.parentElement!.addEventListener("pointerleave", () => { rx(0); ry(0); });
+  }
+  // hero background photo drifts slower than the page (parallax); images only, text never moves
+  if (ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    $$("[data-parallax]").forEach((el) =>
+      gsap.fromTo(el, { yPercent: -7 }, { yPercent: 7, ease: "none", scrollTrigger: { trigger: el.closest("section") ?? el, start: "top top", end: "bottom top", scrub: true } }),
+    );
+    $$("[data-parallax-img]").forEach((el) =>
+      gsap.fromTo(el, { yPercent: -5, scale: 1.12 }, { yPercent: 5, scale: 1.12, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } }),
+    );
+  }
+  // product photos pop in (the photo only; names and prices stay put)
+  if (ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.batch("[data-card]:not([hidden]) .card-media", {
+      start: "top 95%", once: true,
+      onEnter: (els: Element[]) => gsap.from(els, { scale: 0.6, rotation: -8, opacity: 0, duration: 0.9, stagger: 0.06, ease: "back.out(1.7)", clearProps: "transform,opacity" }),
+    });
+  }
+  // product photos tilt toward the pointer
+  if (finePointer) {
+    document.addEventListener("pointermove", (e) => {
+      const m = (e.target as Element).closest?.<HTMLElement>(".card-media");
+      if (!m) return;
+      const r = m.getBoundingClientRect();
+      m.style.setProperty("--ty", `${((e.clientX - r.left) / r.width - 0.5) * 16}deg`);
+      m.style.setProperty("--tx", `${-((e.clientY - r.top) / r.height - 0.5) * 16}deg`);
+    });
+    document.addEventListener("pointerout", (e) => {
+      const m = (e.target as Element).closest?.<HTMLElement>(".card-media");
+      if (m && !m.contains(e.relatedTarget as Node)) { m.style.setProperty("--tx", "0deg"); m.style.setProperty("--ty", "0deg"); }
+    });
+    // buttons lean toward the pointer
+    $$("[data-magnetic]").forEach((btn) => {
+      const xTo = gsap.quickTo(btn, "x", { duration: 0.6, ease: "elastic.out(1,.4)" });
+      const yTo = gsap.quickTo(btn, "y", { duration: 0.6, ease: "elastic.out(1,.4)" });
+      btn.addEventListener("pointermove", (e: PointerEvent) => {
+        const r = btn.getBoundingClientRect();
+        xTo((e.clientX - r.left - r.width / 2) * 0.25);
+        yTo((e.clientY - r.top - r.height / 2) * 0.3);
+      });
+      btn.addEventListener("pointerleave", () => { xTo(0); yTo(0); });
+    });
+  }
+}
+
+/* little hearts burst out of the heart button */
+function burst(from: Element) {
+  if (reduced) return;
+  const r = from.getBoundingClientRect();
+  for (let i = 0; i < 7; i++) {
+    const h = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    h.setAttribute("viewBox", "0 0 24 24");
+    h.setAttribute("class", "burst-heart");
+    h.innerHTML = '<path fill="currentColor" d="M12 21s-8-4.9-8-11a4.6 4.6 0 0 1 8-3.1A4.6 4.6 0 0 1 20 10c0 6.1-8 11-8 11Z"/>';
+    const a = (Math.PI * 2 * i) / 7 + Math.random() * 0.5;
+    const d = 28 + Math.random() * 22;
+    h.style.left = `${r.left + r.width / 2 - 8}px`;
+    h.style.top = `${r.top + r.height / 2 - 8}px`;
+    h.style.setProperty("--dx", `${Math.cos(a) * d}px`);
+    h.style.setProperty("--dy", `${Math.sin(a) * d}px`);
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 850);
+  }
+}
+
+/* fly a copy of the product photo into the bag */
+function flyToBag(id: string, from?: Element | null) {
+  const bag = $("[data-cart-open]");
+  const src = (from?.closest("[data-card]")?.querySelector("[data-img]") as HTMLImageElement | null) ?? (from?.closest("[data-quick]")?.querySelector("[data-q-img]") as HTMLImageElement | null);
+  if (!motion || !bag || !src) return;
+  const a = src.getBoundingClientRect(), b = bag.getBoundingClientRect();
+  const size = Math.min(a.width, 140);
+  const f = document.createElement("img");
+  f.src = catalog[id].src; f.className = "fly"; f.alt = "";
+  Object.assign(f.style, { width: `${size}px`, height: `${size}px`, left: `${a.left + a.width / 2 - size / 2}px`, top: `${a.top + a.height / 2 - size / 2}px` });
+  document.body.appendChild(f);
+  gsap.to(f, {
+    left: b.left + b.width / 2 - size / 2, top: b.top + b.height / 2 - size / 2, scale: 0.18, rotation: 30, duration: 0.8, ease: "power2.in",
+    onComplete: () => { f.remove(); gsap.fromTo(bag, { scale: 0.75 }, { scale: 1, duration: 0.6, ease: "elastic.out(1.2,.4)" }); },
   });
 }
 
-/* ---------- custom cursor ---------- */
-if (finePointer && !reduced) {
-  const cur = $<HTMLElement>("[data-cursor-el]")!;
-  html.classList.add("has-cursor");
-  let x = innerWidth / 2, y = innerHeight / 2;
-  if (gsap) {
-    const xs = gsap.quickTo(cur, "left", { duration: 0.25, ease: "power3" });
-    const ys = gsap.quickTo(cur, "top", { duration: 0.25, ease: "power3" });
-    addEventListener("pointermove", (e) => { xs(e.clientX); ys(e.clientY); });
-  } else {
-    addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; cur.style.left = `${x}px`; cur.style.top = `${y}px`; });
-  }
-  document.addEventListener("pointerover", (e) => {
-    cur.dataset.mode = (e.target as Element).closest?.('[data-cursor="view"]') ? "view" : "";
-  });
-  document.addEventListener("pointerleave", () => (cur.style.opacity = "0"));
-  document.addEventListener("pointerenter", () => (cur.style.opacity = "1"));
+/* ---------- lightbox ---------- */
+const lb = $<HTMLDialogElement>("[data-lightbox-dialog]")!;
+let lbItems: HTMLElement[] = [];
+let lbIndex = 0;
+function lbShow(i: number) {
+  lbIndex = (i + lbItems.length) % lbItems.length;
+  const el = lbItems[lbIndex];
+  const im = $<HTMLImageElement>("[data-lb-img]", lb)!;
+  im.src = el.dataset.full!;
+  im.alt = el.dataset.caption || el.getAttribute("aria-label") || "";
+  $("[data-lb-caption]", lb)!.textContent = el.dataset.caption || "";
+  $("[data-lb-count]", lb)!.textContent = lbItems.length > 1 ? `${lbIndex + 1} / ${lbItems.length}` : "";
+  $$("[data-lb-prev],[data-lb-next]", lb).forEach((b) => (b.hidden = lbItems.length < 2));
+  if (motion) gsap.fromTo(im, { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "power3.out" });
+}
+document.addEventListener("click", (e) => {
+  const t = (e.target as Element).closest<HTMLElement>("[data-lightbox]");
+  if (!t || !t.dataset.full) return;
+  e.preventDefault();
+  lbItems = $$(`[data-lightbox="${t.dataset.lightbox}"]`).filter((x) => x.dataset.full);
+  if (!lb.open) { lb.showModal(); lockScroll(true); }
+  lbShow(lbItems.indexOf(t));
+});
+$("[data-lb-close]", lb)!.addEventListener("click", () => lb.close());
+$("[data-lb-next]", lb)!.addEventListener("click", () => lbShow(lbIndex + 1));
+$("[data-lb-prev]", lb)!.addEventListener("click", () => lbShow(lbIndex - 1));
+lb.addEventListener("click", (e) => { if (e.target === lb) lb.close(); });
+lb.addEventListener("close", () => lockScroll(false));
+lb.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") lbShow(lbIndex + 1);
+  if (e.key === "ArrowRight") lbShow(lbIndex - 1);
+});
+{
+  let x0 = 0;
+  lb.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener("touchend", (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) lbShow(lbIndex + (dx > 0 ? 1 : -1)); });
 }
 
 /* ---------- mobile menu ---------- */
@@ -163,10 +223,10 @@ function renderFavs() {
 }
 function toggleFav(id: string, btn?: HTMLElement) {
   if (favs.has(id)) favs.delete(id);
-  else { favs.add(id); track("AddToWishlist"); toast(`اتضاف للمفضلة: ${catalog[id].name}`); }
+  else { favs.add(id); track("AddToWishlist"); toast(`اتضاف للمفضلة 💗 ${catalog[id].name}`); if (btn) burst(btn); }
   store.set("vicuna-favs", [...favs]);
   renderFavs();
-  if (btn && motion) gsap.fromTo(btn, { scale: 0.7 }, { scale: 1, duration: 0.6, ease: "elastic.out(1.2,.4)" });
+  if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
   if (filters.fav) applyFilters();
 }
 
@@ -193,23 +253,23 @@ function renderCart() {
   const lines = $("[data-lines]")!;
   const ids = Object.keys(cart);
   if (!ids.length) {
-    lines.innerHTML = `<div class="py-10 text-center"><p class="font-ar text-[24px]">الشنطة فاضية</p><p class="mt-2 text-[14px] text-stone">اختاري موديل واضغطي «أضيفي للشنطة».</p></div>`;
+    lines.innerHTML = `<div class="py-10 text-center"><p class="text-[44px]">🛍</p><p class="font-display text-[24px] font-bold">الشنطة فاضية</p><p class="mt-1 text-[14px] text-mauve">اختاري موديل ودوسي «+».</p></div>`;
     return;
   }
   const left = config.shipping.freeOver - sub;
-  lines.innerHTML = `<p class="mb-5 rounded-full bg-sand/70 px-4 py-2 text-center text-[12px]">${
-    left > 0 ? `فاضل <b class="num">${left}</b> جنيه وتاخدي شحن مجاني` : "✓ طلبك عليه شحن مجاني"
+  lines.innerHTML = `<p class="mb-4 rounded-full bg-petal px-4 py-2 text-center text-[13px] font-bold text-berry">${
+    left > 0 ? `فاضل <b class="num">${left}</b> جنيه وتاخدي شحن مجاني` : "🎉 طلبك عليه شحن مجاني"
   }</p>`;
   const list = document.createElement("ul");
-  list.className = "divide-y divide-charcoal/10";
+  list.className = "flex flex-col gap-3";
   for (const id of ids) {
     const it = catalog[id];
     const li = document.createElement("li");
-    li.className = "flex items-center gap-4 py-4";
-    li.innerHTML = `<img src="${it.src}" alt="" class="size-20 shrink-0 bg-white object-contain p-1.5">
-      <div class="min-w-0 flex-1"><div class="font-display text-[18px] leading-tight"></div><div class="mt-1 text-[13px] text-stone"><span class="num">${it.price * cart[id]}</span> جنيه</div></div>
-      <div class="flex items-center rounded-full border border-charcoal/15"><button class="size-8" aria-label="زيادة">+</button><span class="num w-5 text-center text-[14px]">${cart[id]}</span><button class="size-8" aria-label="تقليل">−</button></div>`;
-    li.querySelector(".font-display")!.textContent = it.name;
+    li.className = "flex items-center gap-3 rounded-3xl bg-white p-2.5";
+    li.innerHTML = `<img src="${it.src}" alt="" class="size-20 shrink-0 rounded-2xl bg-blush object-contain p-1.5">
+      <div class="min-w-0 flex-1"><div class="text-[15px] font-bold leading-tight" data-line-name></div><div class="mt-1 text-[14px] font-black text-berry"><span class="num">${it.price * cart[id]}</span> جنيه</div></div>
+      <div class="flex items-center rounded-full bg-blush"><button class="size-8 font-bold" aria-label="زيادة">+</button><span class="num w-5 text-center text-[14px]">${cart[id]}</span><button class="size-8 font-bold" aria-label="تقليل">−</button></div>`;
+    li.querySelector("[data-line-name]")!.textContent = it.name;
     const [plus, minus] = li.querySelectorAll("button");
     plus.addEventListener("click", () => setQty(id, cart[id] + 1));
     minus.addEventListener("click", () => setQty(id, cart[id] - 1));
@@ -222,13 +282,14 @@ function setQty(id: string, n: number) {
   else cart[id] = n;
   store.set("vicuna-cart", cart);
   renderCart();
+  const b = $("[data-cart-count]");
+  if (b) { b.classList.remove("bump"); void (b as HTMLElement).offsetWidth; b.classList.add("bump"); }
 }
-function add(id: string) {
+function add(id: string, from?: Element | null) {
+  flyToBag(id, from);
   setQty(id, (cart[id] || 0) + 1);
-  toast(`اتضاف للشنطة ✓  ${catalog[id].name}`);
+  toast(`اتضاف للشنطة 🛍 ${catalog[id].name}`);
   track("AddToCart", catalog[id].price);
-  const b = $("[data-cart-open]");
-  if (b && motion) gsap.fromTo(b, { scale: 0.8 }, { scale: 1, duration: 0.6, ease: "elastic.out(1.2,.4)" });
 }
 
 const drawer = $<HTMLElement>("[data-cart]")!;
@@ -299,12 +360,13 @@ function openQuick(id: string) {
     b.addEventListener("click", () => openQuick(qid));
     sw.appendChild(b);
   });
-  if (!quick.open) { quick.showModal(); lockScroll(true); if (motion) gsap.from(quick, { y: 30, opacity: 0, duration: 0.6, ease: "power3.out" }); }
+  if (!quick.open) { quick.showModal(); lockScroll(true); if (motion) gsap.from(quick, { scale: 0.92, opacity: 0, duration: 0.5, ease: "back.out(1.6)" }); }
+  else if (motion) gsap.fromTo(im, { scale: 0.85, rotation: -6 }, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.8)" });
 }
 quick.addEventListener("close", () => lockScroll(false));
 quick.addEventListener("click", (e) => { if (e.target === quick) quick.close(); });
 $("[data-quick-close]", quick)!.addEventListener("click", () => quick.close());
-$("[data-q-add]", quick)!.addEventListener("click", () => { add(quickId); quick.close(); });
+$("[data-q-add]", quick)!.addEventListener("click", (e) => { add(quickId, e.currentTarget as Element); quick.close(); });
 
 /* ---------- filtering, sorting, load more ---------- */
 const shop = $<HTMLElement>("[data-shop]");
@@ -345,6 +407,14 @@ function applyFilters(animate = true) {
   sorted(cards).forEach((c) => grid.appendChild(c));
   visible.forEach((c) => grid.appendChild(c));
   cards.forEach((c) => (c.hidden = !shown.includes(c)));
+  // the editorial block sits after the 8th card, and only on the unfiltered grid
+  const ed = $<HTMLElement>("[data-editorial]", grid);
+  if (ed) {
+    const plain = filters.style === "all" && !filters.color && filters.price === "all" && !filters.fav;
+    const anchor = shown[7];
+    ed.hidden = !plain || !anchor;
+    if (anchor) anchor.after(ed); else grid.appendChild(ed);
+  }
   $$("[data-result-count]").forEach((el) => (el.textContent = String(visible.length)));
   $("[data-empty]")!.hidden = visible.length > 0;
   $("[data-more-wrap]")!.hidden = visible.length <= filters.limit;
@@ -370,7 +440,7 @@ if (shop && grid) {
     else if (t.dataset.filterPrice) filters.price = t.dataset.filterPrice;
     else if (t.hasAttribute("data-filter-fav")) filters.fav = !filters.fav;
     else if (t.hasAttribute("data-filter-reset")) Object.assign(filters, { style: "all", color: "", price: "all", fav: false });
-    else if (t.hasAttribute("data-load-more")) { filters.limit += PAGE; applyFilters(false); scrollMotion(); return; }
+    else if (t.hasAttribute("data-load-more")) { filters.limit += PAGE; applyFilters(false); ScrollTrigger?.refresh(); return; }
     else if (t.dataset.viewBtn) {
       shop.dataset.view = t.dataset.viewBtn;
       $$("[data-view-btn]").forEach((b) => b.setAttribute("aria-pressed", String(b === t)));
@@ -399,7 +469,7 @@ if (location.hash === "#favorites" && grid) { filters.fav = true; filters.limit 
 document.addEventListener("click", (e) => {
   const t = (e.target as Element).closest<HTMLElement>("[data-add],[data-fav],[data-quick-open]");
   if (!t) return;
-  if (t.dataset.add) add(t.dataset.add);
+  if (t.dataset.add) add(t.dataset.add, t);
   else if (t.dataset.fav) toggleFav(t.dataset.fav, t);
   else if (t.dataset.quickOpen) openQuick(t.dataset.quickOpen);
 });
@@ -416,8 +486,6 @@ $$<HTMLAnchorElement>('a[href^="#"], a[href^="/#"]').forEach((a) => a.addEventLi
 renderFavs();
 renderCart();
 if (grid) applyFilters(false);
-const start = () => { intro(); scrollMotion(); };
-if (document.fonts?.ready) document.fonts.ready.then(start); else start();
-setTimeout(() => html.classList.remove("is-loading"), 3500);
+effects();
 
 export {};

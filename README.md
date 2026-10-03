@@ -41,6 +41,7 @@ docs/          الناتج النهائي (GitHub Pages)
 
 - `/` — المتجر كامل
 - `/lace/` `/wide-bow/` `/sash/` `/thin-tie/` `/croc-snake/` `/ruffle/` — صفحة هبوط لكل تصميم (للإعلانات)
+- `/p/<id>/` — صفحة لكل حزام فيها معرض صور و«Shop the Look» وLightbox
 - `/returns/` `/privacy/` `/terms/` — السياسات
 
 ## المكتبات

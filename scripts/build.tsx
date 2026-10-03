@@ -26,8 +26,12 @@ async function buildImages() {
   const out = path.join(OUT, "assets", "img");
   await mkdir(out, { recursive: true });
 
-  const jobs: Array<{ key: string; file: string; widths: number[] }> = [
+  // "detail" = a 3:4 close-up of the knot, cut from the centre of the product photo; used for the hover swap.
+  type Crop = { left: number; top: number; width: number; height: number };
+  const detail = (size: number): Crop => ({ left: Math.round(size * 0.24), top: Math.round(size * 0.16), width: Math.round(size * 0.52), height: Math.round(size * 0.693) });
+  const jobs: Array<{ key: string; file: string; widths: number[]; crop?: (size: number) => Crop }> = [
     ...products.map((p) => ({ key: p.id, file: path.join(SRC, "assets/products", `${p.id}.jpg`), widths: [400, 700, 1100] })),
+    ...products.map((p) => ({ key: `${p.id}-detail`, file: path.join(SRC, "assets/products", `${p.id}.jpg`), widths: [400, 700], crop: detail })),
     { key: "hero", file: path.join(SRC, "assets/site/hero.jpg"), widths: [640, 1100, 1600] },
     { key: "mood-lace", file: path.join(SRC, "assets/site/mood-lace.jpg"), widths: [500, 900, 1400] },
     { key: "mood-bow", file: path.join(SRC, "assets/site/mood-bow.jpg"), widths: [500, 900, 1400] },
@@ -35,8 +39,12 @@ async function buildImages() {
   ];
 
   await Promise.all(
-    jobs.map(async ({ key, file, widths }) => {
-      const input = await readFile(file);
+    jobs.map(async ({ key, file, widths, crop }) => {
+      let input = await readFile(file);
+      if (crop) {
+        const m0 = await sharp(input).metadata();
+        input = await sharp(input).extract(crop(m0.width ?? 1200)).toBuffer();
+      }
       const meta = await sharp(input).metadata();
       const files: Array<{ w: number; name: string }> = [];
       for (const w of widths.filter((w) => w <= (meta.width ?? w))) {
@@ -66,9 +74,9 @@ async function buildImages() {
   // Logo files (mark) for social profiles, schema.org and print.
   const markSvg = (bg: string | null, ink: string, accent: string, knot: string) =>
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${bg ? `<rect width="100" height="100" fill="${bg}"/>` : ""}<g transform="translate(14 14) scale(.72)">${MARK_PATHS(ink, accent, knot)}</g></svg>`;
-  await writeFile(path.join(OUT, "assets", "logo-mark.svg"), markSvg(null, "#1A1A1A", "#8B4A2B", "#5E2F19"));
-  await sharp(Buffer.from(markSvg("#F7F4EF", "#1A1A1A", "#8B4A2B", "#5E2F19"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo.png"));
-  await sharp(Buffer.from(markSvg("#1A1A1A", "#F7F4EF", "#C98A63", "#E8E2D8"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo-dark.png"));
+  await writeFile(path.join(OUT, "assets", "logo-mark.svg"), markSvg(null, "#3A1F26", "#B5476A", "#8E2F50"));
+  await sharp(Buffer.from(markSvg("#FFF5F3", "#3A1F26", "#B5476A", "#8E2F50"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo.png"));
+  await sharp(Buffer.from(markSvg("#B5476A", "#FFFFFF", "#F9D6DC", "#FFF5F3"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo-dark.png"));
 }
 
 async function buildBundles() {

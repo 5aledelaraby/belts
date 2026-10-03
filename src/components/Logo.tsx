@@ -33,5 +33,5 @@ export const Logo = () => (
 export const faviconHref =
   "data:image/svg+xml," +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#F7F4EF"/>${MARK_PATHS("#1A1A1A", "#8B4A2B", "#5E2F19")}</svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#FFF5F3"/>${MARK_PATHS("#3A1F26", "#B5476A", "#8E2F50")}</svg>`,
   );
