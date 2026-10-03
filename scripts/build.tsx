@@ -3,6 +3,8 @@
 
 import { mkdir, rm, writeFile, readdir, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { copyFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import * as esbuild from "esbuild";
@@ -12,6 +14,7 @@ import { site, url } from "../src/data/site";
 import { products } from "../src/data/products";
 import { images } from "../src/lib/images";
 import { assets } from "../src/lib/assets";
+import { MARK_PATHS } from "../src/components/Logo";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "docs");
@@ -25,9 +28,10 @@ async function buildImages() {
 
   const jobs: Array<{ key: string; file: string; widths: number[] }> = [
     ...products.map((p) => ({ key: p.id, file: path.join(SRC, "assets/products", `${p.id}.jpg`), widths: [400, 700, 1100] })),
-    { key: "hero", file: path.join(SRC, "assets/site/hero.jpg"), widths: [600, 1000, 1400] },
-    { key: "mood-lace", file: path.join(SRC, "assets/site/mood-lace.jpg"), widths: [500, 900] },
-    { key: "mood-bow", file: path.join(SRC, "assets/site/mood-bow.jpg"), widths: [500, 900] },
+    { key: "hero", file: path.join(SRC, "assets/site/hero.jpg"), widths: [640, 1100, 1600] },
+    { key: "mood-lace", file: path.join(SRC, "assets/site/mood-lace.jpg"), widths: [500, 900, 1400] },
+    { key: "mood-bow", file: path.join(SRC, "assets/site/mood-bow.jpg"), widths: [500, 900, 1400] },
+    { key: "mood-green", file: path.join(SRC, "assets/site/mood-green.jpg"), widths: [640, 1100, 1600] },
   ];
 
   await Promise.all(
@@ -58,6 +62,13 @@ async function buildImages() {
     .resize(1200, 630, { fit: "cover", position: "centre" })
     .jpeg({ quality: 82 })
     .toFile(path.join(OUT, "assets", "og.jpg"));
+
+  // Logo files (mark) for social profiles, schema.org and print.
+  const markSvg = (bg: string | null, ink: string, accent: string, knot: string) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${bg ? `<rect width="100" height="100" fill="${bg}"/>` : ""}<g transform="translate(14 14) scale(.72)">${MARK_PATHS(ink, accent, knot)}</g></svg>`;
+  await writeFile(path.join(OUT, "assets", "logo-mark.svg"), markSvg(null, "#1A1A1A", "#8B4A2B", "#5E2F19"));
+  await sharp(Buffer.from(markSvg("#F7F4EF", "#1A1A1A", "#8B4A2B", "#5E2F19"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo.png"));
+  await sharp(Buffer.from(markSvg("#1A1A1A", "#F7F4EF", "#C98A63", "#E8E2D8"))).resize(1024, 1024).png().toFile(path.join(OUT, "assets", "logo-dark.png"));
 }
 
 async function buildBundles() {
@@ -65,22 +76,31 @@ async function buildBundles() {
     entryPoints: [path.join(SRC, "client/app.ts")],
     bundle: true,
     minify: true,
-    format: "esm",
+    format: "iife",
     target: "es2020",
     write: false,
   });
-  const css = await esbuild.build({
-    entryPoints: [path.join(SRC, "styles/main.css")],
-    bundle: true,
-    minify: true,
-    write: false,
-  });
   const jsText = js.outputFiles[0].text;
-  const cssText = css.outputFiles[0].text;
   assets.js = `assets/app.${hash(jsText)}.js`;
-  assets.css = `assets/app.${hash(cssText)}.css`;
   await writeFile(path.join(OUT, assets.js), jsText);
+
+  // Tailwind v4 standalone CLI scans the TSX sources for classes.
+  const tw = process.env.TAILWIND_BIN || "tailwindcss";
+  const tmp = path.join(OUT, "assets", "_tw.css");
+  execFileSync(tw, ["-i", path.join(SRC, "styles/app.css"), "-o", tmp, "--minify"], { cwd: ROOT, stdio: "pipe" });
+  const cssText = await readFile(tmp, "utf8");
+  await rm(tmp);
+  assets.css = `assets/app.${hash(cssText)}.css`;
   await writeFile(path.join(OUT, assets.css), cssText);
+
+  // Self-hosted animation libraries (GSAP + plugins, Lenis).
+  await mkdir(path.join(OUT, "assets", "vendor"), { recursive: true });
+  for (const f of ["gsap.min.js", "ScrollTrigger.min.js", "Flip.min.js", "lenis.min.js"]) {
+    const buf = await readFile(path.join(SRC, "vendor", f));
+    const name = `assets/vendor/${f.replace(".min.js", "")}.${hash(buf)}.js`;
+    await writeFile(path.join(OUT, name), buf);
+    assets.vendor.push(name);
+  }
 }
 
 async function buildPages() {

@@ -1,21 +1,22 @@
 # Vicuna — متجر الأحزمة
 
-موقع ثابت (Static) سريع، مبني بـ **React + TypeScript** بيتحول لصفحات HTML جاهزة وقت البناء، ومنشور على **GitHub Pages** من فولدر `docs/`.
+موقع ثابت (Static) سريع، مبني بـ **React + TypeScript** (صفحات بتتجهز وقت البناء) و**Tailwind CSS v4**، والحركة بـ **GSAP** (ScrollTrigger + Flip) و**Lenis**، ومنشور على **GitHub Pages** من فولدر `docs/` على الدومين **vicuna-eg.com**.
 
 ## التعديل السريع
 
 | عايز تغيّر | الملف |
 |---|---|
-| السعر، الشحن، رقم الواتساب، العنوان، أكواد الـPixel | `src/data/site.ts` |
-| إضافة / حذف موديل | `src/data/products.ts` + صورته في `src/assets/products/<id>.jpg` |
-| كلام صفحات الهبوط لكل تصميم | `categories` في `src/data/products.ts` |
+| الشحن، الواتساب، InstaPay، العنوان، السوشيال، أكواد الـPixel | `src/data/site.ts` |
+| إضافة / حذف موديل | `src/data/products.ts` + صورة مربعة في `src/assets/products/<id>.jpg` |
+| أسعار التصميمات وكلام صفحات الهبوط | `styles` في `src/data/products.ts` |
 | سياسة الاسترجاع / الخصوصية / الشروط | `src/content/*.ts` |
-| الألوان والخطوط والتصميم | `src/styles/main.css` |
+| الألوان والخطوط والتصميم | `src/styles/app.css` (Tailwind) |
 
 ## البناء
 
 ```bash
 npm install
+# Tailwind v4 standalone CLI لازم يكون متسطب (أو حدد مكانه في TAILWIND_BIN)
 npm run build      # يبني الموقع في docs/
 ```
 
@@ -39,9 +40,9 @@ docs/          الناتج النهائي (GitHub Pages)
 ## الصفحات
 
 - `/` — المتجر كامل
-- `/lace/` `/wide-tie/` `/classic/` `/ruffle/` — صفحة هبوط لكل تصميم (للإعلانات)
+- `/lace/` `/wide-bow/` `/sash/` `/thin-tie/` `/croc-snake/` `/ruffle/` — صفحة هبوط لكل تصميم (للإعلانات)
 - `/returns/` `/privacy/` `/terms/` — السياسات
 
-## الدومين
+## المكتبات
 
-لما تربط دومين: في `src/data/site.ts` غيّر `url` للدومين، و`base` لـ `"/"`، و`customDomain` لاسم الدومين، وابني تاني.
+GSAP 3.15 وLenis 1.3 محفوظين في `src/vendor/` ومتنشرين مع الموقع (مش من CDN)، فالموقع أسرع ومش معتمد على أي سيرفر تاني.

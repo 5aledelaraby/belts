@@ -21,6 +21,8 @@ export interface Product {
   /** Swatch colour. */
   hex: string;
   texture: "smooth" | "suede" | "lace" | "croc" | "snake" | "ruffle";
+  /** Shows a "جديد" badge. */
+  isNew?: boolean;
 }
 
 export const styles: Style[] = [
@@ -84,7 +86,7 @@ export const colors: Array<{ id: ColorId; name: string; hex: string }> = [
 export const products: Product[] = [
   { id: "lace-black", name: "دانتيل أسود", style: "lace", color: "black", hex: "#1E1E22", texture: "lace" },
   { id: "lace-red", name: "دانتيل أحمر", style: "lace", color: "red", hex: "#C8232B", texture: "lace" },
-  { id: "lace-white", name: "دانتيل أبيض", style: "lace", color: "white", hex: "#F4F2EF", texture: "lace" },
+  { id: "lace-white", name: "دانتيل أبيض", style: "lace", color: "white", hex: "#F4F2EF", texture: "lace", isNew: true },
   { id: "lace-gold", name: "دانتيل دهبي", style: "lace", color: "gold", hex: "#CDB98A", texture: "lace" },
   { id: "lace-caramel", name: "دانتيل كراميل", style: "lace", color: "brown", hex: "#A8652F", texture: "lace" },
 
@@ -96,9 +98,9 @@ export const products: Product[] = [
   { id: "bow-taupe", name: "فيونكة بني فاتح", style: "wide-bow", color: "brown", hex: "#9A6B52", texture: "smooth" },
 
   { id: "sash-red", name: "طرف طويل أحمر", style: "sash", color: "red", hex: "#C33A40", texture: "smooth" },
-  { id: "sash-black", name: "طرف طويل أسود", style: "sash", color: "black", hex: "#1E1E22", texture: "smooth" },
+  { id: "sash-black", name: "طرف طويل أسود", style: "sash", color: "black", hex: "#1E1E22", texture: "smooth", isNew: true },
   { id: "sash-blush", name: "طرف طويل بينك فاتح", style: "sash", color: "pink", hex: "#EBC9C2", texture: "smooth" },
-  { id: "sash-green", name: "طرف طويل أخضر", style: "sash", color: "green", hex: "#3E9B3A", texture: "smooth" },
+  { id: "sash-green", name: "طرف طويل أخضر", style: "sash", color: "green", hex: "#3E9B3A", texture: "smooth", isNew: true },
   { id: "sash-cognac", name: "طرف طويل كونياك", style: "sash", color: "brown", hex: "#A8613F", texture: "smooth" },
   { id: "sash-brown", name: "طرف طويل بني غامق", style: "sash", color: "brown", hex: "#4A2E2B", texture: "smooth" },
   { id: "twist-grey", name: "مجدول رمادي", style: "sash", color: "grey", hex: "#7D8592", texture: "smooth" },
@@ -111,19 +113,19 @@ export const products: Product[] = [
   { id: "classic-orange-suede", name: "شريط رفيع برتقالي شمواه", style: "thin-tie", color: "yellow", hex: "#D97A45", texture: "suede" },
   { id: "classic-camel-suede", name: "شريط رفيع كامل شمواه", style: "thin-tie", color: "brown", hex: "#A9653F", texture: "suede" },
   { id: "classic-green", name: "شريط رفيع أخضر زمردي", style: "thin-tie", color: "green", hex: "#1F8A5C", texture: "suede" },
-  { id: "classic-sky-blue", name: "شريط رفيع لبني", style: "thin-tie", color: "blue", hex: "#5BC0DE", texture: "smooth" },
+  { id: "classic-sky-blue", name: "شريط رفيع لبني", style: "thin-tie", color: "blue", hex: "#5BC0DE", texture: "smooth", isNew: true },
   { id: "classic-royal-blue", name: "شريط رفيع أزرق ملكي", style: "thin-tie", color: "blue", hex: "#2F55A8", texture: "smooth" },
-  { id: "classic-navy", name: "شريط رفيع كحلي", style: "thin-tie", color: "blue", hex: "#24305E", texture: "smooth" },
+  { id: "classic-navy", name: "شريط رفيع كحلي", style: "thin-tie", color: "blue", hex: "#24305E", texture: "smooth", isNew: true },
 
   { id: "croc-black", name: "كروكو أسود", style: "croc-snake", color: "black", hex: "#1C1C1F", texture: "croc" },
   { id: "croc-wine", name: "كروكو عنابي", style: "croc-snake", color: "red", hex: "#5A2730", texture: "croc" },
   { id: "croc-pink", name: "كروكو بينك", style: "croc-snake", color: "pink", hex: "#D9A79F", texture: "croc" },
-  { id: "croc-cognac", name: "كروكو كونياك", style: "croc-snake", color: "brown", hex: "#A8653C", texture: "croc" },
-  { id: "snake-grey", name: "ثعبان رمادي", style: "croc-snake", color: "grey", hex: "#9EA3A8", texture: "snake" },
-  { id: "snake-beige", name: "ثعبان بيج", style: "croc-snake", color: "gold", hex: "#C9A57C", texture: "snake" },
+  { id: "croc-cognac", name: "كروكو كونياك", style: "croc-snake", color: "brown", hex: "#A8653C", texture: "croc", isNew: true },
+  { id: "snake-grey", name: "ثعبان رمادي", style: "croc-snake", color: "grey", hex: "#9EA3A8", texture: "snake", isNew: true },
+  { id: "snake-beige", name: "ثعبان بيج", style: "croc-snake", color: "gold", hex: "#C9A57C", texture: "snake", isNew: true },
 
   { id: "ruffle-red", name: "كشكشة أحمر", style: "ruffle", color: "red", hex: "#D3262E", texture: "ruffle" },
-  { id: "ruffle-black", name: "كشكشة أسود", style: "ruffle", color: "black", hex: "#1C1C1F", texture: "ruffle" },
+  { id: "ruffle-black", name: "كشكشة أسود", style: "ruffle", color: "black", hex: "#1C1C1F", texture: "ruffle", isNew: true },
   { id: "ruffle-brown", name: "كشكشة بني", style: "ruffle", color: "brown", hex: "#9A5236", texture: "ruffle" },
 ];
 

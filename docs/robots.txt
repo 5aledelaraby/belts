@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://5aledelaraby.github.io/belts/sitemap.xml
+Sitemap: https://vicuna-eg.com/sitemap.xml

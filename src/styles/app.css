@@ -1,0 +1,166 @@
+/* Vicuna — "quiet luxury meets editorial". Tailwind v4, compiled by scripts/build.tsx. */
+@import "tailwindcss";
+@import "../vendor/lenis.css";
+@source "../";
+
+@theme {
+  --color-bone: #F7F4EF;
+  --color-sand: #E8E2D8;
+  --color-charcoal: #1A1A1A;
+  --color-stone: #6B655E;
+  --color-sienna: #8B4A2B;
+  --color-sienna-deep: #5E2F19;
+  --color-wa: #1C7A4C;
+
+  --font-display: "Cormorant Garamond", "Amiri", Georgia, serif;
+  --font-ar: "Amiri", "Cormorant Garamond", Georgia, serif;
+  --font-sans: "IBM Plex Sans Arabic", "Manrope", system-ui, sans-serif;
+  --font-label: "Manrope", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-accent: "Italiana", "Cormorant Garamond", Georgia, serif;
+
+  --ease-luxe: cubic-bezier(.22, 1, .36, 1);
+  --animate-marquee: marquee 38s linear infinite;
+  @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(50%) } }
+}
+
+/* tiny uppercase labels */
+@utility eyebrow { font-family: var(--font-label); font-size: 11px; text-transform: uppercase; letter-spacing: .32em; }
+
+@layer base {
+  :root { --ink: var(--color-charcoal); --accent: var(--color-sienna); --accent-deep: var(--color-sienna-deep); color-scheme: light; }
+  html { background: var(--color-bone); }
+  body { @apply bg-bone text-charcoal font-sans antialiased; text-rendering: optimizeLegibility; }
+  ::selection { background: var(--color-sienna); color: var(--color-bone); }
+  :focus-visible { outline: 1.5px solid var(--color-sienna); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+  .num { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+  h1, h2, h3 { text-wrap: balance; }
+}
+
+@layer components {
+
+  /* logo */
+  .logo { @apply inline-flex items-center gap-2.5 text-current no-underline; }
+  .logo-mark { flex: none; }
+  .logo-word { @apply flex flex-col leading-none; }
+  .logo-en { @apply font-accent text-[22px] tracking-[.34em]; direction: ltr; }
+  .logo-ar { @apply font-ar text-[11px] tracking-[.1em] opacity-70 mt-1; }
+
+  /* header */
+  .site-header { @apply fixed inset-x-0 z-40 transition-[background-color,color,box-shadow,backdrop-filter] duration-500; top: var(--bar-h, 34px); }
+  .site-header[data-solid="true"] { @apply bg-bone/85 text-charcoal backdrop-blur-xl shadow-[0_1px_0_rgba(26,26,26,.08)]; }
+  .site-header[data-solid="false"] { @apply text-bone; }
+  .nav-link { @apply relative py-1 text-[13px] tracking-wide; }
+  .nav-link::after { content: ""; @apply absolute bottom-0 start-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-500 ease-luxe; }
+  [dir="rtl"] .nav-link::after { transform-origin: right; }
+  .nav-link:hover::after, .nav-link[aria-current="page"]::after { @apply scale-x-100; }
+  .icon-btn { @apply relative inline-grid size-10 place-items-center rounded-full transition-colors hover:bg-charcoal/5; }
+  .site-header[data-solid="false"] .icon-btn:hover { @apply bg-bone/15; }
+  .count-badge { @apply absolute -top-0.5 -end-0.5 grid min-w-[18px] h-[18px] place-items-center rounded-full bg-sienna px-1 font-label text-[10px] text-bone; }
+
+  /* buttons */
+  .btn { @apply inline-flex items-center justify-center gap-3 rounded-full px-7 py-3.5 font-label text-[12px] uppercase tracking-[.22em] transition-[background-color,color,border-color] duration-300; }
+  .btn-dark { @apply bg-charcoal text-bone hover:bg-sienna; }
+  .btn-light { @apply bg-bone text-charcoal hover:bg-sand; }
+  .btn-line { @apply border border-current; }
+  .btn-wa { @apply bg-wa text-white hover:brightness-110; }
+  .btn .arrow { @apply transition-transform duration-500 ease-luxe; }
+  .btn:hover .arrow { transform: translateX(-6px); }
+  .link-line { @apply relative inline-block pb-1 font-label text-[12px] uppercase tracking-[.22em]; }
+  .link-line::after { content: ""; @apply absolute inset-x-0 bottom-0 h-px bg-current transition-transform duration-500 ease-luxe; }
+  .link-line:hover::after { transform: scaleX(.4); }
+
+  /* filter pills */
+  .pill { @apply whitespace-nowrap rounded-full border border-charcoal/15 px-4 py-2 text-[13px] transition-[background-color,color,border-color] duration-300; }
+  .pill:hover { @apply border-charcoal/40; }
+  .pill[aria-pressed="true"] { @apply border-charcoal bg-charcoal text-bone; }
+  .dot { @apply size-6 rounded-full border border-charcoal/15 ring-offset-2 ring-offset-bone transition-shadow; }
+  .dot[aria-pressed="true"] { @apply ring-1 ring-charcoal; }
+
+  /* product card */
+  .card { @apply relative flex min-w-0 flex-col; }
+  .card-media { @apply relative block aspect-[3/4] overflow-hidden bg-white; }
+  .card-media img { @apply absolute inset-0 size-full object-contain p-[7%] transition-transform duration-[1.2s] ease-luxe; }
+  .card:hover .card-media img { transform: scale(1.06); }
+  .quick-add { @apply absolute inset-x-3 bottom-3 translate-y-[140%] rounded-full bg-charcoal/90 py-2.5 text-center font-label text-[11px] uppercase tracking-[.2em] text-bone backdrop-blur transition-transform duration-500 ease-luxe; }
+  .card:hover .quick-add, .quick-add:focus-visible { transform: translateY(0); }
+  @media (hover: none) { .quick-add { transform: translateY(0); @apply inset-x-2 bottom-2 py-2 text-[10px]; } }
+  .heart { @apply absolute top-3 end-3 z-10 grid size-9 place-items-center rounded-full bg-bone/80 text-charcoal backdrop-blur transition-colors hover:text-sienna; }
+  .heart[aria-pressed="true"] { @apply text-sienna; }
+  .heart[aria-pressed="true"] svg path { fill: currentColor; }
+  .badge { @apply absolute top-3 start-3 z-10 rounded-full bg-charcoal px-2.5 py-1 font-label text-[9px] uppercase tracking-[.2em] text-bone; }
+  .swatch { @apply size-3.5 rounded-full border border-charcoal/15 transition-transform hover:scale-125; }
+  .swatch[aria-current="true"] { @apply ring-1 ring-charcoal ring-offset-2 ring-offset-bone; }
+
+  /* list view */
+  [data-view="list"] .product-grid { @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-2; }
+  [data-view="list"] .card { @apply grid grid-cols-[38%_1fr] items-center gap-5 sm:gap-8; }
+
+  /* drawer, sheets, dialog */
+  .scrim { @apply fixed inset-0 z-50 bg-charcoal/40 backdrop-blur-[2px] transition-opacity duration-500; }
+  .drawer { @apply fixed inset-y-0 end-0 z-50 flex w-full max-w-[460px] flex-col bg-bone shadow-2xl transition-transform duration-700 ease-luxe; transform: translateX(-105%); }
+  [dir="ltr"] .drawer { transform: translateX(105%); }
+  .drawer[data-open="true"] { transform: none; }
+  .sheet { @apply fixed inset-x-0 bottom-0 z-50 max-h-[85svh] overflow-y-auto rounded-t-3xl bg-bone px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 transition-transform duration-700 ease-luxe; transform: translateY(105%); }
+  .sheet[data-open="true"] { transform: none; }
+  .field { @apply flex flex-col gap-1.5; }
+  .field label { @apply eyebrow text-stone; }
+  .field input, .field select, .field textarea { @apply w-full border-0 border-b border-charcoal/25 bg-transparent px-0 py-2 text-[15px] outline-none transition-colors focus:border-charcoal; }
+  .field textarea { @apply min-h-16 resize-y; }
+  .radio-card { @apply flex cursor-pointer items-start gap-3 rounded-2xl border border-charcoal/15 p-4 transition-colors has-[:checked]:border-charcoal has-[:checked]:bg-white; }
+  dialog.quick { @apply m-auto w-[min(94vw,980px)] max-h-[92svh] overflow-y-auto bg-bone p-0 text-charcoal shadow-2xl; }
+  dialog.quick::backdrop { background: rgb(26 26 26 / .45); backdrop-filter: blur(3px); }
+
+  /* mobile menu */
+  .menu-overlay { @apply fixed inset-0 z-[60] flex flex-col bg-charcoal px-6 pb-10 pt-6 text-bone transition-opacity duration-700; }
+  .menu-overlay[data-open="false"] { @apply pointer-events-none opacity-0; }
+  .menu-overlay a.big { @apply font-ar text-[clamp(2.2rem,9vw,3.5rem)] leading-[1.35]; }
+
+  /* toast */
+  .toast { @apply fixed bottom-6 left-1/2 z-[70] -translate-x-1/2 translate-y-8 rounded-full bg-charcoal px-6 py-3 text-[13px] text-bone opacity-0 shadow-xl transition-all duration-500 ease-luxe; }
+  .toast[data-show="true"] { @apply translate-y-0 opacity-100; }
+
+  /* custom cursor (fine pointers only) */
+  .cursor { @apply pointer-events-none fixed left-0 top-0 z-[80] hidden size-2 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-charcoal text-bone mix-blend-normal; transition: width .35s var(--ease-luxe), height .35s var(--ease-luxe), background-color .3s; }
+  .cursor span { @apply font-label text-[10px] tracking-[.25em] opacity-0 transition-opacity duration-200; }
+  .cursor[data-mode="view"] { @apply size-16 bg-charcoal/90; }
+  .cursor[data-mode="view"] span { @apply opacity-100; }
+  @media (pointer: fine) { html.has-cursor .cursor { @apply grid; } }
+
+  /* loader: only shown when JS is running (html.is-loading set inline in <head>) */
+  .loader { @apply fixed inset-0 z-[90] hidden place-items-center bg-bone; }
+  html.is-loading .loader { @apply grid; }
+
+  /* marquee */
+  .marquee-track { @apply flex w-max animate-marquee gap-12 whitespace-nowrap; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  /* prose for policy pages */
+  .prose-ar { @apply max-w-[68ch] text-[16px] leading-[1.95]; }
+  .prose-ar h2 { @apply mt-12 border-t border-charcoal/10 pt-8 font-ar text-[28px] leading-snug; }
+  .prose-ar p { @apply my-3 text-charcoal/85; }
+  .prose-ar ul { @apply my-3 list-disc ps-6 text-charcoal/85; }
+  .prose-ar li { @apply my-1.5; }
+  .prose-ar a { @apply underline decoration-sienna underline-offset-4; }
+  .prose-ar table { @apply my-4 w-full border-collapse text-[15px]; }
+  .prose-ar th, .prose-ar td { @apply border-b border-charcoal/10 py-3 text-start; }
+  .prose-ar th { @apply eyebrow font-normal text-stone; }
+  .prose-ar .box { @apply my-6 rounded-2xl bg-sand/60 p-5; }
+  .prose-ar .box b { @apply text-sienna; }
+
+  /* faq */
+  .faq summary { @apply flex cursor-pointer list-none items-center justify-between gap-6 py-6 font-ar text-[22px]; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; @apply font-label text-xl text-sienna transition-transform duration-500; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+@layer components {
+  .site-header[data-solid="false"] { --ink: var(--color-bone); --accent: #C98A63; --accent-deep: #E8E2D8; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
