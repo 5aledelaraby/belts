@@ -2,34 +2,48 @@
 
 export const site = {
   brand: "Vicuna",
+  brandAr: "فيكونا",
   tagline: "Belts & Accessories",
   legalNameAr: "فيكونا للتجارة العامة والتصميمات",
   legalNameEn: "Vicuna for General Trading & Designs",
   legalForm: "شركة ذات مسئولية محدودة",
   commercialRegister: "196463",
-  headOffice: "21 شارع عباس العقاد، مدينة نصر، القاهرة",
+  headOffice: "21 شارع عباس العقاد، المنطقة الأولى، مدينة نصر، القاهرة 4450225",
+  headOfficeEn: "21 Abbas El-Akkad, Al Manteqah Al Oula, Nasr City, Cairo 4450225, Egypt",
   pickup: "جاردينيا سيتي، مدينة نصر",
 
-  /** Public URL of the site. Change to "https://shopvicuna.com" (and base to "/") once the domain is connected. */
-  url: "https://5aledelaraby.github.io",
-  base: "/belts/",
-  /** Set to the custom domain (e.g. "shopvicuna.com") to write a CNAME file into the build. */
-  customDomain: "",
+  /** Public URL of the site (no trailing slash) and the path it is served under. */
+  url: "https://vicuna-eg.com",
+  base: "/",
+  /** Writes a CNAME file into the build so GitHub Pages serves the custom domain. */
+  customDomain: "vicuna-eg.com",
 
   whatsapp: {
-    display: "01000860448",
-    international: "201000860448",
+    display: "01221988192",
+    international: "201221988192",
   },
+  instapay: "01221988192",
+
+  social: [
+    { id: "tiktok", label: "تيك توك", handle: "@elaraby_khaled", href: "https://www.tiktok.com/@elaraby_khaled" },
+    { id: "instagram", label: "إنستجرام", handle: "5aled.elaraby", href: "https://www.instagram.com/5aled.elaraby" },
+    { id: "snapchat", label: "سناب شات", handle: "khaled-elaraby", href: "https://www.snapchat.com/add/khaled-elaraby" },
+  ],
 
   currency: "جنيه",
-  price: 200,
   shipping: {
     standard: 80,
     express: 120,
     freeOver: 1500,
   },
+  deliveryDays: 3,
   returnDays: 14,
   refundDays: 7,
+
+  size: {
+    widthCm: 14,
+    lengthCm: 140,
+  },
 
   /** Ad pixels — paste the IDs here when the ad accounts are ready. Empty = not loaded. */
   pixels: {
