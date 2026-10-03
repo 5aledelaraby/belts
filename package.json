@@ -1,0 +1,24 @@
+{
+  "name": "vicuna-store",
+  "private": true,
+  "type": "module",
+  "description": "Vicuna belts store — static site built with React (server-rendered) + TypeScript, deployed on GitHub Pages from docs/.",
+  "scripts": {
+    "build": "tsx scripts/build.tsx",
+    "dev": "tsx scripts/build.tsx && npx --yes serve docs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "sharp": "^0.35.4",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/node": "^22.0.0"
+  }
+}
