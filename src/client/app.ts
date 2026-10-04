@@ -361,7 +361,7 @@ function renderCart() {
   const lines = $("[data-lines]")!;
   const ids = Object.keys(cart);
   if (!ids.length) {
-    lines.innerHTML = `<div class="py-10 text-center"><p class="text-[44px]">🛍</p><p class="font-display text-[24px] font-bold">${S.emptyTitle}</p><p class="mt-1 text-[14px] text-mauve">${S.emptyHint}</p></div>`;
+    lines.innerHTML = `<div class="py-10 text-center"><p class="font-display text-[24px] font-bold">${S.emptyTitle}</p><p class="mx-auto mt-2 max-w-[30ch] text-[14px] leading-7 text-mauve">${S.emptyHint}</p><button type="button" class="btn btn-berry mt-5" data-empty-cta>${S.emptyCta}</button></div>`;
     return;
   }
   const left = config.shipping.freeOver - sub;
@@ -428,6 +428,14 @@ function closeOverlays() {
   scrim.hidden = true; lockScroll(false);
 }
 $("[data-cart-open]")!.addEventListener("click", openCart);
+// Empty bag → back to the belts (on this page if it has the grid, otherwise the home page's grid).
+document.addEventListener("click", (e) => {
+  if (!(e.target as Element).closest("[data-empty-cta]")) return;
+  closeOverlays();
+  const shopEl = $("#shop");
+  if (shopEl) setTimeout(() => scrollToEl(shopEl), 350);
+  else location.href = (html.lang === "en" ? "/en/" : "/") + "#shop";
+});
 $("[data-cart-close]")!.addEventListener("click", closeOverlays);
 scrim.addEventListener("click", closeOverlays);
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeOverlays(); setMenu(false); } });
