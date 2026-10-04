@@ -127,6 +127,7 @@ async function buildPages() {
     .map((p) => {
       const neutral = p.path.replace(/^en\//, "");
       const alt = (l: string, path: string) => `<xhtml:link rel="alternate" hreflang="${l}" href="${site.url}${url(path)}"/>`;
+      if (p.single) return `  <url><loc>${site.url}${url(p.path)}</loc><lastmod>${today}</lastmod></url>`;
       return `  <url><loc>${site.url}${url(p.path)}</loc><lastmod>${today}</lastmod>${alt("ar", neutral)}${alt("en", "en/" + neutral)}${alt("x-default", neutral)}</url>`;
     })
     .join("\n");

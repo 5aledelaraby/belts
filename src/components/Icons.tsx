@@ -21,6 +21,8 @@ export const IconSprite = () => (
     <symbol id="i-pin" viewBox="0 0 24 24"><path {...s} d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z" /><circle {...s} cx="12" cy="9.5" r="2.5" /></symbol>
     <symbol id="i-wa" viewBox="0 0 24 24"><path {...s} d="M4 20l1.2-4A8 8 0 1 1 8 18.8L4 20Z" /><path {...s} d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2L9 9.5Z" /></symbol>
     <symbol id="i-tiktok" viewBox="0 0 24 24"><path {...s} d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5M14 4c.4 2.4 2 4 4.5 4.2" /></symbol>
+    <symbol id="i-facebook" viewBox="0 0 24 24"><path {...s} d="M14 8h2.5V4.5H14A3.5 3.5 0 0 0 10.5 8v2.5H8V14h2.5v6H14v-6h2.5l.5-3.5h-3V8.5a.5.5 0 0 1 .5-.5Z" /></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path {...s} d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path {...s} d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></symbol>
     <symbol id="i-instagram" viewBox="0 0 24 24"><rect {...s} x="4" y="4" width="16" height="16" rx="5" /><circle {...s} cx="12" cy="12" r="3.6" /><path {...s} d="M16.8 7.2v.01" /></symbol>
     <symbol id="i-snapchat" viewBox="0 0 24 24"><path {...s} d="M12 4c2.8 0 4.5 2 4.5 4.6v2.2l1.8-.5c.5 0 .7.6.2.9l-1.9 1c.6 1.8 1.9 3 3.4 3.4-.4.7-1.4 1-2.4 1.1l-.4 1.1c-1.1-.2-2 0-3 .7-1.4 1-3 1-4.4 0-1-.7-1.9-.9-3-.7l-.4-1.1c-1-.1-2-.4-2.4-1.1 1.5-.4 2.8-1.6 3.4-3.4l-1.9-1c-.5-.3-.3-.9.2-.9l1.8.5V8.6C7.5 6 9.2 4 12 4Z" /></symbol>
   </svg>

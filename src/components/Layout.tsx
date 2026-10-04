@@ -14,6 +14,10 @@ interface Props {
   description: string;
   /** Path of this page relative to the site root, e.g. "lace/". */
   path: string;
+  /** False for pages that exist in one language only (the blog): no hreflang, and the switch goes to the other home page. */
+  hasTwin?: boolean;
+  /** JSON-LD blocks that replace the automatic ones. */
+  schema?: object[];
   children: ReactNode;
 }
 
@@ -34,14 +38,14 @@ const marqueeFor = (en: boolean) => en ? [
   "مقاسات خاصة حسب الطلب",
 ];
 
-export const Layout = ({ title, description, path, children }: Props) => {
+export const Layout = ({ title, description, path, children, hasTwin = true, schema }: Props) => {
   const lang = useLang();
   const en = lang === "en";
   const tr = useTr();
   const url = (p = "") => hrefFor(lang, p);
   const marquee = marqueeFor(en);
   const other = en ? "ar" : "en";
-  const isPage = !path.endsWith(".html");
+  const isPage = hasTwin && !path.endsWith(".html");
   const canonical = site.url + url(path);
   const ogImage = site.url + hrefFor("ar", "assets/og.jpg");
   const catalog = Object.fromEntries(
@@ -88,7 +92,7 @@ export const Layout = ({ title, description, path, children }: Props) => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={fonts} />
         <link rel="stylesheet" href={hrefFor("ar", assets.css)} />
-        {schemaFor(lang, path, title).map((json, i) => (
+        {(schema ?? schemaFor(lang, path, title)).map((json, i) => (
           <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json).replace(/</g, "\\u003c") }} />
         ))}
       </head>
@@ -120,6 +124,7 @@ export const Layout = ({ title, description, path, children }: Props) => {
               {styles.map((s) => (
                 <a key={s.id} className="nav-pill" href={url(`${s.id}/`)} aria-current={path === `${s.id}/` ? "page" : undefined}>{sText(s, lang).name}</a>
               ))}
+              {!en && <a className="nav-pill" href={url("blog/")} aria-current={path.startsWith("blog/") ? "page" : undefined}>المدونة</a>}
             </nav>
             <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
               <a className="lang-switch" href={hrefFor(other, isPage ? path : "")} hrefLang={other} lang={other} data-lang-switch aria-label={tr("Switch to English", "التحويل للعربي")}>
@@ -146,6 +151,7 @@ export const Layout = ({ title, description, path, children }: Props) => {
           <nav className="mt-10 flex flex-col">
             <a className="big" href={url("#shop")}>{tr("كل الموديلات", "Shop all")}</a>
             {styles.map((s) => <a key={s.id} className="big" href={url(`${s.id}/`)}>{sText(s, lang).name}</a>)}
+            {!en && <a className="big" href={url("blog/")}>المدونة</a>}
           </nav>
           <Bow className="pointer-events-none absolute bottom-24 start-6 w-40 text-berry/30" />
           <div className="mt-auto flex flex-col gap-3 text-[15px] font-semibold">
@@ -305,6 +311,7 @@ const Footer = ({ en }: { en: boolean }) => {
         <ul className="mt-4 space-y-2.5 text-[14px]">
           <li><a className="hover:text-rose" href={url("returns/")}>{tr("الشحن والاسترجاع", "Shipping & returns")}</a></li>
           <li><a className="hover:text-rose" href={url("#tie")}>{tr("طريقة الربط", "How to tie")}</a></li>
+          <li><a className="hover:text-rose" href={hrefFor("ar", "blog/")} lang="ar">{tr("المدونة", "Blog (Arabic)")}</a></li>
           <li><a className="hover:text-rose" href={url("#faq")}>{tr("أسئلة شائعة", "FAQ")}</a></li>
           <li><a className="hover:text-rose" href={url("privacy/")}>{tr("سياسة الخصوصية", "Privacy policy")}</a></li>
           <li><a className="hover:text-rose" href={url("terms/")}>{tr("الشروط والأحكام", "Terms & conditions")}</a></li>

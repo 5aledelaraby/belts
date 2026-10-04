@@ -71,6 +71,34 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   addEventListener("scroll", update, { passive: true });
 }
 
+/* ---------- blog: load more + share ---------- */
+{
+  const more = document.querySelector<HTMLButtonElement>("[data-blog-more]");
+  more?.addEventListener("click", () => {
+    const hidden = [...document.querySelectorAll<HTMLElement>("[data-post][hidden]")];
+    hidden.slice(0, Number(more.dataset.pageSize) || 6).forEach((el) => { el.hidden = false; });
+    if (hidden.length <= (Number(more.dataset.pageSize) || 6)) (more.closest("[data-blog-more-wrap]") as HTMLElement).hidden = true;
+  });
+  const copy = async (link: string, msg: string) => {
+    try { await navigator.clipboard.writeText(link); } catch { prompt("", link); return; }
+    const t = document.querySelector<HTMLElement>("[data-toast]");
+    if (t) { t.textContent = msg; t.dataset.show = "true"; setTimeout(() => { t.dataset.show = "false"; }, 2600); }
+  };
+  document.addEventListener("click", (e) => {
+    const target = e.target as Element;
+    const native = target.closest<HTMLElement>("[data-share-native]");
+    if (native) {
+      // Instagram has no web share link: use the phone's share sheet, or copy the link for a story/DM.
+      const data = { title: native.dataset.title, url: native.dataset.url };
+      if (navigator.share) navigator.share(data).catch(() => {});
+      else copy(native.dataset.url!, document.documentElement.lang === "en" ? "Link copied — paste it in your Instagram story or DM" : "اتنسخ الرابط، الصقيه في ستوري أو رسالة إنستجرام");
+      return;
+    }
+    const c = target.closest<HTMLElement>("[data-copy-link]");
+    if (c) copy(c.dataset.copyLink!, document.documentElement.lang === "en" ? "Link copied" : "اتنسخ رابط المقالة ✓");
+  });
+}
+
 /* ---------- floating WhatsApp button (after 300px; tooltip shows once for 5s) ---------- */
 {
   const fab = document.querySelector<HTMLElement>("[data-wa-fab]");

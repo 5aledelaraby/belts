@@ -4,6 +4,7 @@ import { site } from "./data/site";
 import { products, styles, priceOf, productUrl, pName, sText, tName } from "./data/products";
 import { img } from "./lib/images";
 import { productSeo } from "./data/seo-copy";
+import type { Post } from "./blog";
 import { hrefFor, type Lang } from "./i18n";
 
 const abs = (p: string) => (p.startsWith("http") ? p : site.url + p);
@@ -44,6 +45,8 @@ const website = (lang: Lang) => ({
   inLanguage: lang,
   publisher: { "@id": `${site.url}/#org` },
 });
+
+export const breadcrumbSchema = (lang: Lang, trail: Array<[string, string]>) => breadcrumb(lang, trail);
 
 const breadcrumb = (lang: Lang, trail: Array<[string, string]>) => ({
   "@context": "https://schema.org",
@@ -119,3 +122,19 @@ export const schemaFor = (lang: Lang, path: string, title: string): object[] => 
   }
   return [breadcrumb(lang, [home, [title.split(" | ")[0], path]])];
 };
+
+export const articleSchema = (p: Post) => ({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: p.title,
+  description: p.description,
+  image: [abs(img(p.cover).large)],
+  datePublished: p.date,
+  dateModified: p.date,
+  inLanguage: "ar",
+  wordCount: p.words,
+  keywords: p.keyword,
+  mainEntityOfPage: { "@type": "WebPage", "@id": abs(hrefFor("ar", `blog/${p.slug}/`)) },
+  author: { "@type": "Organization", name: site.brand, url: abs(hrefFor("ar")) },
+  publisher: { "@type": "Organization", name: site.brand, logo: { "@type": "ImageObject", url: abs(hrefFor("ar", "assets/logo.png")) } },
+});

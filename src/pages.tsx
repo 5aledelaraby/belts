@@ -7,6 +7,9 @@ import {
   Hero, Stories, Perks, Shop, Lookbook, TieSteps, Faq, InnerCircle, StyleHero,
 } from "./components/Sections";
 import { productSeo } from "./data/seo-copy";
+import { BlogIndex, BlogPost } from "./components/Blog";
+import { posts } from "./blog";
+import { articleSchema, breadcrumbSchema } from "./seo";
 import { LangCtx, hrefFor, type Lang } from "./i18n";
 import * as returnsAr from "./content/returns";
 import * as privacyAr from "./content/privacy";
@@ -21,6 +24,8 @@ export interface Page {
   element: ReactElement;
   /** Leave out of the sitemap (e.g. 404). */
   hidden?: boolean;
+  /** Exists in one language only — no hreflang alternates in the sitemap. */
+  single?: boolean;
 }
 
 const pagesFor = (lang: Lang): Page[] => {
@@ -117,6 +122,26 @@ const pagesFor = (lang: Lang): Page[] => {
   ];
 
   if (!en) {
+    // Blog (Arabic only)
+    list.push({ ...wrap("blog/", (
+      <Layout path="blog/" hasTwin={false}
+        title={`مدونة ${site.brand} | نصايح لتنسيق أحزمة الوسط والفساتين`}
+        description="مدونة Vicuna: نصايح وإلهام لتنسيق حزام الفستان، اختيار الحزام المناسب لجسمك، والمقاسات والخامات. اقرئي واختاري حزامك وتوصيل لكل مصر."
+        schema={[breadcrumbSchema("ar", [["الرئيسية", ""], ["المدونة", "blog/"]])]}>
+        <BlogIndex />
+        <InnerCircle />
+      </Layout>
+    )), single: true });
+    for (const post of posts()) {
+      list.push({ ...wrap(`blog/${post.slug}/`, (
+        <Layout path={`blog/${post.slug}/`} hasTwin={false} title={`${post.title} | ${site.brand}`} description={post.description}
+          schema={[articleSchema(post), breadcrumbSchema("ar", [["الرئيسية", ""], ["المدونة", "blog/"], [post.title, `blog/${post.slug}/`]])]}>
+          <BlogPost p={post} />
+          <InnerCircle />
+        </Layout>
+      )), single: true });
+    }
+
     list.push(wrap("404.html", (
       <Layout path="404.html" title={`الصفحة مش موجودة | ${site.brand}`} description="الصفحة اللي بتدوري عليها مش موجودة.">
         <section className="mx-auto flex min-h-[70svh] max-w-[900px] flex-col items-center justify-center px-5 text-center">
