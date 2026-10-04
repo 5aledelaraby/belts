@@ -376,7 +376,10 @@ function setQty(id: string, n: number) {
   if (b) { b.classList.remove("bump"); void (b as HTMLElement).offsetWidth; b.classList.add("bump"); }
 }
 function add(id: string, from?: Element | null) {
-  flyToBag(id, from);
+  flyToBag(id, from);                       // instant visual feedback
+  afterPaint(() => addNow(id));             // cart update, toast and tracking right after
+}
+function addNow(id: string) {
   setQty(id, (cart[id] || 0) + 1);
   toast(`${S.bagAdded} ${catalog[id].name}`);
   track("AddToCart", [[id, 1]]);
@@ -480,19 +483,24 @@ $("[data-q-add]", quick)!.addEventListener("click", (e) => { add(quickId, e.curr
 const shop = $<HTMLElement>("[data-shop]");
 const grid = $<HTMLElement>("[data-grid]");
 const cards = grid ? $$<HTMLElement>("[data-card]", grid) : [];
-/** Move the cards waiting in <template data-more-cards> into the grid (once, on first filter / sort / "show more"). */
+/** Move the cards waiting in <template data-more-cards> into the grid.
+    After load they trickle in a few at a time while the browser is idle; a filter/sort/"show more" finishes the job at once. */
 let hydrated = false;
-function hydrateCards() {
+const moreTpl = grid ? $<HTMLTemplateElement>("template[data-more-cards]", grid) : null;
+function hydrateCards(batch = Infinity) {
   if (hydrated || !grid) return;
-  hydrated = true;
-  const t = $<HTMLTemplateElement>("template[data-more-cards]", grid);
-  if (!t) return;
-  const extra = $$<HTMLElement>("[data-card]", t.content);
-  grid.insertBefore(t.content, t);
-  t.remove();
-  cards.push(...extra);
+  if (!moreTpl) { hydrated = true; return; }
+  const next = $$<HTMLElement>("[data-card]", moreTpl.content).slice(0, batch);
+  for (const c of next) { grid.appendChild(c); cards.push(c); }
+  if (!moreTpl.content.querySelector("[data-card]")) { moreTpl.remove(); hydrated = true; }
   renderFavs();
 }
+if (moreTpl) {
+  const step = () => { hydrateCards(6); if (!hydrated) idle(step, 3000); };
+  addEventListener("load", () => setTimeout(() => idle(step, 3000), 1500), { once: true });
+}
+/** Run heavy work after the browser has painted the response to a tap (keeps INP low). */
+const afterPaint = (fn: () => void) => requestAnimationFrame(() => setTimeout(fn, 0));
 const PAGE = 12;
 const filters = { style: "all", color: "", price: "all", fav: false, sort: "featured", limit: PAGE };
 const NEW = new Set(Object.keys(catalog).filter((id) => $(`[data-card][data-id="${id}"] .badge`)));
@@ -520,10 +528,11 @@ function syncControls() {
   const active = (filters.style !== "all" ? 1 : 0) + (filters.color ? 1 : 0) + (filters.price !== "all" ? 1 : 0) + (filters.fav ? 1 : 0);
   const a = $("[data-active-filters]"); if (a) a.textContent = active ? `(${active})` : "";
 }
-function applyFilters(animate = true) {
+function applyFilters(animate = true, hydrate = true) {
   if (!grid) return;
-  hydrateCards();
-  const state = animate && motion && Flip ? Flip.getState(cards) : null;
+  if (hydrate) hydrateCards();
+  // Only cards on screen can be measured, so Flip records just those (much cheaper than all 38).
+  const state = animate && motion && Flip ? Flip.getState(cards.filter((c) => !c.hidden)) : null;
   const visible = sorted(cards.filter(matches));
   const shown = visible.slice(0, filters.limit);
   sorted(cards).forEach((c) => grid.appendChild(c));
@@ -537,12 +546,16 @@ function applyFilters(animate = true) {
     ed.hidden = !plain || !anchor;
     if (anchor) anchor.after(ed); else grid.appendChild(ed);
   }
-  $$("[data-result-count]").forEach((el) => (el.textContent = String(visible.length)));
-  $("[data-empty]")!.hidden = visible.length > 0;
-  $("[data-more-wrap]")!.hidden = visible.length <= filters.limit;
+  // While some cards are still waiting in the template, keep the server-rendered count and "show more" button.
+  if (hydrated) {
+    $$("[data-result-count]").forEach((el) => (el.textContent = String(visible.length)));
+    $("[data-empty]")!.hidden = visible.length > 0;
+    $("[data-more-wrap]")!.hidden = visible.length <= filters.limit;
+  }
   syncControls();
   if (state) {
     Flip.from(state, {
+      targets: cards.filter((c) => !c.hidden),
       duration: 0.7, ease: "power3.inOut", absolute: true, scale: true, nested: true,
       onEnter: (els: Element[]) => gsap.fromTo(els, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }),
       onLeave: (els: Element[]) => gsap.to(els, { opacity: 0, scale: 0.92, duration: 0.4 }),
@@ -563,7 +576,7 @@ if (shop && grid) {
     else if (t.dataset.filterPrice) filters.price = t.dataset.filterPrice;
     else if (t.hasAttribute("data-filter-fav")) filters.fav = !filters.fav;
     else if (t.hasAttribute("data-filter-reset")) Object.assign(filters, { style: "all", color: "", price: "all", fav: false });
-    else if (t.hasAttribute("data-load-more")) { filters.limit += PAGE; applyFilters(false); ScrollTrigger?.refresh(); return; }
+    else if (t.hasAttribute("data-load-more")) { filters.limit += PAGE; afterPaint(() => { applyFilters(false); ScrollTrigger?.refresh(); }); return; }
     else if (t.dataset.viewBtn) {
       shop.dataset.view = t.dataset.viewBtn;
       $$("[data-view-btn]").forEach((b) => b.setAttribute("aria-pressed", String(b === t)));
@@ -572,9 +585,10 @@ if (shop && grid) {
     } else if (t.hasAttribute("data-sheet-open")) { sheet.dataset.open = "true"; scrim.hidden = false; lockScroll(true); return; }
     else if (t.hasAttribute("data-sheet-close")) { closeOverlays(); return; }
     filters.limit = PAGE;
-    applyFilters();
+    syncControls();            // pressed state shows immediately…
+    afterPaint(() => applyFilters()); // …the grid updates right after
   });
-  $<HTMLSelectElement>("[data-sort]")?.addEventListener("change", (e) => { filters.sort = (e.target as HTMLSelectElement).value; applyFilters(); });
+  $<HTMLSelectElement>("[data-sort]")?.addEventListener("change", (e) => { filters.sort = (e.target as HTMLSelectElement).value; afterPaint(() => applyFilters()); });
 }
 
 /* favourites link in the header */
@@ -609,7 +623,8 @@ $$<HTMLAnchorElement>('a[href*="#"]').forEach((a) => a.addEventListener("click",
 /* ---------- boot ---------- */
 renderFavs();
 renderCart();
-if (grid) applyFilters(false);
+// Initial state: no need to pull in the waiting cards unless a favourites view was asked for.
+if (grid) applyFilters(false, filters.fav);
 idle(effects, 1200);
 
 export {};

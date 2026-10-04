@@ -43,7 +43,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
       {/* product */}
       <section className="mx-auto grid max-w-[1400px] gap-8 px-4 pt-6 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-12">
         <div>
-          <nav className="mb-4 text-[13px] font-semibold text-mauve" aria-label={tr("مسار الصفحة", "Breadcrumb")}>
+          <nav className="crumbs mb-4 text-[13px] font-semibold text-mauve" aria-label={tr("مسار الصفحة", "Breadcrumb")}>
             <a href={url()} className="hover:text-berry">{tr("الرئيسية", "Home")}</a> {sep} <a href={url(`${style.id}/`)} className="hover:text-berry">{style.name}</a> {sep} <span className="text-plum">{name}</span>
           </nav>
           <div className="grid grid-cols-[1fr_76px] gap-3 sm:grid-cols-[1fr_96px]">
@@ -82,7 +82,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <button className="btn btn-berry btn-shine flex-1" data-add={p.id} data-magnetic>{tr("أضيفي للشنطة", "Add to bag")} 🛍</button>
             <a className="btn btn-white flex-1" href={waLink(tr(`السلام عليكم، عايزة أطلب حزام ${name} (${priceOf(p)} جنيه)`, `Hello, I would like to order the ${name} belt (${priceOf(p)} EGP)`))} target="_blank" rel="noopener"><Icon name="wa" className="size-4" /> {tr("اطلبي على واتساب", "Order on WhatsApp")}</a>
           </div>
-          <button className="mt-3 inline-flex items-center gap-2 text-[14px] font-semibold text-mauve hover:text-berry" data-fav={p.id} aria-pressed="false">
+          <button className="mt-2 inline-flex items-center gap-2 py-2.5 text-[14px] font-semibold text-mauve hover:text-berry" data-fav={p.id} aria-pressed="false">
             <Icon name="heart" className="size-5" /> {tr("أضيفي للمفضلة", "Add to favourites")}
           </button>
 
@@ -133,7 +133,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
                     <button className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-blush" data-lightbox="look" data-full={qi.large} data-caption={pName(q, lang)} aria-label={`${tr("تكبير", "Enlarge")}: ${pName(q, lang)}`}>
                       <img src={qi.src} srcSet={qi.srcset} sizes="25vw" width={qi.width} height={qi.height} decoding="async" alt={tr(`حزام ${pName(q, lang)}`, `${pName(q, lang)} belt`)} loading="lazy" className="absolute inset-0 size-full object-contain p-[8%] mix-blend-multiply transition-transform duration-500 hover:scale-110" />
                     </button>
-                    <a href={url(productUrl(q.id))} className="mt-2.5 px-1 text-[14px] font-bold hover:text-berry">{pName(q, lang)}</a>
+                    <a href={url(productUrl(q.id))} className="mt-1.5 block px-1 py-1.5 text-[14px] font-bold hover:text-berry">{pName(q, lang)}</a>
                     <div className="mt-1 flex items-center justify-between px-1">
                       <span className="font-extrabold text-berry"><span className="num">{priceOf(q)}</span> {tr("ج", "EGP")}</span>
                       <button className="plus" data-add={q.id} aria-label={tr(`أضيفي ${pName(q, lang)} للشنطة`, `Add ${pName(q, lang)} to bag`)}>+</button>
@@ -160,7 +160,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
       <section className="mx-auto max-w-[1400px] px-4 pt-16 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] font-bold">{tr("شوفي كمان", "You may also like")}</h2>
-          <a href={url("#shop")} className="text-[14px] font-bold text-berry underline underline-offset-4">{tr("كل الموديلات", "Shop all belts")}</a>
+          <a href={url("#shop")} className="inline-block py-2.5 text-[14px] font-bold text-berry underline underline-offset-4">{tr("كل الموديلات", "Shop all belts")}</a>
         </div>
         <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
           {seeAlso.map((q, i) => <ProductCard key={q.id} p={q} index={i} paged={false} />)}

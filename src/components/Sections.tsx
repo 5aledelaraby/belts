@@ -139,14 +139,14 @@ export const ProductCard = ({ p, index, paged = true }: { p: Product; index: num
       </button>
       <div className="px-1.5 pt-3">
         <div className="text-[12px] font-semibold text-mauve">{sName(p.style, lang)}</div>
-        <h3 className="mt-0.5 text-[15px] font-bold leading-snug sm:text-[16px]"><a href={href} className="hover:text-berry">{name}</a></h3>
+        <h3 className="text-[15px] font-bold leading-snug sm:text-[16px]"><a href={href} className="block py-1 hover:text-berry">{name}</a></h3>
         <div className="mt-1.5 text-[16px] font-extrabold text-berry"><span className="num">{priceOf(p)}</span> <span className="text-[12px]">{tr("جنيه", "EGP")}</span></div>
-        <div className="mt-2.5 flex flex-wrap gap-1.5" aria-label={tr("الألوان المتاحة", "Available colours")}>
-          {siblings.slice(0, 6).map((q) => (
+        <div className="mt-2 flex flex-wrap items-center gap-2" aria-label={tr("الألوان المتاحة", "Available colours")}>
+          {siblings.slice(0, 3).map((q) => (
             <a key={q.id} className="swatch" style={{ background: q.hex }} href={url(productUrl(q.id))}
               aria-current={q.id === p.id ? "true" : undefined} aria-label={pName(q, lang)} title={pName(q, lang)} />
           ))}
-          {siblings.length > 6 && <span className="text-[11px] font-semibold text-mauve">+{siblings.length - 6}</span>}
+          {siblings.length > 3 && <a href={url(`${p.style}/`)} dir="ltr" className="grid h-6 min-w-6 place-items-center px-1 text-[12px] font-semibold text-mauve hover:text-berry" aria-label={tr(`${siblings.length - 3} ألوان تانية`, `${siblings.length - 3} more colours`)}>+{siblings.length - 3}</a>}
         </div>
       </div>
     </article>
@@ -419,7 +419,7 @@ export const Faq = () => {
 export const InnerCircle = () => {
   const lang = useLang(); const tr = useTr();
   return (
-  <section className="px-3 pt-20 sm:px-5">
+  <section className="inner-circle px-3 pt-20 sm:px-5">
     <div className="relative mx-auto max-w-[1100px] overflow-hidden rounded-[36px] bg-gradient-to-br from-petal via-peach to-cream px-6 py-14 text-center sm:py-20">
       <Blobs />
       <Bow className="absolute -top-2 start-6 w-24 text-berry/40 sm:w-32" w={2} />
@@ -451,7 +451,7 @@ export const StyleHero = ({ s }: { s: Style }) => {
       <div className="relative mx-auto grid max-w-[1400px] items-center gap-6 overflow-hidden rounded-[36px] bg-gradient-to-bl from-petal via-peach to-cream px-6 py-10 sm:px-12 lg:grid-cols-[1.2fr_1fr]">
         <Blobs />
         <div className="relative">
-          <nav className="text-[13px] font-semibold text-mauve" aria-label={tr("مسار الصفحة", "Breadcrumb")}>
+          <nav className="crumbs text-[13px] font-semibold text-mauve" aria-label={tr("مسار الصفحة", "Breadcrumb")}>
             <a href={url()} className="hover:text-berry">{tr("الرئيسية", "Home")}</a> {lang === "en" ? "›" : "‹"} <span className="text-plum">{st.name}</span>
           </nav>
           <h1 className="mt-4 font-display text-[clamp(2.6rem,7vw,5rem)] font-bold leading-[1.15]">{lang === "en" ? <><span className="text-berry">{st.name}</span> belts</> : <>أحزمة <span className="text-berry">{st.name}</span></>}</h1>

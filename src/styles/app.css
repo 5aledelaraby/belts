@@ -64,7 +64,7 @@
   .nav-pill { @apply rounded-full bg-white px-3.5 py-1.5 text-[13px] font-semibold shadow-[0_2px_0_rgb(181_71_106/.12)] transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-berry hover:text-white; }
   .nav-pill[aria-current="page"] { @apply bg-berry text-white; }
   .icon-btn { @apply relative inline-grid size-11 place-items-center rounded-full transition-[background-color,transform] duration-300 hover:bg-white active:scale-90; }
-  .count-badge { @apply absolute -top-0.5 -end-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-berry px-1 text-[11px] font-bold text-white; }
+  .count-badge { @apply absolute -top-0.5 -end-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-berry px-1 text-[12px] font-bold text-white; }
   .count-badge.bump { animation: pop .5s var(--ease-bounce); }
 
   /* buttons */
@@ -107,7 +107,7 @@
   .heart[aria-pressed="true"] { @apply text-berry; }
   .heart[aria-pressed="true"] svg path { fill: currentColor; }
   .heart.pop { animation: pop .55s var(--ease-bounce); }
-  .badge { @apply absolute top-4 start-4 z-10 rounded-full bg-berry px-2.5 py-1 text-[11px] font-bold text-white; }
+  .badge { @apply absolute top-4 start-4 z-10 rounded-full bg-berry px-2.5 py-1 text-[12px] font-bold text-white; }
   .plus { @apply grid size-9 shrink-0 place-items-center rounded-full bg-plum text-[20px] leading-none text-white transition-[background-color,transform] duration-300 hover:rotate-90 hover:bg-berry active:scale-90; }
   .swatch { @apply size-4 rounded-full border-2 border-white shadow-[0_0_0_1px_rgb(58_31_38/.15)] transition-transform hover:scale-125; }
   .swatch[aria-current="true"] { @apply shadow-[0_0_0_1.5px_var(--color-plum)]; }
@@ -267,3 +267,13 @@ body:has(dialog[open]) .wa-fab { opacity: 0; pointer-events: none; }
 .post-table td { padding: 10px 14px; border-top: 1px solid rgb(58 31 38 / .08); }
 .desc-links a { color: var(--color-berry); font-weight: 700; text-decoration: underline; text-decoration-color: var(--color-rose); text-underline-offset: 5px; }
 .desc-links a:hover { color: var(--color-berry-deep); }
+
+/* ---------- mobile tap targets (min 24px, comfortable spacing) ---------- */
+.swatch { box-sizing: border-box; width: 24px; height: 24px; padding: 4px; border: 0; background-clip: content-box; box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 4px rgb(58 31 38 / .18); }
+.swatch[aria-current="true"] { box-shadow: inset 0 0 0 2px var(--color-plum), inset 0 0 0 4px #fff; }
+.swatch.size-8 { width: 34px; height: 34px; padding: 5px; }
+.crumbs a { display: inline-block; padding-block: 10px; }
+footer ul a { display: inline-block; padding-block: 6px; }
+
+/* ---------- below-the-fold sections: let the browser skip their rendering until they're near ---------- */
+footer, .inner-circle { content-visibility: auto; contain-intrinsic-size: auto 640px; }

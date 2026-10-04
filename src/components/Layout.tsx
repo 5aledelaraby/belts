@@ -354,14 +354,14 @@ const Footer = ({ en }: { en: boolean }) => {
       </div>
       <nav aria-label={tr("التصميمات", "Designs")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("تسوّقي", "Shop")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]">
+        <ul className="mt-3 space-y-0.5 text-[14px]">
           <li><a className="hover:text-rose" href={url("#shop")}>{tr("كل الموديلات", "All belts")}</a></li>
           {styles.map((s) => <li key={s.id}><a className="hover:text-rose" href={url(`${s.id}/`)}>{tr(`أحزمة ${sText(s, "ar").name}`, `${sText(s, "en").name} belts`)}</a></li>)}
         </ul>
       </nav>
       <nav aria-label={tr("وصل حديثاً", "New in")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("وصل حديثاً", "New in")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]">
+        <ul className="mt-3 space-y-0.5 text-[14px]">
           {products.filter((p) => p.isNew).slice(0, 7).map((p) => (
             <li key={p.id}><a className="hover:text-rose" href={url(`p/${p.id}/`)}>{tr(`حزام ${p.name}`, `${pName(p, "en")} belt`)}</a></li>
           ))}
@@ -369,14 +369,14 @@ const Footer = ({ en }: { en: boolean }) => {
       </nav>
       <nav aria-label={tr("المدونة", "Blog")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("المدونة", "Blog (Arabic)")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]" lang="ar">
+        <ul className="mt-3 space-y-0.5 text-[14px]" lang="ar">
           <li><a className="font-semibold hover:text-rose" href={hrefFor("ar", "blog/")}>{en ? "All articles" : "كل المقالات"}</a></li>
           {posts().map((p) => <li key={p.slug}><a className="hover:text-rose" href={hrefFor("ar", `blog/${p.slug}/`)}>{footerPostLabel[p.slug] ?? p.title}</a></li>)}
         </ul>
       </nav>
       <nav aria-label={tr("مساعدة", "Help")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("مساعدة", "Help")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]">
+        <ul className="mt-3 space-y-0.5 text-[14px]">
           <li><a className="hover:text-rose" href={url("about/")}>{tr("من نحن", "About us")}</a></li>
           <li><a className="hover:text-rose" href={url("returns/")}>{tr("الشحن والاسترجاع", "Shipping & returns")}</a></li>
           <li><a className="hover:text-rose" href={url("#tie")}>{tr("طريقة الربط", "How to tie")}</a></li>

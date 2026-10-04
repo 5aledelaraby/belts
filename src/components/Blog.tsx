@@ -40,7 +40,7 @@ export const BlogIndex = () => {
           <Bow className="absolute -top-2 start-8 w-24 text-berry/30 sm:w-32" w={2} />
           <Sparkle className="twinkle absolute bottom-10 end-[12%] size-5 text-berry" />
           <div className="relative">
-            <nav className="text-[13px] font-semibold text-mauve" aria-label="مسار الصفحة">
+            <nav className="crumbs text-[13px] font-semibold text-mauve" aria-label="مسار الصفحة">
               <a href={url()} className="hover:text-berry">الرئيسية</a> ‹ <span className="text-plum">المدونة</span>
             </nav>
             <h1 className="mt-4 font-display text-[clamp(2.6rem,7vw,5rem)] font-bold leading-[1.15]">مدونة <span className="text-berry">Vicuna</span></h1>
@@ -82,7 +82,7 @@ export const BlogPost = ({ p }: { p: Post }) => {
   return (
     <>
       <article className="mx-auto max-w-[1000px] px-4 pt-6 sm:px-6">
-        <nav className="text-[13px] font-semibold text-mauve" aria-label="مسار الصفحة">
+        <nav className="crumbs text-[13px] font-semibold text-mauve" aria-label="مسار الصفحة">
           <a href={url()} className="hover:text-berry">الرئيسية</a> ‹ <a href={url("blog/")} className="hover:text-berry">المدونة</a> ‹ <span className="text-plum">{p.title}</span>
         </nav>
         <header className="mt-5">
