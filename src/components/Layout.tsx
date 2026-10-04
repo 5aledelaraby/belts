@@ -3,6 +3,7 @@ import { site, waLink, governorates, governoratesEn } from "../data/site";
 import { products, styles, priceOf, pName, sName, sText, tName } from "../data/products";
 import { useLang, useTr, hrefFor, clientStrings } from "../i18n";
 import { schemaFor, keywords } from "../seo";
+import { posts } from "../blog";
 import { assets } from "../lib/assets";
 import { img } from "../lib/images";
 import { IconSprite, Icon } from "./Icons";
@@ -137,7 +138,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
               <a className="lang-switch" href={hrefFor(other, isPage ? path : "")} hrefLang={other} lang={other} data-lang-switch aria-label={tr("Switch to English", "التحويل للعربي")}>
                 {en ? "عربي" : "EN"}
               </a>
-              <a className="icon-btn" href={url("#favorites")} data-show-favs aria-label={tr("المفضلة", "Favourites")}>
+              <a className="icon-btn" href={url("#shop")} data-show-favs aria-label={tr("المفضلة", "Favourites")}>
                 <Icon name="heart" className="size-[22px]" />
                 <span className="count-badge" data-fav-count hidden>0</span>
               </a>
@@ -294,13 +295,22 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
   );
 };
 
+/** Short labels for blog posts in the footer. */
+const footerPostLabel: Record<string, string> = {
+  "dress-belt-styling-ideas": "طرق تنسيق حزام الفستان",
+  "evening-dress-belt": "حزام الفستان السواريه",
+  "belt-for-body-shape": "الحزام المناسب لشكل جسمك",
+  "lace-belts-90s-trend": "أحزمة الدانتيل وموضة التسعينات",
+  "waist-belt-size-material-guide": "دليل مقاسات وخامات الأحزمة",
+};
+
 const Footer = ({ en }: { en: boolean }) => {
   const tr = (a: string, e: string) => (en ? e : a);
   const url = (p = "") => hrefFor(en ? "en" : "ar", p);
   return (
   <footer className="relative mt-10 overflow-hidden rounded-t-[40px] bg-plum text-white">
     <Bow className="pointer-events-none absolute -top-4 end-6 w-48 text-white/10 sm:w-72" w={1.2} />
-    <div className="relative mx-auto grid max-w-[1400px] gap-10 px-5 py-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div className="relative mx-auto grid max-w-[1400px] gap-10 px-5 py-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr_1fr]">
       <div>
         <div className="[--ink:white] [--accent:var(--color-rose)] [--accent-deep:var(--color-petal)]"><Logo /></div>
         <p className="mt-5 max-w-sm text-[14px] leading-7 text-white/70">{tr("أحزمة خصر بالربط من جلد PU مستورد، بتتصمم في القاهرة وبتوصل لكل محافظات مصر.", "Tie waist belts in imported PU leather — designed in Cairo, delivered to every governorate in Egypt.")}</p>
@@ -308,31 +318,46 @@ const Footer = ({ en }: { en: boolean }) => {
           <span className="rounded-full bg-white/10 px-3 py-1.5">💵 {tr("الدفع عند الاستلام", "Cash on delivery")}</span>
           <span className="rounded-full bg-white/10 px-3 py-1.5" style={{ direction: "ltr" }}>InstaPay</span>
         </div>
+        <div className="mt-6 flex gap-2" aria-label={tr("تابعينا", "Follow us")}>
+          {site.social.map((s) => (
+            <a key={s.id} className="grid size-10 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/20" href={s.href} target="_blank" rel="noopener" aria-label={en ? s.labelEn : s.label}><Icon name={s.id} className="size-[18px]" /></a>
+          ))}
+        </div>
       </div>
-      <div>
+      <nav aria-label={tr("التصميمات", "Designs")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("تسوّقي", "Shop")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]">{styles.map((s) => <li key={s.id}><a className="hover:text-rose" href={url(`${s.id}/`)}>{sText(s, en ? "en" : "ar").name}</a></li>)}</ul>
-      </div>
-      <div>
+        <ul className="mt-4 space-y-2.5 text-[14px]">
+          <li><a className="hover:text-rose" href={url("#shop")}>{tr("كل الموديلات", "All belts")}</a></li>
+          {styles.map((s) => <li key={s.id}><a className="hover:text-rose" href={url(`${s.id}/`)}>{tr(`أحزمة ${sText(s, "ar").name}`, `${sText(s, "en").name} belts`)}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={tr("وصل حديثاً", "New in")}>
+        <div className="font-display text-[18px] font-bold text-rose">{tr("وصل حديثاً", "New in")}</div>
+        <ul className="mt-4 space-y-2.5 text-[14px]">
+          {products.filter((p) => p.isNew).slice(0, 7).map((p) => (
+            <li key={p.id}><a className="hover:text-rose" href={url(`p/${p.id}/`)}>{tr(`حزام ${p.name}`, `${pName(p, "en")} belt`)}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <nav aria-label={tr("المدونة", "Blog")}>
+        <div className="font-display text-[18px] font-bold text-rose">{tr("المدونة", "Blog (Arabic)")}</div>
+        <ul className="mt-4 space-y-2.5 text-[14px]" lang="ar">
+          <li><a className="font-semibold hover:text-rose" href={hrefFor("ar", "blog/")}>{en ? "All articles" : "كل المقالات"}</a></li>
+          {posts().map((p) => <li key={p.slug}><a className="hover:text-rose" href={hrefFor("ar", `blog/${p.slug}/`)}>{footerPostLabel[p.slug] ?? p.title}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={tr("مساعدة", "Help")}>
         <div className="font-display text-[18px] font-bold text-rose">{tr("مساعدة", "Help")}</div>
         <ul className="mt-4 space-y-2.5 text-[14px]">
+          <li><a className="hover:text-rose" href={url("about/")}>{tr("من نحن", "About us")}</a></li>
           <li><a className="hover:text-rose" href={url("returns/")}>{tr("الشحن والاسترجاع", "Shipping & returns")}</a></li>
           <li><a className="hover:text-rose" href={url("#tie")}>{tr("طريقة الربط", "How to tie")}</a></li>
-          <li><a className="hover:text-rose" href={hrefFor("ar", "blog/")} lang="ar">{tr("المدونة", "Blog (Arabic)")}</a></li>
           <li><a className="hover:text-rose" href={url("#faq")}>{tr("أسئلة شائعة", "FAQ")}</a></li>
           <li><a className="hover:text-rose" href={url("privacy/")}>{tr("سياسة الخصوصية", "Privacy policy")}</a></li>
           <li><a className="hover:text-rose" href={url("terms/")}>{tr("الشروط والأحكام", "Terms & conditions")}</a></li>
           <li><a className="hover:text-rose" href={waLink(tr("السلام عليكم، عندي استفسار", "Hello, I have a question"))} target="_blank" rel="noopener">{tr("واتساب", "WhatsApp")} <span className="num">{site.whatsapp.display}</span></a></li>
         </ul>
-      </div>
-      <div>
-        <div className="font-display text-[18px] font-bold text-rose">{tr("تابعينا", "Follow us")}</div>
-        <ul className="mt-4 space-y-2.5 text-[14px]">
-          {site.social.map((s) => (
-            <li key={s.id}><a className="inline-flex items-center gap-3 hover:text-rose" href={s.href} target="_blank" rel="noopener"><span className="grid size-9 place-items-center rounded-full bg-white/10"><Icon name={s.id} className="size-[18px]" /></span>{en ? s.labelEn : s.label}</a></li>
-          ))}
-        </ul>
-      </div>
+      </nav>
     </div>
     <div className="relative border-t border-white/10">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-5 py-6 text-[12px] leading-6 text-white/50 sm:px-8 lg:flex-row lg:justify-between">

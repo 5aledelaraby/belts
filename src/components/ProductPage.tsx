@@ -17,6 +17,16 @@ export const ProductPage = ({ p }: { p: Product }) => {
   const main = img(p.id), detail = img(`${p.id}-detail`);
   const siblings = products.filter((q) => q.style === p.style);
   const related = siblings.filter((q) => q.id !== p.id).slice(0, 4);
+  // "See also": same colour family in other designs first, then one belt from each remaining design.
+  const seeAlso = (() => {
+    const pool = products.filter((q) => q.style !== p.style);
+    const sameColour = pool.filter((q) => q.color === p.color);
+    const picked: Product[] = [];
+    for (const q of sameColour) if (picked.length < 4 && !picked.some((x) => x.style === q.style)) picked.push(q);
+    for (const q of sameColour) if (picked.length < 4 && !picked.includes(q)) picked.push(q);
+    for (const q of pool) if (picked.length < 4 && !picked.some((x) => x.style === q.style)) picked.push(q);
+    return picked;
+  })();
   const look = lookFor(p.id);
   const lookImg = img(look.image);
   const lt = lookText(look, lang);
@@ -91,8 +101,8 @@ export const ProductPage = ({ p }: { p: Product }) => {
         <section className="mx-auto max-w-[1400px] px-4 pt-14 sm:px-6">
           <div className="rounded-[32px] bg-white p-6 shadow-[var(--shadow-card)] sm:p-10">
             <h2 className="font-display text-[clamp(1.6rem,3.6vw,2.4rem)] font-bold">عن حزام {name}</h2>
-            <div className="mt-4 max-w-[75ch] space-y-4 leading-8 text-mauve">
-              {seo.description.map((para, i) => <p key={i}>{para}</p>)}
+            <div className="desc-links mt-4 max-w-[75ch] space-y-4 leading-8 text-mauve">
+              {seo.descriptionHtml.map((para, i) => <p key={i} dangerouslySetInnerHTML={{ __html: para }} />)}
             </div>
           </div>
         </section>
@@ -145,6 +155,17 @@ export const ProductPage = ({ p }: { p: Product }) => {
           </div>
         </section>
       )}
+
+      {/* see also: other designs in the same colour */}
+      <section className="mx-auto max-w-[1400px] px-4 pt-16 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] font-bold">{tr("شوفي كمان", "You may also like")}</h2>
+          <a href={url("#shop")} className="text-[14px] font-bold text-berry underline underline-offset-4">{tr("كل الموديلات", "Shop all belts")}</a>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+          {seeAlso.map((q, i) => <ProductCard key={q.id} p={q} index={i} paged={false} />)}
+        </div>
+      </section>
     </>
   );
 };

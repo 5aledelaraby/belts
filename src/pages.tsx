@@ -4,7 +4,7 @@ import { styles, products, priceOf, productUrl, pName, sText } from "./data/prod
 import { ProductPage } from "./components/ProductPage";
 import { Layout } from "./components/Layout";
 import {
-  Hero, Stories, Perks, Shop, Lookbook, TieSteps, Faq, InnerCircle, StyleHero,
+  Hero, Stories, Perks, Shop, ShopByStyle, Lookbook, TieSteps, Faq, InnerCircle, StyleHero,
 } from "./components/Sections";
 import { productSeo } from "./data/seo-copy";
 import { BlogIndex, BlogPost } from "./components/Blog";
@@ -17,6 +17,8 @@ import * as termsAr from "./content/terms";
 import * as returnsEn from "./content/returns.en";
 import * as privacyEn from "./content/privacy.en";
 import * as termsEn from "./content/terms.en";
+import * as aboutAr from "./content/about";
+import * as aboutEn from "./content/about.en";
 
 export interface Page {
   /** Output path relative to the site root ("" = home). */
@@ -51,6 +53,7 @@ const pagesFor = (lang: Lang): Page[] => {
       <Stories />
       <Perks />
       <Shop />
+      <ShopByStyle />
       <Lookbook />
       <TieSteps />
       <Faq />
@@ -110,6 +113,9 @@ const pagesFor = (lang: Lang): Page[] => {
     home,
     ...stylePages,
     ...productPages,
+    en
+      ? policy("about", aboutEn, `About ${site.brand}: an Egyptian brand of women's tie waist belts in imported PU leather and lace, delivered across Egypt with cash on delivery.`)
+      : policy("about", aboutAr, `تعرفي على ${site.brand}: براند مصري لأحزمة الوسط النسائية بالربط من جلد PU مستورد ودانتيل، بتوصيل لكل مصر والدفع عند الاستلام.`),
     en
       ? policy("returns", returnsEn, `Shipping and returns at ${site.brand}: delivery in ${site.deliveryDays} working days and a full refund within ${site.returnDays} days.`)
       : policy("returns", returnsAr, `الشحن والاسترجاع في ${site.brand}: توصيل خلال ${site.deliveryDays} أيام عمل، واسترجاع الفلوس كاملة خلال ${site.returnDays} يوم.`),

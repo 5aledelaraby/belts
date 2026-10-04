@@ -107,9 +107,45 @@ export interface ProductSeo {
   title: string;
   meta: string;
   description: string[];
+  /** Same paragraphs with internal links on the key phrases (Arabic pages). */
+  descriptionHtml: string[];
   alt: string;
   altDetail: string;
 }
+
+/* Internal links inside the description: each target is linked once, on the first phrase found. */
+const styleLinks: Record<StyleId, { href: string; phrases: string[] }> = {
+  lace: { href: "/lace/", phrases: ["حزام الدانتيل", "الدانتيل", "دانتيل"] },
+  "wide-bow": { href: "/wide-bow/", phrases: ["فيونكة عريضة", "الفيونكة الكبيرة", "فيونكة"] },
+  sash: { href: "/sash/", phrases: ["بطرف طويل", "طرف طويل", "الطرف"] },
+  "thin-tie": { href: "/thin-tie/", phrases: ["بشريط رفيع", "شريط رفيع", "الكلاسيكي"] },
+  "croc-snake": { href: "/croc-snake/", phrases: ["نقشة كروكو", "نقشة ثعبان", "كروكو", "ثعبان", "النقشة"] },
+  ruffle: { href: "/ruffle/", phrases: ["حزام أحمر مكشكش", "الكشكشة", "كشكشة", "مكشكش"] },
+};
+const commonLinks = [
+  { href: "/blog/waist-belt-size-material-guide/", phrases: ["جلد PU مستورد", "المقاس العادي"] },
+  { href: "/blog/evening-dress-belt/", phrases: ["فساتين السواريه", "السواريه", "السهرات", "سهرة"] },
+];
+
+const linkify = (paras: string[], p: Product) => {
+  const targets = [styleLinks[p.style], ...commonLinks];
+  const done = new Set<string>();
+  const out = paras.map((text) => {
+    let html = text;
+    for (const t of targets) {
+      if (done.has(t.href)) continue;
+      const phrase = t.phrases.find((ph) => html.includes(ph));
+      if (!phrase) continue;
+      html = html.replace(phrase, `<a href="${t.href}">${phrase}</a>`);
+      done.add(t.href);
+    }
+    return html;
+  });
+  // Styling ideas + the whole catalogue, at the end of the tip and the closing paragraphs.
+  out[2] += ` ولو عايزة أفكار أكتر، اقري <a href="/blog/dress-belt-styling-ideas/">طرق تنسيق حزام الفستان لإطلالة أنيقة</a>.`;
+  out[4] += ` أو شوفي <a href="/#shop">كل أحزمة الجلد والدانتيل</a> عندنا.`;
+  return out;
+};
 
 export const productSeo = (p: Product): ProductSeo => {
   const pp = perProduct[p.id];
@@ -129,6 +165,7 @@ export const productSeo = (p: Product): ProductSeo => {
     title: `حزام ${p.name} — ${pp.feature} | Vicuna`,
     meta,
     description: [pp.hook + " " + st.who, st.material + " " + st.key, pp.wear + " " + sizes, care, closing],
+    descriptionHtml: linkify([pp.hook + " " + st.who, st.material + " " + st.key, pp.wear + " " + sizes, care, closing], p),
     alt: `حزام وسط نسائي ${p.name} من Vicuna، ${st.meta}`,
     altDetail: `تفاصيل عقدة حزام ${p.name} من Vicuna`,
   };

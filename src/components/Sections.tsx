@@ -291,6 +291,44 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
   );
 };
 
+/* ---------- shop by design (home) ---------- */
+export const ShopByStyle = () => {
+  const lang = useLang(); const tr = useTr(); const url = useHref();
+  const cover: Record<string, string> = { lace: "lace-black", "wide-bow": "bow-white", sash: "sash-green", "thin-tie": "classic-royal-blue", "croc-snake": "croc-cognac", ruffle: "ruffle-red" };
+  return (
+    <section id="designs" className="mx-auto max-w-[1400px] scroll-mt-24 px-4 pt-16 sm:px-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold leading-tight">{tr("تسوقي حسب التصميم", "Shop by design")} <Sparkle className="inline size-6 text-berry" /></h2>
+        <p className="max-w-md text-mauve">{tr("6 تصميمات، كل واحد بشخصية. اختاري التصميم وشوفي كل ألوانه.", "Six designs, each with its own character. Pick one and see every colour.")}</p>
+      </div>
+      <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+        {styles.map((s) => {
+          const st = sText(s, lang);
+          const count = products.filter((p) => p.style === s.id).length;
+          const im = img(cover[s.id] ?? first(s.id).id);
+          return (
+            <a key={s.id} href={url(`${s.id}/`)} className="group relative flex flex-col overflow-hidden rounded-[30px] bg-white p-3 shadow-[var(--shadow-card)] transition-transform duration-500 ease-soft hover:-translate-y-1.5">
+              <span className="relative block aspect-[4/3] overflow-hidden rounded-[22px] bg-gradient-to-br from-petal/70 to-cream">
+                <img src={im.src} srcSet={im.srcset} sizes="(max-width:1024px) 46vw, 30vw" width={im.width} height={im.height} loading="lazy"
+                  alt={tr(`أحزمة ${st.name} من Vicuna`, `${st.name} belts by Vicuna`)}
+                  className="absolute inset-0 size-full object-contain p-[9%] mix-blend-multiply transition-transform duration-700 ease-soft group-hover:scale-110 group-hover:-rotate-2" />
+                <span className="tag absolute top-3 start-3"><span className="num">{count}</span> {tr("لون", count === 1 ? "colour" : "colours")}</span>
+              </span>
+              <span className="flex items-start justify-between gap-2 px-2 pb-1 pt-4">
+                <span>
+                  <span className="block font-display text-[clamp(1.25rem,2.4vw,1.7rem)] font-bold leading-tight group-hover:text-berry">{tr(`أحزمة ${st.name}`, `${st.name} belts`)}</span>
+                  <span className="mt-1 hidden text-[13px] leading-6 text-mauve sm:block">{st.headline}</span>
+                </span>
+                <span className="shrink-0 rounded-full bg-petal px-3 py-1 text-[13px] font-extrabold text-berry"><span className="num">{s.price}</span> {tr("ج", "EGP")}</span>
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
 /* ---------- lookbook band ---------- */
 export const Lookbook = () => {
   const tr = useTr();
