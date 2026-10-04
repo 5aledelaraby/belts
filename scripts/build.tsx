@@ -149,6 +149,42 @@ async function buildBundles() {
   }
 }
 
+/** Meta (and Google Merchant) product feed: docs/catalog/products.csv + 1080px JPEGs.
+ *  Product ids match the Pixel's content_ids, so catalog ads can show each visitor the belts she viewed. */
+async function buildFeed() {
+  const { productSeo } = await import("../src/data/seo-copy");
+  const { styleOf, colors, textureName } = await import("../src/data/products");
+  const dir = path.join(OUT, "catalog");
+  await mkdir(path.join(dir, "img"), { recursive: true });
+  const csv = (v: string | number) => `"${String(v).replace(/"/g, '""').replace(/\s+/g, " ").trim()}"`;
+  const head = ["id", "title", "description", "availability", "condition", "price", "link", "image_link", "additional_image_link",
+    "brand", "google_product_category", "fb_product_category", "product_type", "item_group_id", "color", "material", "gender", "age_group"];
+  const rows = await Promise.all(products.map(async (p) => {
+    const src = path.join(SRC, "assets/products", `${p.id}.jpg`);
+    const img = async (name: string, input: sharp.Sharp) => {
+      await input.resize(1080, 1080, { fit: "contain", background: "#ffffff" }).flatten({ background: "#ffffff" }).jpeg({ quality: 86 }).toFile(path.join(dir, "img", name));
+      return `${site.url}${url(`catalog/img/${name}`)}`;
+    };
+    const meta = await sharp(src).metadata();
+    const w = meta.width ?? 1200;
+    const main = await img(`${p.id}.jpg`, sharp(src));
+    const detail = await img(`${p.id}-detail.jpg`, sharp(src).extract({ left: Math.round(w * 0.24), top: Math.round(w * 0.16), width: Math.round(w * 0.52), height: Math.round(w * 0.693) }));
+    const seo = productSeo(p);
+    const style = styleOf(p.style);
+    return [
+      p.id,
+      `حزام ${p.name}`,
+      seo.description.join(" ").slice(0, 5000),
+      "in stock", "new", `${style.price}.00 EGP`,
+      `${site.url}${url(`p/${p.id}/`)}`,
+      main, detail,
+      site.brand, "169", "Clothing & Accessories > Accessories > Belts", `Belts > ${style.name}`,
+      p.style, colors.find((c) => c.id === p.color)?.name ?? p.color, textureName[p.texture], "female", "adult",
+    ].map(csv).join(",");
+  }));
+  await writeFile(path.join(dir, "products.csv"), [head.join(","), ...rows].join("\n") + "\n");
+}
+
 async function buildPages() {
   // Imported after images/assets are known, because components read them while rendering.
   const { pages } = await import("../src/pages");
@@ -174,6 +210,7 @@ async function buildPages() {
     path.join(OUT, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
   );
+  await buildFeed();
   await writeFile(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${site.url}${url("sitemap.xml")}\n`);
   await writeFile(path.join(OUT, ".nojekyll"), "");
   if (site.customDomain) await writeFile(path.join(OUT, "CNAME"), site.customDomain + "\n");
