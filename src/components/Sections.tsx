@@ -132,7 +132,7 @@ export const ProductCard = ({ p, index, paged = true }: { p: Product; index: num
           <img className="img-alt" src={dt.src} srcSet={dt.srcset} sizes="(max-width:640px) 50vw, 25vw"
             width={dt.width} height={dt.height} alt={tr(productSeo(p).altDetail, `${name} belt knot detail`)} loading="lazy" decoding="async" />
         </a>
-        <button className="quick-add" data-add={p.id}>+ Quick Add</button>
+        <button className="quick-add" data-add={p.id} aria-label={tr(`أضيفي ${name} للشنطة`, `Add ${name} to bag`)}>{tr("أضيفي للشنطة 🛍", "Add to bag 🛍")}</button>
       </div>
       {p.isNew && <span className="badge">{tr("جديد ✨", "New ✨")}</span>}
       <button className="heart" data-fav={p.id} aria-pressed="false" aria-label={tr(`أضيفي ${name} للمفضلة`, `Add ${name} to favourites`)}>

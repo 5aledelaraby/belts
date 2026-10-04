@@ -100,7 +100,7 @@
   .card:hover .card-media .img-main { opacity: 0; transform: scale(.92); }
   .card:hover .card-media .img-alt { @apply scale-100 opacity-100; }
   @media (hover: none) { .card:hover .card-media .img-main { opacity: 1; transform: none; } .card:hover .card-media .img-alt { opacity: 0; } }
-  .quick-add { @apply absolute inset-x-3 bottom-3 z-10 translate-y-[150%] rounded-full bg-plum/90 py-2.5 text-center text-[13px] font-extrabold tracking-wide text-white opacity-0 backdrop-blur transition-[transform,opacity,background-color] duration-500 ease-bounce hover:bg-berry; direction: ltr; }
+  .quick-add { @apply absolute inset-x-3 bottom-3 z-10 translate-y-[150%] rounded-full bg-berry/95 py-2.5 text-center text-[13px] font-extrabold text-white shadow-[0_8px_20px_-8px_rgb(181_71_106/.7)] opacity-0 backdrop-blur transition-[transform,opacity,background-color] duration-500 ease-bounce hover:bg-berry; direction: ltr; }
   .card:hover .quick-add, .quick-add:focus-visible { @apply translate-y-0 opacity-100; }
   @media (hover: none) { .quick-add { @apply inset-x-2 bottom-2 translate-y-0 py-2 text-[12px] opacity-100; } }
   .heart { @apply absolute top-4 end-4 z-10 grid size-9 place-items-center rounded-full bg-white/90 text-mauve shadow-sm transition-colors hover:text-berry; }
@@ -300,3 +300,5 @@ footer, .inner-circle { content-visibility: auto; contain-intrinsic-size: auto 6
 .icon-btn.nudge { color: var(--color-berry); background: var(--color-petal); }
 .icon-btn.nudge > svg { animation: bag-nudge 1s var(--ease-soft) 2; }
 @media (prefers-reduced-motion: reduce) { .icon-btn.nudge > svg { animation: none; } }
+
+.quick-add:hover { background: var(--color-berry-deep); }
