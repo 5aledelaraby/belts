@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { site, waLink } from "../data/site";
 import { colors, products, styles, looks, priceOf, productUrl, pName, sName, sText, cName, lookText, type Product, type Style } from "../data/products";
 import { useLang, useTr, useHref } from "../i18n";
@@ -187,6 +188,62 @@ export const EditorialInGrid = () => {
   );
 };
 
+/* ---------- how to order: 3 steps above the grid ---------- */
+const orderSteps = (tr: (a: string, e: string) => string) => [
+  { icon: "🛍", title: tr("اختاري الحزام اللي يعجبك", "Pick the belt you love"), hint: tr("اضغطي على الصورة أو الاسم", "Tap its photo or name"), short: tr("اختاري الحزام", "Pick a belt") },
+  { icon: "➕", title: tr("أضيفيه للشنطة", "Add it to your bag"), hint: tr("دوسي على «أضيفي للشنطة»", "Tap “Add to bag”"), short: tr("أضيفيه للشنطة", "Add to bag") },
+  { icon: "📱", title: tr("ابعتي الطلب", "Send your order"), hint: tr("افتحي الشنطة وابعتي على واتساب", "Open your bag and send it on WhatsApp"), short: tr("ابعتي على واتساب", "Send on WhatsApp") },
+];
+
+export const OrderSteps = () => {
+  const tr = useTr();
+  const steps = orderSteps(tr);
+  return (
+    <div className="mx-auto mt-5 max-w-[1400px] px-4 sm:px-6" data-steps>
+      <div className="rounded-[26px] border border-rose/40 bg-white/70 p-4 sm:p-5">
+        <div className="text-[14px] font-bold text-berry">{tr("إزاي تطلبي في 3 خطوات؟", "How to order in 3 steps")}</div>
+        <ol className="mt-3 grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-center lg:gap-3">
+          {steps.map((st, i) => (
+            <Fragment key={st.title}>
+              <li className="flex items-center gap-3 rounded-2xl bg-blush px-3 py-2 lg:px-3.5 lg:py-3.5">
+                <span className="relative grid size-10 shrink-0 place-items-center rounded-full bg-white text-[18px] shadow-[var(--shadow-card)] lg:size-12 lg:text-[22px]" aria-hidden="true">
+                  {st.icon}
+                  <span className="absolute -top-1 -end-1 grid size-5 place-items-center rounded-full bg-berry text-[12px] font-extrabold text-white num">{i + 1}</span>
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[15px] font-bold leading-snug">{st.title}</span>
+                  <span className="block text-[13px] leading-snug text-mauve">{st.hint}</span>
+                </span>
+              </li>
+              {i < steps.length - 1 && <span className="steps-arrow hidden text-[22px] font-bold text-rose lg:block" aria-hidden="true">→</span>}
+            </Fragment>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+};
+
+/** One-line version inside the sticky filter bar; it appears once the full steps have scrolled away. */
+const OrderStepsMini = () => {
+  const tr = useTr();
+  const steps = orderSteps(tr);
+  return (
+    <div className="steps-mini" data-steps-mini data-show="false" aria-label={tr("إزاي تطلبي في 3 خطوات؟", "How to order in 3 steps")}>
+      <div className="mx-auto flex max-w-[1400px] items-center justify-center gap-1.5 px-4 text-[12.5px] font-semibold text-plum sm:gap-3 sm:px-6 sm:text-[13px]">
+        {steps.map((st, i) => (
+          <Fragment key={st.short}>
+            {i === 2
+              ? <button type="button" className="steps-mini-item underline decoration-rose underline-offset-4" data-cart-open-mini><span className="steps-mini-num num">{i + 1}</span>{st.short}</button>
+              : <span className="steps-mini-item"><span className="steps-mini-num num">{i + 1}</span>{st.short}</span>}
+            {i < steps.length - 1 && <span className="steps-arrow inline-block text-rose" aria-hidden="true">→</span>}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 /* ---------- filter bar + grid ---------- */
 export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
   const lang = useLang(); const tr = useTr();
@@ -204,8 +261,10 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
           <span className="tag"><span className="num" data-result-count>{list.length}</span> {tr("موديل", "belts")}</span>
         </div>
       </div>
+      <OrderSteps />
 
       <div className="filter-bar sticky top-[70px] z-30 mt-5 bg-blush/90 backdrop-blur-xl">
+        <OrderStepsMini />
         <div className="mx-auto flex max-w-[1400px] items-center gap-3 px-4 py-3 sm:px-6">
           <div className="no-scrollbar -my-2 hidden min-w-0 flex-1 items-center gap-2 overflow-x-auto py-2 md:flex">
             {!only && (

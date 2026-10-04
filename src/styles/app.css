@@ -277,3 +277,15 @@ footer ul a { display: inline-block; padding-block: 6px; }
 
 /* ---------- below-the-fold sections: let the browser skip their rendering until they're near ---------- */
 footer, .inner-circle { content-visibility: auto; contain-intrinsic-size: auto 640px; }
+
+/* ---------- how-to-order steps ---------- */
+[dir="rtl"] .steps-arrow { transform: scaleX(-1); }   /* arrows point in reading direction */
+.steps-mini { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease-soft); border-bottom: 1px solid transparent; }
+.steps-mini > div { overflow: hidden; }
+.steps-mini[data-show="true"] { grid-template-rows: 1fr; border-bottom-color: rgb(231 164 176 / .35); }
+.steps-mini[data-show="true"] > div { padding-block: 7px; }
+.steps-mini-item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; min-height: 24px; }
+.steps-mini-num { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 999px; background: var(--color-berry); color: white; font-size: 11.5px; font-weight: 800; }
+@media (max-width: 430px) { .steps-mini > div { font-size: 12px; gap: 4px; padding-inline: 10px; } .steps-mini-num { width: 16px; height: 16px; font-size: 11px; } .steps-mini-item { gap: 4px; } }
+.steps-mini > div { flex-wrap: wrap; row-gap: 2px; }
+@media (max-width: 370px) { .steps-mini .steps-arrow { display: none; } .steps-mini > div { gap: 10px; } }

@@ -108,6 +108,15 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   addEventListener("scroll", update, { passive: true });
 }
 
+/* ---------- how-to-order: show the one-line steps once the full ones scroll away ---------- */
+{
+  const full = $("[data-steps]"), mini = $("[data-steps-mini]");
+  if (full && mini && "IntersectionObserver" in window) {
+    new IntersectionObserver(([e]) => { mini.dataset.show = String(!e.isIntersecting && e.boundingClientRect.top < 0); }, { rootMargin: "-140px 0px 0px 0px" }).observe(full);
+  }
+  $("[data-cart-open-mini]")?.addEventListener("click", () => $<HTMLElement>("[data-cart-open]")!.click());
+}
+
 /* ---------- blog: load more + share ---------- */
 {
   const more = document.querySelector<HTMLButtonElement>("[data-blog-more]");
