@@ -130,6 +130,9 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         ))}
       </head>
       <body data-page={path || "home"} data-lang={lang}>
+        {site.pixels.meta && (
+          <noscript><img height={1} width={1} style={{ display: "none" }} alt="" src={`https://www.facebook.com/tr?id=${site.pixels.meta}&ev=PageView&noscript=1`} /></noscript>
+        )}
         <IconSprite />
 
         {/* announcement marquee */}

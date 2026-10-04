@@ -34,13 +34,14 @@ const store = {
 
 /* ---------- ad pixels: Meta + TikTok (no-ops until IDs are set in src/data/site.ts) ----------
    Fired at the same moments as the GA4 events, so the numbers line up across platforms. */
-type PixelEvent = "ViewContent" | "AddToCart" | "InitiateCheckout" | "Purchase" | "Contact" | "AddToWishlist";
+type PixelEvent = "ViewContent" | "AddToCart" | "RemoveFromCart" | "InitiateCheckout" | "Purchase" | "Contact" | "AddToWishlist";
 function track(event: PixelEvent, lines: Array<[string, number]> = [], extra: { value?: number; orderNo?: string } = {}) {
   try {
     const value = extra.value ?? lines.reduce((a, [id, q]) => a + catalog[id].price * q, 0);
     const money = lines.length || extra.value ? { value, currency: "EGP" } : {};
     // Meta Pixel
-    window.fbq?.("track", event, lines.length
+    // RemoveFromCart isn't a Meta standard event, so it goes out as a custom one.
+    window.fbq?.(event === "RemoveFromCart" ? "trackCustom" : "track", event, lines.length
       ? { ...money, content_type: "product", content_ids: lines.map(([id]) => id), contents: lines.map(([id, q]) => ({ id, quantity: q })), num_items: lines.reduce((a, [, q]) => a + q, 0), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
       : money);
     // TikTok Pixel — an order sent on WhatsApp is "PlaceAnOrder" (payment comes later).
@@ -48,8 +49,8 @@ function track(event: PixelEvent, lines: Array<[string, number]> = [], extra: { 
     window.ttq?.track?.(tt, lines.length
       ? { ...money, content_type: "product", contents: lines.map(([id, q]) => ({ content_id: id, content_name: catalog[id].name, quantity: q, price: catalog[id].price })), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
       : money);
-    const snap = ({ ViewContent: "VIEW_CONTENT", AddToCart: "ADD_CART", InitiateCheckout: "START_CHECKOUT", Purchase: "PURCHASE", Contact: "CUSTOM_EVENT_1", AddToWishlist: "SAVE" } as const)[event];
-    window.snaptr?.("track", snap, money);
+    const snap = ({ ViewContent: "VIEW_CONTENT", AddToCart: "ADD_CART", InitiateCheckout: "START_CHECKOUT", Purchase: "PURCHASE", Contact: "CUSTOM_EVENT_1", AddToWishlist: "SAVE" } as Record<string, string>)[event];
+    if (snap) window.snaptr?.("track", snap, money);
   } catch { /* never block ordering */ }
 }
 
@@ -362,6 +363,11 @@ function renderCart() {
   lines.appendChild(list);
 }
 function setQty(id: string, n: number) {
+  const removed = (cart[id] || 0) - Math.max(n, 0);
+  if (removed > 0) {
+    ga("remove_from_cart", { currency: "EGP", value: catalog[id].price * removed, items: [gaItem(id, removed)] });
+    track("RemoveFromCart", [[id, removed]]);
+  }
   if (n <= 0) delete cart[id];
   else cart[id] = n;
   store.set("vicuna-cart", cart);
