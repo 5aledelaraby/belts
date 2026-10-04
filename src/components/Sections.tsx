@@ -499,7 +499,7 @@ export const Faq = () => {
       {items.map(([q, a], i) => (
         <details key={q} open={i === 0}>
           <summary>{q}</summary>
-          <p className="pb-5 leading-8 text-mauve">{a}</p>
+          <p className="whitespace-pre-line pb-5 leading-8 text-mauve">{a}</p>
         </details>
       ))}
     </div>
