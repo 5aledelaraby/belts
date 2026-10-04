@@ -80,6 +80,8 @@ const product = (lang: Lang, id: string) => {
       "@type": "Offer",
       url: abs(hrefFor(lang, productUrl(p.id))),
       priceCurrency: "EGP",
+      // Prices aren't time-limited; the date moves forward on every build so it never looks expired.
+      priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
       price: String(priceOf(p)),
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
@@ -130,7 +132,7 @@ const itemList = (lang: Lang, ids: string[], name: string) => ({
 /** All JSON-LD blocks for a page, given its language-neutral path. */
 export const schemaFor = (lang: Lang, path: string, title: string): object[] => {
   const home: [string, string] = [lang === "en" ? "Home" : "الرئيسية", ""];
-  if (path === "") return [organization(lang), website(lang), itemList(lang, products.map((p) => p.id), lang === "en" ? "All Vicuna belts" : "كل أحزمة Vicuna"), faqPage(lang)];
+  if (path === "") return [organization(lang), website(lang), itemList(lang, products.map((p) => p.id), lang === "en" ? "Women's waist belts by Vicuna" : "أحزمة خصر نسائية من Vicuna"), faqPage(lang)];
   if (path.endsWith(".html")) return [];
   const style = styles.find((s) => path === `${s.id}/`);
   if (style) {
