@@ -176,3 +176,50 @@ export const looks: Look[] = [
 
 export const productUrl = (id: string) => `p/${id}/`;
 export const lookFor = (id: string) => looks.find((l) => l.products.includes(id)) ?? looks[0];
+
+/* ---------- English copy (pages under /en/) ---------- */
+type L = "ar" | "en";
+
+const productEn: Record<string, string> = {
+  "lace-black": "Black Lace", "lace-red": "Red Lace", "lace-white": "White Lace", "lace-gold": "Gold Lace", "lace-caramel": "Caramel Lace",
+  "bow-white": "White Bow", "bow-silver": "Silver Bow", "bow-gold": "Gold Bow", "bow-mustard": "Mustard Bow", "bow-burgundy": "Burgundy Bow", "bow-taupe": "Taupe Bow",
+  "sash-red": "Red Long Sash", "sash-black": "Black Long Sash", "sash-blush": "Blush Long Sash", "sash-green": "Green Long Sash",
+  "sash-cognac": "Cognac Long Sash", "sash-brown": "Chocolate Long Sash", "twist-grey": "Grey Twist",
+  "classic-white": "White Thin Tie", "classic-red": "Red Thin Tie", "classic-rose": "Rosewood Thin Tie", "classic-pink-suede": "Pink Suede Thin Tie",
+  "classic-mustard": "Mustard Thin Tie", "classic-orange-suede": "Orange Suede Thin Tie", "classic-camel-suede": "Camel Suede Thin Tie",
+  "classic-green": "Emerald Thin Tie", "classic-sky-blue": "Sky Blue Thin Tie", "classic-royal-blue": "Royal Blue Thin Tie", "classic-navy": "Navy Thin Tie",
+  "croc-black": "Black Croc", "croc-wine": "Wine Croc", "croc-pink": "Pink Croc", "croc-cognac": "Cognac Croc",
+  "snake-grey": "Grey Snake", "snake-beige": "Beige Snake",
+  "ruffle-red": "Red Ruffle", "ruffle-black": "Black Ruffle", "ruffle-brown": "Brown Ruffle",
+};
+
+const styleEn: Record<StyleId, { name: string; headline: string; intro: string }> = {
+  lace: { name: "Lace", headline: "A lace belt turns the simplest dress into an evening look", intro: "Lace worked over an imported PU leather lining, tied with a slim strap. Made for nights out and occasions — it defines the waist without squeezing." },
+  "wide-bow": { name: "Wide Bow", headline: "A wide bow that draws every eye to your waist", intro: "Soft PU leather that wraps the waist and ties into a big bow at the front. Here the belt is the star of the outfit." },
+  sash: { name: "Long Sash", headline: "One simple knot and a long, falling tail", intro: "A wide belt tied in a single knot with the end falling over the dress. Calm and elegant, for casual and formal looks alike." },
+  "thin-tie": { name: "Thin Tie", headline: "The classic belt that goes with everything", intro: "A wide belt with a slim strap that wraps the waist and ties into a small bow. Smooth leather and suede in many colours — wear it with dresses, blouses and jackets." },
+  "croc-snake": { name: "Croc & Snake", headline: "Croc and snake textures that give your outfit character", intro: "Croc or snake embossing on imported PU leather, with a slim tie. A bold touch for any plain outfit." },
+  ruffle: { name: "Ruffle", headline: "Ruffles that add movement and softness", intro: "A belt ruffled top and bottom with a strap that ties in the middle. A soft, different touch for any plain dress." },
+};
+
+const colorEn: Record<ColorId, string> = {
+  black: "Black", white: "White", red: "Red", pink: "Pink", brown: "Brown", gold: "Gold & beige", yellow: "Yellow & orange", green: "Green", blue: "Blue", grey: "Grey & silver",
+};
+
+const textureEn: Record<Product["texture"], string> = {
+  smooth: "Smooth imported PU leather", suede: "Imported PU suede", lace: "Lace on a PU leather lining",
+  croc: "Imported PU leather, croc embossed", snake: "Imported PU leather, snake print", ruffle: "Ruffled imported PU leather",
+};
+
+const lookEn: Record<string, { title: string; tip: string }> = {
+  trio: { title: "Three belts, three moods", tip: "Over a plain white or black dress: the long sash feels calm, the wide bow turns heads, and the ruffle adds movement." },
+  green: { title: "One bold colour", tip: "Keep the whole outfit neutral and let the green belt do the talking. Tie it in a side knot and let the tail fall." },
+  lace: { title: "Lace for the evening", tip: "A lace belt turns a simple black dress into an evening look. Tie it in a small bow at the centre." },
+};
+
+export const pName = (p: Product, lang: L) => (lang === "en" ? productEn[p.id] ?? p.name : p.name);
+export const sText = (s: Style, lang: L) => (lang === "en" ? styleEn[s.id] : { name: s.name, headline: s.headline, intro: s.intro });
+export const sName = (id: StyleId, lang: L) => sText(styleOf(id), lang).name;
+export const cName = (c: { id: ColorId; name: string }, lang: L) => (lang === "en" ? colorEn[c.id] : c.name);
+export const tName = (p: Product, lang: L) => (lang === "en" ? textureEn[p.texture] : textureName[p.texture]);
+export const lookText = (l: Look, lang: L) => (lang === "en" ? lookEn[l.id] : { title: l.title, tip: l.tip });

@@ -25,9 +25,9 @@ export const site = {
   instapay: "01221988192",
 
   social: [
-    { id: "tiktok", label: "تيك توك", handle: "@elaraby_khaled", href: "https://www.tiktok.com/@elaraby_khaled" },
-    { id: "instagram", label: "إنستجرام", handle: "5aled.elaraby", href: "https://www.instagram.com/5aled.elaraby" },
-    { id: "snapchat", label: "سناب شات", handle: "khaled-elaraby", href: "https://www.snapchat.com/add/khaled-elaraby" },
+    { id: "tiktok", label: "تيك توك", labelEn: "TikTok", handle: "@elaraby_khaled", href: "https://www.tiktok.com/@elaraby_khaled" },
+    { id: "instagram", label: "إنستجرام", labelEn: "Instagram", handle: "5aled.elaraby", href: "https://www.instagram.com/5aled.elaraby" },
+    { id: "snapchat", label: "سناب شات", labelEn: "Snapchat", handle: "khaled-elaraby", href: "https://www.snapchat.com/add/khaled-elaraby" },
   ],
 
   currency: "جنيه",
@@ -53,6 +53,9 @@ export const site = {
   },
 
   updated: "4 أكتوبر 2026",
+  updatedEn: "4 October 2026",
+  legalFormEn: "Limited Liability Company",
+  pickupEn: "Gardenia City, Nasr City",
 } as const;
 
 export const governorates = [
@@ -60,6 +63,13 @@ export const governorates = [
   "المنوفية", "البحيرة", "كفر الشيخ", "دمياط", "بورسعيد", "الإسماعيلية", "السويس",
   "الفيوم", "بني سويف", "المنيا", "أسيوط", "سوهاج", "قنا", "الأقصر", "أسوان",
   "البحر الأحمر", "الوادي الجديد", "مطروح", "شمال سيناء", "جنوب سيناء",
+];
+
+export const governoratesEn = [
+  "Cairo", "Giza", "Alexandria", "Qalyubia", "Dakahlia", "Sharqia", "Gharbia",
+  "Monufia", "Beheira", "Kafr El Sheikh", "Damietta", "Port Said", "Ismailia", "Suez",
+  "Faiyum", "Beni Suef", "Minya", "Asyut", "Sohag", "Qena", "Luxor", "Aswan",
+  "Red Sea", "New Valley", "Matrouh", "North Sinai", "South Sinai",
 ];
 
 export const waLink = (text?: string) =>

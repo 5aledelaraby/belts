@@ -9,7 +9,8 @@ declare global {
 interface Item { name: string; price: number; style: string; styleName: string; hex: string; texture: string; src: string; srcset: string; large: string }
 interface Config { shipping: { standard: number; express: number; freeOver: number }; whatsapp: string; instapay: string; deliveryDays: number }
 
-const { config, catalog } = JSON.parse(document.getElementById("catalog")!.textContent!) as { config: Config; catalog: Record<string, Item> };
+const { config, catalog, strings: S } = JSON.parse(document.getElementById("catalog")!.textContent!) as { config: Config; catalog: Record<string, Item>; strings: Record<string, string> };
+const fill = (s: string, vars: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k]));
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector(sel) as T | null;
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll(sel)] as T[];
 const html = document.documentElement;
@@ -68,6 +69,25 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   const update = () => { header.dataset.scrolled = String(scrollY > 8); };
   update();
   addEventListener("scroll", update, { passive: true });
+}
+
+/* ---------- floating WhatsApp button (after 300px; tooltip shows once for 5s) ---------- */
+{
+  const fab = document.querySelector<HTMLElement>("[data-wa-fab]");
+  if (fab) {
+    let tipped = false;
+    const update = () => {
+      const show = scrollY > 300;
+      fab.dataset.show = String(show);
+      if (show && !tipped) {
+        tipped = true;
+        fab.dataset.tip = "true";
+        setTimeout(() => { fab.dataset.tip = "false"; }, 5000);
+      }
+    };
+    update();
+    addEventListener("scroll", update, { passive: true });
+  }
 }
 
 /* ---------- visual effects (images, cards, buttons — never text) ---------- */
@@ -223,7 +243,7 @@ function renderFavs() {
 }
 function toggleFav(id: string, btn?: HTMLElement) {
   if (favs.has(id)) favs.delete(id);
-  else { favs.add(id); track("AddToWishlist"); toast(`اتضاف للمفضلة 💗 ${catalog[id].name}`); if (btn) burst(btn); }
+  else { favs.add(id); track("AddToWishlist"); toast(`${S.favAdded} ${catalog[id].name}`); if (btn) burst(btn); }
   store.set("vicuna-favs", [...favs]);
   renderFavs();
   if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
@@ -247,18 +267,18 @@ function renderCart() {
   badge.hidden = n === 0;
   $("[data-n]")!.textContent = String(n);
   $("[data-sub]")!.textContent = String(sub);
-  $("[data-ship]")!.innerHTML = !n ? "—" : ship === 0 ? "<b>مجاني</b>" : `<span class="num">${ship}</span> جنيه`;
+  $("[data-ship]")!.innerHTML = !n ? "—" : ship === 0 ? `<b>${S.free}</b>` : `<span class="num">${ship}</span> ${S.currency}`;
   $("[data-total]")!.textContent = String(n ? sub + ship : 0);
 
   const lines = $("[data-lines]")!;
   const ids = Object.keys(cart);
   if (!ids.length) {
-    lines.innerHTML = `<div class="py-10 text-center"><p class="text-[44px]">🛍</p><p class="font-display text-[24px] font-bold">الشنطة فاضية</p><p class="mt-1 text-[14px] text-mauve">اختاري موديل ودوسي «+».</p></div>`;
+    lines.innerHTML = `<div class="py-10 text-center"><p class="text-[44px]">🛍</p><p class="font-display text-[24px] font-bold">${S.emptyTitle}</p><p class="mt-1 text-[14px] text-mauve">${S.emptyHint}</p></div>`;
     return;
   }
   const left = config.shipping.freeOver - sub;
   lines.innerHTML = `<p class="mb-4 rounded-full bg-petal px-4 py-2 text-center text-[13px] font-bold text-berry">${
-    left > 0 ? `فاضل <b class="num">${left}</b> جنيه وتاخدي شحن مجاني` : "🎉 طلبك عليه شحن مجاني"
+    left > 0 ? fill(S.leftForFree, { n: `<b class="num">${left}</b>` }) : S.gotFree
   }</p>`;
   const list = document.createElement("ul");
   list.className = "flex flex-col gap-3";
@@ -267,8 +287,8 @@ function renderCart() {
     const li = document.createElement("li");
     li.className = "flex items-center gap-3 rounded-3xl bg-white p-2.5";
     li.innerHTML = `<img src="${it.src}" alt="" class="size-20 shrink-0 rounded-2xl bg-blush object-contain p-1.5">
-      <div class="min-w-0 flex-1"><div class="text-[15px] font-bold leading-tight" data-line-name></div><div class="mt-1 text-[14px] font-black text-berry"><span class="num">${it.price * cart[id]}</span> جنيه</div></div>
-      <div class="flex items-center rounded-full bg-blush"><button class="size-8 font-bold" aria-label="زيادة">+</button><span class="num w-5 text-center text-[14px]">${cart[id]}</span><button class="size-8 font-bold" aria-label="تقليل">−</button></div>`;
+      <div class="min-w-0 flex-1"><div class="text-[15px] font-bold leading-tight" data-line-name></div><div class="mt-1 text-[14px] font-black text-berry"><span class="num">${it.price * cart[id]}</span> ${S.currency}</div></div>
+      <div class="flex items-center rounded-full bg-blush"><button class="size-8 font-bold" aria-label="${S.inc}">+</button><span class="num w-5 text-center text-[14px]">${cart[id]}</span><button class="size-8 font-bold" aria-label="${S.dec}">−</button></div>`;
     li.querySelector("[data-line-name]")!.textContent = it.name;
     const [plus, minus] = li.querySelectorAll("button");
     plus.addEventListener("click", () => setQty(id, cart[id] + 1));
@@ -288,7 +308,7 @@ function setQty(id: string, n: number) {
 function add(id: string, from?: Element | null) {
   flyToBag(id, from);
   setQty(id, (cart[id] || 0) + 1);
-  toast(`اتضاف للشنطة 🛍 ${catalog[id].name}`);
+  toast(`${S.bagAdded} ${catalog[id].name}`);
   track("AddToCart", catalog[id].price);
 }
 
@@ -312,27 +332,27 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
   const v = (id: string) => ($<HTMLInputElement>(id)!.value || "").trim();
   const err = $("[data-err]")!;
   const ids = Object.keys(cart);
-  if (!ids.length) { err.textContent = "ضيفي حزام واحد على الأقل قبل ما تبعتي الطلب."; return; }
-  const missing = ([["#f-name", "الاسم"], ["#f-phone", "رقم الموبايل"], ["#f-gov", "المحافظة"], ["#f-addr", "العنوان"]] as const)
+  if (!ids.length) { err.textContent = S.needItem; return; }
+  const missing = ([["#f-name", S.fName], ["#f-phone", S.fPhone], ["#f-gov", S.fGov], ["#f-addr", S.fAddr]] as const)
     .filter(([id]) => !v(id)).map(([, label]) => label);
-  if (missing.length) { err.textContent = `ناقص: ${missing.join("، ")}`; return; }
+  if (missing.length) { err.textContent = S.missing + missing.join(S.sep); return; }
   err.textContent = "";
   const sub = subtotal(), ship = shippingCost(sub), pay = payMethod();
   const msg = [
-    "طلب جديد من موقع Vicuna 🛍️", "",
-    ...ids.map((id) => `• ${catalog[id].name} × ${cart[id]} = ${catalog[id].price * cart[id]} جنيه`), "",
-    `المنتجات: ${sub} جنيه`,
-    `الشحن (${shipMethod() === "express" ? "سريع" : "عادي"}): ${ship === 0 ? "مجاني" : `${ship} جنيه`}`,
-    `الإجمالي: ${sub + ship} جنيه`,
-    `الدفع: ${pay === "instapay" ? `InstaPay على ${config.instapay} (هبعت صورة التحويل)` : "عند الاستلام"}`, "",
-    `الاسم: ${v("#f-name")}`, `الموبايل: ${v("#f-phone")}`, `المحافظة: ${v("#f-gov")}`, `العنوان: ${v("#f-addr")}`,
-    ...(v("#f-note") ? [`ملاحظات / مقاس: ${v("#f-note")}`] : []),
+    S.orderTitle, "",
+    ...ids.map((id) => `• ${catalog[id].name} × ${cart[id]} = ${catalog[id].price * cart[id]} ${S.currency}`), "",
+    `${S.products}: ${sub} ${S.currency}`,
+    `${S.shipping} (${shipMethod() === "express" ? S.express : S.standard}): ${ship === 0 ? S.free : `${ship} ${S.currency}`}`,
+    `${S.total}: ${sub + ship} ${S.currency}`,
+    `${S.payment}: ${pay === "instapay" ? fill(S.payInsta, { n: config.instapay }) : S.payCod}`, "",
+    `${S.name}: ${v("#f-name")}`, `${S.phone}: ${v("#f-phone")}`, `${S.gov}: ${v("#f-gov")}`, `${S.addr}: ${v("#f-addr")}`,
+    ...(v("#f-note") ? [`${S.notes}: ${v("#f-note")}`] : []),
   ].join("\n");
   track("InitiateCheckout", sub + ship);
   const a = document.createElement("a");
   a.href = wa(msg); a.target = "_blank"; a.rel = "noopener";
   document.body.appendChild(a); a.click(); a.remove();
-  toast("بنفتح واتساب برسالة الطلب، ابعتيها من هناك");
+  toast(S.openingWa);
 });
 
 /* ---------- quick view ---------- */
@@ -342,13 +362,13 @@ function openQuick(id: string) {
   quickId = id;
   const it = catalog[id];
   const im = $<HTMLImageElement>("[data-q-img]", quick)!;
-  im.src = it.large; im.srcset = it.srcset; im.sizes = "(max-width:768px) 94vw, 520px"; im.alt = `حزام ${it.name}`;
+  im.src = it.large; im.srcset = it.srcset; im.sizes = "(max-width:768px) 94vw, 520px"; im.alt = `${S.beltAlt} ${it.name}`;
   $("[data-q-style]", quick)!.textContent = `${it.styleName} · Vicuna`;
   $("[data-q-name]", quick)!.textContent = it.name;
   $("[data-q-price]", quick)!.textContent = String(it.price);
   $("[data-q-color]", quick)!.textContent = it.name;
   $("[data-q-texture]", quick)!.textContent = it.texture;
-  $<HTMLAnchorElement>("[data-q-wa]", quick)!.href = wa(`السلام عليكم، عايزة أطلب حزام ${it.name} (${it.price} جنيه)`);
+  $<HTMLAnchorElement>("[data-q-wa]", quick)!.href = wa(fill(S.orderOne, { name: it.name, price: it.price }));
   const sw = $("[data-q-swatches]", quick)!;
   sw.innerHTML = "";
   Object.entries(catalog).filter(([, q]) => q.style === it.style).forEach(([qid, q]) => {
@@ -461,7 +481,7 @@ $("[data-show-favs]")?.addEventListener("click", (e) => {
   Object.assign(filters, { style: "all", color: "", price: "all", fav: true, limit: 99 });
   applyFilters();
   scrollToEl(shop!);
-  if (!favs.size) toast("لسه ما ضفتيش حاجة للمفضلة ♡");
+  if (!favs.size) toast(S.noFavs);
 });
 if (location.hash === "#favorites" && grid) { filters.fav = true; filters.limit = 99; }
 
@@ -476,8 +496,10 @@ document.addEventListener("click", (e) => {
 $$('a[href^="https://wa.me"]').forEach((a) => a.addEventListener("click", () => track("Contact")));
 
 /* same-page anchors go through Lenis */
-$$<HTMLAnchorElement>('a[href^="#"], a[href^="/#"]').forEach((a) => a.addEventListener("click", (e) => {
-  const id = a.getAttribute("href")!.replace(/^\/?#/, "");
+$$<HTMLAnchorElement>('a[href*="#"]').forEach((a) => a.addEventListener("click", (e) => {
+  const u = new URL(a.href);
+  if (u.pathname !== location.pathname) return;
+  const id = u.hash.slice(1);
   const el = id && document.getElementById(id);
   if (el) { e.preventDefault(); scrollToEl(el); history.replaceState(null, "", `#${id}`); }
 }));

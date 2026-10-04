@@ -55,7 +55,7 @@
   .logo { @apply inline-flex items-center gap-2 text-current no-underline; }
   .logo-mark { flex: none; }
   .logo-word { @apply flex flex-col leading-none; }
-  .logo-en { @apply font-latin text-[20px] tracking-[.3em]; direction: ltr; }
+  .logo-en { font-family: "Marcellus", var(--font-latin); @apply text-[21px] tracking-[.28em]; direction: ltr; }
   .logo-ar { @apply mt-1 font-display text-[13px] font-bold text-berry; }
 
   /* header */
@@ -187,3 +187,56 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- English (LTR) pages ---------- */
+[dir="ltr"] .drawer { transform: translateX(105%); }
+[dir="ltr"] .drawer[data-open="true"] { transform: none; }
+[dir="ltr"] .marquee-track { animation-direction: reverse; }
+[dir="ltr"] svg:has(> use[href="#i-arrow"]) { transform: scaleX(-1); }
+[lang="en"] .font-display,
+[lang="en"] .prose-ar h2,
+[lang="en"] .menu-overlay a.big { font-family: "Marcellus", Georgia, serif; font-weight: 400; letter-spacing: .01em; }
+[lang="en"] .prose-ar { line-height: 1.8; }
+
+/* language switch pill in the header */
+.lang-switch {
+  display: inline-grid; place-items: center; height: 36px; min-width: 44px; padding-inline: 12px; margin-inline-end: 4px;
+  border-radius: 999px; background: white; color: var(--color-plum); font-size: 13px; font-weight: 800; letter-spacing: .06em;
+  box-shadow: 0 0 0 1px rgb(58 31 38 / .1); transition: background-color .3s, color .3s, transform .3s var(--ease-soft);
+}
+.lang-switch:hover { background: var(--color-plum); color: white; transform: translateY(-1px); }
+
+/* ---------- floating WhatsApp button ---------- */
+.wa-fab {
+  position: fixed; z-index: 45; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%;
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 999px;
+  background: #25D366; color: white; box-shadow: 0 8px 24px -8px rgb(37 211 102 / .7);
+  opacity: 0; pointer-events: none; transform: translateX(-50%) scale(.6);
+  transition: opacity .45s var(--ease-soft), transform .45s var(--ease-soft), box-shadow .3s;
+}
+.wa-fab[data-show="true"] { opacity: 1; pointer-events: auto; transform: translateX(-50%) scale(1); }
+.wa-fab[data-show="true"]:hover { transform: translateX(-50%) scale(1.1); box-shadow: 0 14px 30px -8px rgb(37 211 102 / .8); }
+.wa-fab:focus-visible { outline: 3px solid var(--color-plum); outline-offset: 3px; }
+.wa-tip { display: none; }
+@media (min-width: 768px) {
+  /* bottom-right corner on desktop, in both languages */
+  .wa-fab { left: auto; right: 24px; bottom: 24px; width: 60px; height: 60px; transform: scale(.6); }
+  .wa-fab[data-show="true"] { transform: scale(1); }
+  .wa-fab[data-show="true"]:hover { transform: scale(1.1); }
+  .wa-tip {
+    display: block; position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%;
+    white-space: nowrap; padding: 8px 14px; border-radius: 999px; background: white; color: var(--color-plum);
+    font-size: 13px; font-weight: 700; box-shadow: 0 8px 24px -10px rgb(58 31 38 / .35);
+    opacity: 0; transform: translateX(8px); transition: opacity .4s, transform .4s var(--ease-soft); pointer-events: none;
+  }
+  .wa-tip::after { content: ""; position: absolute; right: -5px; top: 50%; width: 10px; height: 10px; background: white; transform: translateY(-50%) rotate(45deg); border-radius: 2px; }
+  .wa-fab[data-tip="true"] .wa-tip { opacity: 1; transform: none; }
+}
+/* keep the toast clear of the button on phones */
+@media (max-width: 767px) { body:has(.wa-fab[data-show="true"]) .toast { bottom: 88px; } }
+/* hide it while the bag, menu, filter sheet or a dialog is open */
+body:has(.drawer[data-open="true"]) .wa-fab,
+body:has(.menu-overlay[data-open="true"]) .wa-fab,
+body:has(.sheet[data-open="true"]) .wa-fab,
+body:has(dialog[open]) .wa-fab { opacity: 0; pointer-events: none; }
+@media (max-width: 420px) { .lang-switch { height: 32px; min-width: 36px; padding-inline: 8px; margin-inline-end: 2px; font-size: 12px; } }
