@@ -45,14 +45,18 @@ export const site = {
     lengthCm: 140,
   },
 
+  /** X (Twitter) handle for twitter:site, e.g. "@vicuna_eg". Empty = tag left out. */
+  twitter: "",
+
   /** Google Analytics 4 Measurement ID, e.g. "G-ABC123XYZ9". Empty = GA4 is not loaded at all. */
   ga4: "",
 
-  /** Ad pixels — paste the IDs here when the ad accounts are ready. Empty = not loaded. */
+  /** Ad pixels — paste the IDs here when the ad accounts are ready. Empty = not loaded.
+   *  meta: the Pixel/Dataset ID from Events Manager (digits only); tiktok: the Pixel ID from TikTok Events Manager. */
   pixels: {
+    meta: "",
     tiktok: "",
     snapchat: "",
-    meta: "",
   },
 
   updated: "4 أكتوبر 2026",

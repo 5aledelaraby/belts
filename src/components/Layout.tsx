@@ -7,7 +7,7 @@ import { posts } from "../blog";
 import { assets } from "../lib/assets";
 import { img } from "../lib/images";
 import { IconSprite, Icon } from "./Icons";
-import { Logo, faviconHref } from "./Logo";
+import { Logo } from "./Logo";
 import { Bow, Sparkle } from "./Art";
 
 interface Props {
@@ -73,13 +73,16 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords[lang]} />
-        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta name="robots" content={path.endsWith(".html") ? "noindex, follow" : "index, follow, max-image-preview:large"} />
         <meta name="theme-color" content="#FFF5F3" />
         <link rel="canonical" href={canonical} />
         {isPage && <link rel="alternate" hrefLang="ar" href={site.url + hrefFor("ar", path)} />}
         {isPage && <link rel="alternate" hrefLang="en" href={site.url + hrefFor("en", path)} />}
         {isPage && <link rel="alternate" hrefLang="x-default" href={site.url + hrefFor("ar", path)} />}
-        <link rel="icon" href={faviconHref} />
+        <link rel="icon" href={hrefFor("ar", "favicon.svg")} type="image/svg+xml" />
+        <link rel="icon" href={hrefFor("ar", "assets/icons/icon-48.png")} sizes="48x48" type="image/png" />
+        <link rel="apple-touch-icon" href={hrefFor("ar", "apple-touch-icon.png")} sizes="180x180" />
+        <link rel="manifest" href={hrefFor("ar", "manifest.webmanifest")} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={site.brand} />
         <meta property="og:url" content={canonical} />
@@ -88,12 +91,15 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <meta property="og:image" content={ogImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={tr("أحزمة خصر Vicuna بالربط: دانتيل وفيونكة وطرف طويل على مانيكان", "Vicuna tie waist belts — lace, bow and long sash on mannequins")} />
         <meta property="og:locale" content={en ? "en_US" : "ar_EG"} />
         <meta property="og:locale:alternate" content={en ? "ar_EG" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={tr("أحزمة خصر Vicuna بالربط", "Vicuna tie waist belts")} />
+        {site.twitter && <meta name="twitter:site" content={site.twitter} />}
         {site.ga4 && (
           <>
             {/* Google Analytics 4 — async, so it never blocks the page from showing */}
@@ -102,6 +108,16 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
           </>
         )}
         {/* The main (LCP) image of each page is preloaded by React from its fetchPriority="high" <img>. */}
+        {site.pixels.meta && (
+          /* Meta Pixel — the base code loads fbevents.js asynchronously */
+          <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${site.pixels.meta}');fbq('track','PageView');` }} />
+        )}
+        {site.pixels.tiktok && (
+          /* TikTok Pixel — the base code loads events.js asynchronously */
+          <script dangerouslySetInnerHTML={{ __html: `!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=d.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=d.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};ttq.load('${site.pixels.tiktok}');ttq.page()}(window,document,'ttq');` }} />
+        )}
+        {/* WhatsApp is only opened on a tap, so a cheap DNS lookup is enough (a full preconnect would be wasted on most visits) */}
+        <link rel="dns-prefetch" href="https://wa.me" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* Fonts: fetched early but applied without blocking the first paint (text shows in a system font, then swaps). */}

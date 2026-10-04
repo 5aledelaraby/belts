@@ -76,6 +76,43 @@ async function buildImages() {
     if (/\.(svg|png)$/.test(f)) await copyFile(path.join(ROOT, "brand", f), path.join(OUT, "assets", "brand", f));
   }
   await copyFile(path.join(ROOT, "brand", "vicuna-seal-1080.png"), path.join(OUT, "assets", "logo.png"));
+
+  // Site icons: favicon (SVG + PNG + ICO), Apple touch icon, and web-app manifest icons.
+  const mark = await readFile(path.join(ROOT, "brand", "vicuna-mark-favicon.svg"), "utf8");
+  const square = mark.replace(/rx="[\d.]+"/, 'rx="0"');                       // iOS rounds the corners itself
+  const inner = mark.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "").replace(/<rect[^>]*\/>/, "");
+  const maskable = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#FFF5F3"/><g transform="translate(26 26) scale(.74)">${inner}</g></svg>`; // logo inside the 80% safe zone
+  await mkdir(path.join(OUT, "assets", "icons"), { recursive: true });
+  await writeFile(path.join(OUT, "favicon.svg"), mark);
+  const png = (svg: string, size: number) => sharp(Buffer.from(svg), { density: 600 }).resize(size, size).png({ compressionLevel: 9 });
+  await png(square, 180).flatten({ background: "#FFF5F3" }).toFile(path.join(OUT, "apple-touch-icon.png"));
+  for (const size of [48, 192, 512]) await png(mark, size).toFile(path.join(OUT, "assets", "icons", `icon-${size}.png`));
+  await png(maskable, 512).toFile(path.join(OUT, "assets", "icons", "maskable-512.png"));
+  // favicon.ico (16/32/48) for browsers and crawlers that ask for /favicon.ico
+  const icoSizes = [16, 32, 48];
+  const pngs = await Promise.all(icoSizes.map((sz) => png(mark, sz).toBuffer()));
+  const header = Buffer.alloc(6 + 16 * icoSizes.length);
+  header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(icoSizes.length, 4);
+  let offset = header.length;
+  icoSizes.forEach((sz, i) => {
+    const e = 6 + i * 16;
+    header.writeUInt8(sz, e); header.writeUInt8(sz, e + 1); header.writeUInt16LE(1, e + 4); header.writeUInt16LE(32, e + 6);
+    header.writeUInt32LE(pngs[i].length, e + 8); header.writeUInt32LE(offset, e + 12); offset += pngs[i].length;
+  });
+  await writeFile(path.join(OUT, "favicon.ico"), Buffer.concat([header, ...pngs]));
+  await writeFile(path.join(OUT, "manifest.webmanifest"), JSON.stringify({
+    name: `${site.brand} — أحزمة خصر بالربط`,
+    short_name: site.brand,
+    description: "أحزمة خصر نسائية بالربط من جلد PU مستورد، توصيل لكل مصر والدفع عند الاستلام.",
+    lang: "ar", dir: "rtl",
+    start_url: url(), scope: url(), display: "standalone",
+    background_color: "#FFF5F3", theme_color: "#FFF5F3",
+    icons: [
+      { src: url("assets/icons/icon-192.png"), sizes: "192x192", type: "image/png" },
+      { src: url("assets/icons/icon-512.png"), sizes: "512x512", type: "image/png" },
+      { src: url("assets/icons/maskable-512.png"), sizes: "512x512", type: "image/png", purpose: "maskable" },
+    ],
+  }, null, 2));
 }
 
 async function buildBundles() {

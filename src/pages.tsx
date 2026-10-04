@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { site } from "./data/site";
-import { styles, products, priceOf, productUrl, pName, sText } from "./data/products";
+import { styles, products, priceOf, productUrl, pName, sText, tName } from "./data/products";
 import { ProductPage } from "./components/ProductPage";
 import { Layout } from "./components/Layout";
 import {
@@ -29,6 +29,9 @@ export interface Page {
   /** Exists in one language only — no hreflang alternates in the sitemap. */
   single?: boolean;
 }
+
+/** The longest wording that fits Google's ~160-character snippet. */
+const fit = (variants: string[]) => variants.find((v) => v.length <= 160) ?? variants[variants.length - 1];
 
 const pagesFor = (lang: Lang): Page[] => {
   const en = lang === "en";
@@ -67,7 +70,19 @@ const pagesFor = (lang: Lang): Page[] => {
     return wrap(`${s.id}/`, (
       <Layout path={`${s.id}/`}
         title={tr(`أحزمة ${st.name} — ${s.price} جنيه | ${site.brand}`, `${st.name} belts — ${s.price} EGP | ${site.brand}`)}
-        description={`${st.headline}. ${st.intro}`}>
+        description={(() => {
+          const n = products.filter((p) => p.style === s.id).length;
+          return fit(en ? [
+            `${st.headline}. ${n} colours in imported PU leather at ${s.price} EGP, delivered across Egypt in ${site.deliveryDays} days. Cash on delivery, ${site.returnDays}-day returns.`,
+            `${st.headline}. ${n} colours at ${s.price} EGP, delivered across Egypt in ${site.deliveryDays} days. Cash on delivery, ${site.returnDays}-day returns.`,
+            `${st.headline}. ${n} colours at ${s.price} EGP, delivered across Egypt in ${site.deliveryDays} days. Cash on delivery.`,
+          ] : [
+            `${st.headline}. ${n} ألوان من جلد PU مستورد بـ${s.price} جنيه، توصيل لكل مصر خلال ${site.deliveryDays} أيام والدفع عند الاستلام واسترجاع ${site.returnDays} يوم. اطلبي دلوقتي!`,
+            `${st.headline}. ${n} ألوان من جلد PU مستورد بـ${s.price} جنيه، توصيل لكل مصر خلال ${site.deliveryDays} أيام والدفع عند الاستلام واسترجاع ${site.returnDays} يوم.`,
+            `${st.headline}. ${n} ألوان بـ${s.price} جنيه، توصيل لكل مصر خلال ${site.deliveryDays} أيام والدفع عند الاستلام واسترجاع ${site.returnDays} يوم.`,
+            `${st.headline}. ${n} ألوان بـ${s.price} جنيه، توصيل لكل مصر خلال ${site.deliveryDays} أيام والدفع عند الاستلام.`,
+          ]);
+        })()}>
         <StyleHero s={s} />
         <Stories current={s.id} />
         <Shop only={s} title={tr(`كل ألوان ${st.name}`, `All ${st.name} colours`)} />
@@ -87,7 +102,7 @@ const pagesFor = (lang: Lang): Page[] => {
         title={tr(productSeo(p).title, `${name} belt — ${priceOf(p)} EGP | ${site.brand}`)}
         description={tr(
           productSeo(p).meta,
-          `The ${name} belt from our ${st.name} collection. ${priceOf(p)} EGP, delivered in ${site.deliveryDays} working days, cash on delivery.`,
+          `${name} tie waist belt by Vicuna — ${st.name} design in ${tName(p, "en").toLowerCase()}. ${priceOf(p)} EGP, delivered across Egypt in ${site.deliveryDays} days. Order now!`,
         )}>
         <ProductPage p={p} />
         <Faq />
@@ -96,9 +111,9 @@ const pagesFor = (lang: Lang): Page[] => {
     ));
   });
 
-  const policy = (slug: string, mod: { title: string; html: string }, description: string) =>
+  const policy = (slug: string, mod: { title: string; html: string }, description: string, pageTitle = `${mod.title} | ${site.brand}`) =>
     wrap(`${slug}/`, (
-      <Layout path={`${slug}/`} title={`${mod.title} | ${site.brand}`} description={description}>
+      <Layout path={`${slug}/`} title={pageTitle} description={description}>
         <article className="mx-auto max-w-[1000px] px-4 pb-10 pt-8 sm:px-6">
           <a className="text-[14px] font-bold text-mauve hover:text-berry" href={hrefFor(lang)}>{tr("→ الرجوع للمتجر", "← Back to the shop")}</a>
           <div className="mt-5 rounded-[36px] bg-white p-6 shadow-[0_6px_0_rgba(181,71,106,.08)] sm:p-12">
@@ -115,17 +130,17 @@ const pagesFor = (lang: Lang): Page[] => {
     ...stylePages,
     ...productPages,
     en
-      ? policy("about", aboutEn, `About ${site.brand}: an Egyptian brand of women's tie waist belts in imported PU leather and lace, delivered across Egypt with cash on delivery.`)
-      : policy("about", aboutAr, `تعرفي على ${site.brand}: براند مصري لأحزمة الوسط النسائية بالربط من جلد PU مستورد ودانتيل، بتوصيل لكل مصر والدفع عند الاستلام.`),
+      ? policy("about", aboutEn, `About ${site.brand}: an Egyptian brand of women's tie waist belts in imported PU leather and lace, delivered across Egypt with cash on delivery.`, `About ${site.brand} | Women's tie waist belts from Egypt`)
+      : policy("about", aboutAr, `تعرفي على ${site.brand}: براند مصري لأحزمة الوسط النسائية بالربط من جلد PU مستورد ودانتيل، بتوصيل لكل مصر والدفع عند الاستلام واسترجاع ${site.returnDays} يوم.`, `من نحن | ${site.brand} — براند أحزمة خصر مصري`),
     en
-      ? policy("returns", returnsEn, `Shipping and returns at ${site.brand}: delivery in ${site.deliveryDays} working days and a full refund within ${site.returnDays} days.`)
-      : policy("returns", returnsAr, `الشحن والاسترجاع في ${site.brand}: توصيل خلال ${site.deliveryDays} أيام عمل، واسترجاع الفلوس كاملة خلال ${site.returnDays} يوم.`),
+      ? policy("returns", returnsEn, `Shipping and returns at ${site.brand}: delivery to every governorate in ${site.deliveryDays} working days, free shipping over ${site.shipping.freeOver} EGP, and ${site.returnDays}-day full refunds.`)
+      : policy("returns", returnsAr, `الشحن والاسترجاع في ${site.brand}: توصيل لكل المحافظات خلال ${site.deliveryDays} أيام عمل، وشحن مجاني فوق ${site.shipping.freeOver} جنيه، واسترجاع فلوسك كاملة خلال ${site.returnDays} يوم.`),
     en
-      ? policy("privacy", privacyEn, `How ${site.brand} collects and uses your data, and your rights.`)
-      : policy("privacy", privacyAr, `إزاي ${site.brand} بتجمع وتستخدم بياناتك، وإيه حقوقك.`),
+      ? policy("privacy", privacyEn, `How ${site.brand} collects, uses and protects your data when you order a belt — what we collect, who we share it with, and your rights over it.`)
+      : policy("privacy", privacyAr, `سياسة الخصوصية في ${site.brand}: البيانات اللي بنجمعها لما تطلبي حزام، وبنستخدمها في إيه، ومين بنشاركها معاه، وإيه حقوقك عليها.`),
     en
-      ? policy("terms", termsEn, `Terms and conditions for ordering from ${site.brand}.`)
-      : policy("terms", termsAr, `الشروط والأحكام الخاصة بالطلب من ${site.brand}.`),
+      ? policy("terms", termsEn, `Terms and conditions for ordering from ${site.brand}: orders, prices and payment, products, returns and your rights under Egyptian consumer protection law.`)
+      : policy("terms", termsAr, `الشروط والأحكام للطلب من ${site.brand}: الطلبات والأسعار والدفع والمنتجات والاسترجاع، وحقوقك في قانون حماية المستهلك المصري.`),
   ];
 
   if (!en) {

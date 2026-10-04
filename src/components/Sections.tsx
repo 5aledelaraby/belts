@@ -2,6 +2,7 @@ import { site, waLink } from "../data/site";
 import { colors, products, styles, looks, priceOf, productUrl, pName, sName, sText, cName, lookText, type Product, type Style } from "../data/products";
 import { useLang, useTr, useHref } from "../i18n";
 import { productSeo } from "../data/seo-copy";
+import { faqItems } from "../data/faq";
 import { img } from "../lib/images";
 import { Icon } from "./Icons";
 import { Bow, Ribbon, Sparkle, Blobs, Heart } from "./Art";
@@ -398,21 +399,7 @@ export const TieSteps = () => {
 /* ---------- faq ---------- */
 export const Faq = () => {
   const lang = useLang();
-  const items = lang === "en" ? [
-    ["How do I order?", "Pick a belt and tap “+” or “Add to bag”, then open your bag, fill in your details and choose how to pay. WhatsApp opens with your full order — just send it and we will confirm right away."],
-    ["How do I pay?", `Either cash on delivery to the courier, or an InstaPay transfer to ${site.instapay} — then send the screenshot on WhatsApp.`],
-    ["How long does delivery take, and how much?", `We deliver to every governorate in Egypt within ${site.deliveryDays} working days. Standard shipping is ${site.shipping.standard} EGP, express is ${site.shipping.express} EGP, and standard shipping is free on orders from ${site.shipping.freeOver} EGP.`],
-    ["Will it fit me?", `The belt is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long, and it wraps and ties, so it fits every size. Need a custom size? Write it in the notes and we will make it.`],
-    ["What is it made of?", "Top-grade imported PU leather — soft and light. There are also suede, lace, croc and snake designs."],
-    ["What if I don’t like it?", `You have ${site.returnDays} days from delivery to return it for a full refund or exchange it. If it is faulty or we sent the wrong item, all shipping is on us.`],
-  ] : [
-    ["إزاي أطلب؟", "اختاري الموديل واضغطي «+» أو «أضيفي للشنطة»، وبعدين افتحي الشنطة واكتبي بياناتك واختاري طريقة الدفع. هيتفتح واتساب برسالة فيها الطلب كامل، ابعتيها ونأكد معاكي على طول."],
-    ["الدفع إزاي؟", `يا إما الدفع عند الاستلام للمندوب، يا إما تحويل InstaPay على رقم ${site.instapay} وتبعتي صورة التحويل على واتساب.`],
-    ["التوصيل بياخد قد إيه وبكام؟", `بنوصّل لكل محافظات مصر خلال ${site.deliveryDays} أيام عمل. الشحن العادي ${site.shipping.standard} جنيه، والسريع ${site.shipping.express} جنيه، والشحن العادي مجاني للطلبات من ${site.shipping.freeOver} جنيه.`],
-    ["المقاس هيبقى مظبوط؟", `الحزام عرضه ${site.size.widthCm} سم وطوله ${site.size.lengthCm} سم، وبيتلف ويتربط فمناسب لكل الأوزان. ولو محتاجة مقاس خاص اكتبيه في الملاحظات وإحنا نعمله.`],
-    ["الخامة إيه؟", "جلد PU مستورد من أنضف الأنواع، ناعم وخفيف. وفيه موديلات شمواه ودانتيل وكروكو وثعبان."],
-    ["لو الحزام ما عجبنيش؟", `معاكي ${site.returnDays} يوم من الاستلام ترجّعيه وتاخدي فلوسك كاملة، أو تبدّليه. ولو فيه عيب أو وصلك غلط، الشحن كله علينا.`],
-  ];
+  const items = faqItems(lang);
   return (
   <section id="faq" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 pt-20 sm:px-6">
     <h2 className="text-center font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{lang === "en" ? "Questions you ask a lot" : "أسئلة بتتسأل كتير"} 💬</h2>

@@ -32,14 +32,24 @@ const store = {
   set(k: string, v: unknown) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
 };
 
-/* ---------- ad pixels (no-ops until IDs are configured) ---------- */
-function track(event: "AddToCart" | "InitiateCheckout" | "Contact" | "AddToWishlist", value?: number) {
-  const payload = value ? { value, currency: "EGP" } : undefined;
+/* ---------- ad pixels: Meta + TikTok (no-ops until IDs are set in src/data/site.ts) ----------
+   Fired at the same moments as the GA4 events, so the numbers line up across platforms. */
+type PixelEvent = "ViewContent" | "AddToCart" | "InitiateCheckout" | "Purchase" | "Contact" | "AddToWishlist";
+function track(event: PixelEvent, lines: Array<[string, number]> = [], extra: { value?: number; orderNo?: string } = {}) {
   try {
-    window.ttq?.track?.(event, payload);
-    window.fbq?.("track", event, payload);
-    const snap = { AddToCart: "ADD_CART", InitiateCheckout: "START_CHECKOUT", Contact: "CUSTOM_EVENT_1", AddToWishlist: "SAVE" }[event];
-    window.snaptr?.("track", snap);
+    const value = extra.value ?? lines.reduce((a, [id, q]) => a + catalog[id].price * q, 0);
+    const money = lines.length || extra.value ? { value, currency: "EGP" } : {};
+    // Meta Pixel
+    window.fbq?.("track", event, lines.length
+      ? { ...money, content_type: "product", content_ids: lines.map(([id]) => id), contents: lines.map(([id, q]) => ({ id, quantity: q })), num_items: lines.reduce((a, [, q]) => a + q, 0), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
+      : money);
+    // TikTok Pixel — an order sent on WhatsApp is "PlaceAnOrder" (payment comes later).
+    const tt = event === "Purchase" ? "PlaceAnOrder" : event;
+    window.ttq?.track?.(tt, lines.length
+      ? { ...money, content_type: "product", contents: lines.map(([id, q]) => ({ content_id: id, content_name: catalog[id].name, quantity: q, price: catalog[id].price })), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
+      : money);
+    const snap = ({ ViewContent: "VIEW_CONTENT", AddToCart: "ADD_CART", InitiateCheckout: "START_CHECKOUT", Purchase: "PURCHASE", Contact: "CUSTOM_EVENT_1", AddToWishlist: "SAVE" } as const)[event];
+    window.snaptr?.("track", snap, money);
   } catch { /* never block ordering */ }
 }
 
@@ -297,7 +307,7 @@ function renderFavs() {
 }
 function toggleFav(id: string, btn?: HTMLElement) {
   if (favs.has(id)) favs.delete(id);
-  else { favs.add(id); track("AddToWishlist"); toast(`${S.favAdded} ${catalog[id].name}`); if (btn) burst(btn); }
+  else { favs.add(id); track("AddToWishlist", [[id, 1]]); toast(`${S.favAdded} ${catalog[id].name}`); if (btn) burst(btn); }
   store.set("vicuna-favs", [...favs]);
   renderFavs();
   if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
@@ -363,7 +373,7 @@ function add(id: string, from?: Element | null) {
   flyToBag(id, from);
   setQty(id, (cart[id] || 0) + 1);
   toast(`${S.bagAdded} ${catalog[id].name}`);
-  track("AddToCart", catalog[id].price);
+  track("AddToCart", [[id, 1]]);
   ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
 }
 
@@ -376,6 +386,7 @@ function openCart() {
   if (ids.length && !checkoutSent) {
     checkoutSent = true;
     ga("begin_checkout", { currency: "EGP", value: subtotal(), items: ids.map((id) => gaItem(id, cart[id])) });
+    track("InitiateCheckout", ids.map((id) => [id, cart[id]] as [string, number]));
   }
   drawer.dataset.open = "true"; drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false; lockScroll(true); $<HTMLElement>("[data-cart-close]")!.focus(); }
 function closeOverlays() {
@@ -413,7 +424,7 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
     `${S.name}: ${v("#f-name")}`, `${S.phone}: ${v("#f-phone")}`, `${S.gov}: ${v("#f-gov")}`, `${S.addr}: ${v("#f-addr")}`,
     ...(v("#f-note") ? [`${S.notes}: ${v("#f-note")}`] : []),
   ].join("\n");
-  track("InitiateCheckout", sub + ship);
+  track("Purchase", ids.map((id) => [id, cart[id]] as [string, number]), { value: sub, orderNo });
   // The order is "placed" when it is sent on WhatsApp; payment happens later (cash on delivery / InstaPay).
   ga("purchase", {
     transaction_id: orderNo, currency: "EGP", value: sub, shipping: ship,
@@ -579,7 +590,6 @@ document.addEventListener("click", (e) => {
   else if (t.dataset.fav) toggleFav(t.dataset.fav, t);
   else if (t.dataset.quickOpen) openQuick(t.dataset.quickOpen);
 });
-$$('a[href^="https://wa.me"]').forEach((a) => a.addEventListener("click", () => track("Contact")));
 
 /* same-page anchors go through Lenis */
 $$<HTMLAnchorElement>('a[href*="#"]').forEach((a) => a.addEventListener("click", (e) => {
@@ -601,12 +611,16 @@ export {};
 /* ---------- GA4: view_item on product pages, contact on WhatsApp links ---------- */
 {
   const m = (document.body.dataset.page || "").match(/^p\/([^/]+)\/$/);
-  if (m && catalog[m[1]]) ga("view_item", { currency: "EGP", value: catalog[m[1]].price, items: [gaItem(m[1])] });
+  if (m && catalog[m[1]]) {
+    ga("view_item", { currency: "EGP", value: catalog[m[1]].price, items: [gaItem(m[1])] });
+    track("ViewContent", [[m[1], 1]]);
+  }
 
   document.addEventListener("click", (e) => {
     const a = (e.target as Element).closest<HTMLAnchorElement>('a[href*="wa.me/20"]');
     if (!a || "noTrack" in a.dataset) return;
     const where = a.closest("[data-wa-fab]") ? "floating_button" : a.closest("footer") ? "footer" : a.closest("[data-quick]") ? "quick_view" : a.closest(".post-body, article") ? "page_content" : "page";
     ga("contact", { method: "whatsapp", location: where, page: location.pathname });
+    track("Contact");
   });
 }

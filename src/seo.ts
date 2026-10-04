@@ -5,6 +5,7 @@ import { products, styles, priceOf, productUrl, pName, sText, tName } from "./da
 import { img } from "./lib/images";
 import { productSeo } from "./data/seo-copy";
 import type { Post } from "./blog";
+import { faqItems } from "./data/faq";
 import { hrefFor, type Lang } from "./i18n";
 
 const abs = (p: string) => (p.startsWith("http") ? p : site.url + p);
@@ -70,6 +71,7 @@ const product = (lang: Lang, id: string) => {
     image: [abs(img(p.id).large), abs(img(`${p.id}-detail`).large)],
     description: lang === "en" ? `${st.intro} ${tName(p, lang)}.` : productSeo(p).description.join(" "),
     sku: `VIC-${p.id.toUpperCase()}`,
+    url: abs(hrefFor(lang, productUrl(p.id))),
     color: name,
     material: tName(p, lang),
     category: lang === "en" ? "Women's waist belts" : "أحزمة وسط نسائية",
@@ -104,13 +106,41 @@ const product = (lang: Lang, id: string) => {
   };
 };
 
+/** FAQPage: built from the same text the FAQ section shows (src/data/faq.ts). */
+const faqPage = (lang: Lang) => ({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  inLanguage: lang,
+  mainEntity: faqItems(lang).map(([q, a]) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+});
+
+/** ItemList of product pages, in the order they appear on the page. */
+const itemList = (lang: Lang, ids: string[], name: string) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name,
+  numberOfItems: ids.length,
+  itemListElement: ids.map((id, i) => ({ "@type": "ListItem", position: i + 1, url: abs(hrefFor(lang, productUrl(id))) })),
+});
+
 /** All JSON-LD blocks for a page, given its language-neutral path. */
 export const schemaFor = (lang: Lang, path: string, title: string): object[] => {
   const home: [string, string] = [lang === "en" ? "Home" : "الرئيسية", ""];
-  if (path === "") return [organization(lang), website(lang)];
+  if (path === "") return [organization(lang), website(lang), itemList(lang, products.map((p) => p.id), lang === "en" ? "All Vicuna belts" : "كل أحزمة Vicuna"), faqPage(lang)];
   if (path.endsWith(".html")) return [];
   const style = styles.find((s) => path === `${s.id}/`);
-  if (style) return [breadcrumb(lang, [home, [sText(style, lang).name, path]])];
+  if (style) {
+    const name = sText(style, lang).name;
+    return [
+      breadcrumb(lang, [home, [name, path]]),
+      itemList(lang, products.filter((p) => p.style === style.id).map((p) => p.id), lang === "en" ? `${name} belts` : `أحزمة ${name}`),
+      faqPage(lang),
+    ];
+  }
   const m = path.match(/^p\/([^/]+)\/$/);
   if (m) {
     const p = products.find((q) => q.id === m[1])!;
@@ -118,6 +148,7 @@ export const schemaFor = (lang: Lang, path: string, title: string): object[] => 
     return [
       product(lang, p.id),
       breadcrumb(lang, [home, [sText(s, lang).name, `${s.id}/`], [pName(p, lang), path]]),
+      faqPage(lang),
     ];
   }
   return [breadcrumb(lang, [home, [title.split(" | ")[0], path]])];
