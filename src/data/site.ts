@@ -58,7 +58,7 @@ export const site = {
   /** Ad pixels — paste the IDs here when the ad accounts are ready. Empty = not loaded.
    *  meta: the Pixel/Dataset ID from Events Manager (digits only); tiktok: the Pixel ID from TikTok Events Manager. */
   pixels: {
-    meta: "998614156583835",
+    meta: "2311877842998870",
     tiktok: "",
     snapchat: "",
   },
