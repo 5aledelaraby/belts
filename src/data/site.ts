@@ -49,7 +49,7 @@ export const site = {
   twitter: "",
 
   /** Google Analytics 4 Measurement ID, e.g. "G-ABC123XYZ9". Empty = GA4 is not loaded at all. */
-  ga4: "",
+  ga4: "G-PD8H3JF2WR",
 
   /** Ad pixels — paste the IDs here when the ad accounts are ready. Empty = not loaded.
    *  meta: the Pixel/Dataset ID from Events Manager (digits only); tiktok: the Pixel ID from TikTok Events Manager. */
