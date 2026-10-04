@@ -390,13 +390,13 @@ const Footer = ({ en }: { en: boolean }) => {
       </nav>
     </div>
     <div className="relative border-t border-white/10">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-5 py-6 text-[12px] leading-6 text-white/50 sm:px-8 lg:flex-row lg:justify-between">
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-5 py-6 text-[12px] leading-6 text-white/70 sm:px-8 lg:flex-row lg:justify-between">
         <div>
           {en ? <>{site.legalNameEn} · <span lang="ar" style={{ unicodeBidi: "isolate" }}>{site.legalNameAr}</span> · {site.legalFormEn} · Commercial Register No. <span className="num">{site.commercialRegister}</span>
           <br />{site.headOfficeEn}</> : <>{site.legalNameAr} · <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>{site.legalNameEn}</span> · {site.legalForm} · سجل تجاري رقم <span className="num">{site.commercialRegister}</span>
           <br />{site.headOffice}</>}
         </div>
-        <div>© 2026 {site.brand} · {tr("اتعمل بحب في القاهرة ♡", "Made with love in Cairo ♡")}</div>
+        <div><span dir="ltr" style={{ unicodeBidi: "isolate" }}>© 2026 {site.legalNameEn}. All rights reserved.</span> · {tr("اتعمل بحب في القاهرة ♡", "Made with love in Cairo ♡")}</div>
       </div>
     </div>
   </footer>
