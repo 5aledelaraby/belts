@@ -8,8 +8,8 @@ export const site = {
   legalNameEn: "Vicuna for General Trading & Designs",
   legalForm: "شركة ذات مسئولية محدودة",
   commercialRegister: "196463",
-  headOffice: "21 شارع عباس العقاد، المنطقة الأولى، مدينة نصر، القاهرة 4450225",
-  headOfficeEn: "21 Abbas El-Akkad, Al Manteqah Al Oula, Nasr City, Cairo 4450225, Egypt",
+  headOffice: "21 شارع عباس العقاد، مدينة نصر، القاهرة 11371",
+  headOfficeEn: "21 Abbas El Akkad street, Nasr City, Cairo 11371, Egypt",
   pickup: "جاردينيا سيتي، مدينة نصر",
 
   /** Public URL of the site (no trailing slash) and the path it is served under. */

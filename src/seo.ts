@@ -27,7 +27,7 @@ const organization = (lang: Lang) => ({
   description: lang === "en"
     ? "An Egyptian store specialising in women's tie waist belts in exclusive designs."
     : "متجر متخصص في أحزمة الوسط النسائية بتصاميم حصرية",
-  address: { "@type": "PostalAddress", streetAddress: site.headOfficeEn, addressLocality: "Cairo", addressCountry: "EG" },
+  address: { "@type": "PostalAddress", streetAddress: "21 Abbas El Akkad street, Nasr City", addressLocality: "Cairo", postalCode: "11371", addressCountry: "EG" },
   contactPoint: {
     "@type": "ContactPoint",
     telephone: "+" + site.whatsapp.international,
