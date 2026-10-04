@@ -31,5 +31,5 @@ export const html = `
 <p>${site.legalNameEn} (<span lang="ar" style="unicode-bidi:isolate">${site.legalNameAr}</span>), ${site.legalFormEn}, Commercial Register No. <span class="num">${site.commercialRegister}</span>.<br>Head office: ${site.headOfficeEn}.</p>
 
 <h2>Contact us</h2>
-<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a question")}" target="_blank" rel="noopener">Message us on WhatsApp</a><br>Follow us on ${site.social.map((s) => `<a href="${s.href}" target="_blank" rel="noopener">${s.labelEn}</a>`).join(", ")}.</p>
+<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a question")}" target="_blank" rel="noopener">Message us on WhatsApp</a><br>Email: <a href="mailto:${site.email}" dir="ltr">${site.email}</a><br>Follow us on ${site.social.map((s) => `<a href="${s.href}" target="_blank" rel="noopener">${s.labelEn}</a>`).join(", ")}.</p>
 `;

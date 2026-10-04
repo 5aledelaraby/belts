@@ -384,6 +384,7 @@ const Footer = ({ en }: { en: boolean }) => {
           <li><a className="hover:text-rose" href={url("privacy/")}>{tr("سياسة الخصوصية", "Privacy policy")}</a></li>
           <li><a className="hover:text-rose" href={url("terms/")}>{tr("الشروط والأحكام", "Terms & conditions")}</a></li>
           <li><a className="hover:text-rose" href={waLink(tr("السلام عليكم، عندي استفسار", "Hello, I have a question"))} target="_blank" rel="noopener">{tr("واتساب", "WhatsApp")} <span className="num">{site.whatsapp.display}</span></a></li>
+          <li><a className="hover:text-rose" href={`mailto:${site.email}`} dir="ltr">{site.email}</a></li>
         </ul>
       </nav>
     </div>

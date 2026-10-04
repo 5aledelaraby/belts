@@ -55,7 +55,7 @@ export const html = `
 
 <h2>إزاي ترجّعي أو تبدّلي؟</h2>
 <p>من غير أي استمارات. ابعتيلنا على واتساب اسمك وقولي عايزة ترجّعي ولا تبدّلي، وإحنا نرتب معاكي الاستلام.</p>
-<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عايزة أرجّع أو أبدّل طلب")}" target="_blank" rel="noopener">كلمينا على واتساب</a></p>
+<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عايزة أرجّع أو أبدّل طلب")}" target="_blank" rel="noopener">كلمينا على واتساب</a><br>الإيميل: <a href="mailto:${site.supportEmail}" dir="ltr">${site.supportEmail}</a></p>
 
 <p>اقرئي كمان <a href="${url("terms/")}">الشروط والأحكام</a> و<a href="${url("privacy/")}">سياسة الخصوصية</a>.</p>
 `;

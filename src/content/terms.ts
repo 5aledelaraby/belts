@@ -65,5 +65,5 @@ export const html = `
 <p>ممكن نحدّث الشروط دي من وقت للتاني، والتعديل بيبدأ من وقت نشره هنا. الطلبات اللي اتأكدت قبل التعديل بتمشي على الشروط اللي كانت سارية وقتها.</p>
 
 <h2>١٤. تواصلي معانا</h2>
-<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عندي سؤال عن الشروط")}" target="_blank" rel="noopener">كلمينا على واتساب</a></p>
+<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عندي سؤال عن الشروط")}" target="_blank" rel="noopener">كلمينا على واتساب</a><br>الإيميل: <a href="mailto:${site.email}" dir="ltr">${site.email}</a></p>
 `;

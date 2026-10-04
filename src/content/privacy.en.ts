@@ -52,7 +52,7 @@ export const html = `
 
 <h2>10. Your rights</h2>
 <p>You can ask at any time to see the data we hold about you, correct it, delete it, or make a complaint. Contact us and we'll get back to you.</p>
-<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a request about my data")}" target="_blank" rel="noopener">Message us on WhatsApp</a></p>
+<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a request about my data")}" target="_blank" rel="noopener">Message us on WhatsApp</a><br>Email: <a href="mailto:${site.email}" dir="ltr">${site.email}</a></p>
 
 <h2>11. Changes to this policy</h2>
 <p>We may update this policy from time to time. Changes take effect when published here, and the date of the last update is shown above. If there is a significant change, we'll explain it on this page.</p>

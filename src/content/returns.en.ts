@@ -57,7 +57,7 @@ export const html = `
 
 <h2>How to return or exchange</h2>
 <p>No forms. Send us your name on WhatsApp and tell us whether you'd like a return or an exchange, and we'll arrange the pickup.</p>
-<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I would like to return or exchange an order")}" target="_blank" rel="noopener">Message us on WhatsApp</a></p>
+<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I would like to return or exchange an order")}" target="_blank" rel="noopener">Message us on WhatsApp</a><br>Email: <a href="mailto:${site.supportEmail}" dir="ltr">${site.supportEmail}</a></p>
 
 <p>See also our <a href="${url("terms/")}">Terms & Conditions</a> and <a href="${url("privacy/")}">Privacy Policy</a>.</p>
 `;

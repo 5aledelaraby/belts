@@ -69,5 +69,5 @@ export const html = `
 <p>We may update these terms from time to time. Changes take effect when published here. Orders confirmed before a change follow the terms in force at the time.</p>
 
 <h2>14. Contact us</h2>
-<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a question about the terms")}" target="_blank" rel="noopener">Message us on WhatsApp</a></p>
+<p>WhatsApp: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("Hello, I have a question about the terms")}" target="_blank" rel="noopener">Message us on WhatsApp</a><br>Email: <a href="mailto:${site.email}" dir="ltr">${site.email}</a></p>
 `;

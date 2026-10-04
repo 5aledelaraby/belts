@@ -31,6 +31,6 @@ export const html = `
 <p>${site.legalNameAr} (<span style="direction:ltr;unicode-bidi:isolate">${site.legalNameEn}</span>)، ${site.legalForm}، سجل تجاري رقم <span class="num">${site.commercialRegister}</span>.<br>المقر: ${site.headOffice}.</p>
 
 <h2>تواصلي معانا</h2>
-<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عندي استفسار")}" target="_blank" rel="noopener">كلمينا على واتساب</a><br>وتابعي جديدنا على ${site.social.map((s) => `<a href="${s.href}" target="_blank" rel="noopener">${s.label}</a>`).join(" و")}.</p>
+<p>واتساب: <b class="num">${site.whatsapp.display}</b> · <a href="${waLink("السلام عليكم، عندي استفسار")}" target="_blank" rel="noopener">كلمينا على واتساب</a><br>الإيميل: <a href="mailto:${site.email}" dir="ltr">${site.email}</a><br>وتابعي جديدنا على ${site.social.map((s) => `<a href="${s.href}" target="_blank" rel="noopener">${s.label}</a>`).join(" و")}.</p>
 <p>وفي <a href="/blog/">مدونة Vicuna</a> هتلاقي نصايح لتنسيق الأحزمة واختيار الحزام المناسب ليكي.</p>
 `;

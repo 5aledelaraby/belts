@@ -31,6 +31,7 @@ const organization = (lang: Lang) => ({
   contactPoint: {
     "@type": "ContactPoint",
     telephone: "+" + site.whatsapp.international,
+    email: site.email,
     contactType: "customer service",
     areaServed: "EG",
     availableLanguage: ["Arabic", "English"],

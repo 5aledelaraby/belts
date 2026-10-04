@@ -18,6 +18,10 @@ export const site = {
   /** Writes a CNAME file into the build so GitHub Pages serves the custom domain. */
   customDomain: "vicuna-eg.com",
 
+  /** Domain email (Cloudflare Email Routing → Gmail). */
+  email: "info@vicuna-eg.com",
+  supportEmail: "support@vicuna-eg.com",
+
   whatsapp: {
     display: "01221988192",
     international: "201221988192",
