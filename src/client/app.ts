@@ -7,7 +7,7 @@ declare global {
 }
 
 interface Item { name: string; price: number; style: string; styleName: string; hex: string; texture: string; src: string; srcset: string; large: string }
-interface Config { shipping: { standard: number; express: number; freeOver: number }; whatsapp: string; instapay: string; deliveryDays: number; vendor: { lenis: string; flip: string } }
+interface Config { shipping: { standard: number; express: number; freeOver: number }; whatsapp: string; instapay: string; deliveryDays: number; vendor: { lenis: string; flip: string }; capi: string }
 
 const { config, catalog, strings: S } = JSON.parse(document.getElementById("catalog")!.textContent!) as { config: Config; catalog: Record<string, Item>; strings: Record<string, string> };
 const fill = (s: string, vars: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k]));
@@ -35,15 +35,64 @@ const store = {
 /* ---------- ad pixels: Meta + TikTok (no-ops until IDs are set in src/data/site.ts) ----------
    Fired at the same moments as the GA4 events, so the numbers line up across platforms. */
 type PixelEvent = "ViewContent" | "AddToCart" | "RemoveFromCart" | "InitiateCheckout" | "Purchase" | "Contact" | "AddToWishlist";
+
+/* ---------- Meta Conversions API (server side, through the Cloudflare Worker at config.capi) ----------
+   Every Meta event gets an event_id; the browser Pixel and the Worker send the same id, so Meta counts it once.
+   Personal details (phone, name, governorate) are SHA-256 hashed here in the browser — only hashes leave the page. */
+const newEventId = (prefix: string) => `${prefix}.${Date.now().toString(36)}.${Math.random().toString(36).slice(2, 8)}`;
+const cookie = (name: string) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1];
+const externalId = (() => {
+  let id = store.get<string>("vicuna-xid", "");
+  if (!id) { id = newEventId("x"); store.set("vicuna-xid", id); }
+  return id;
+})();
+const sha256 = async (s: string) => {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+};
+/** Egyptian mobile → 20XXXXXXXXXX (Meta's format: country code, digits only). */
+const normPhone = (p: string) => {
+  const d = p.replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x0660)).replace(/\D/g, "");
+  return d.startsWith("20") ? d : d.startsWith("0") ? "2" + d : "20" + d;
+};
+type Who = { phone?: string; name?: string; gov?: string };
+let who: Who = {};
+async function capi(event: string, eventId: string, custom: Record<string, unknown> = {}) {
+  if (!config.capi) return;
+  try {
+    const fbclid = new URLSearchParams(location.search).get("fbclid");
+    const fbc = cookie("_fbc") || (fbclid ? `fb.1.${Date.now()}.${fbclid}` : undefined);
+    const ud: Record<string, unknown> = { fbp: cookie("_fbp"), fbc, external_id: [await sha256(externalId)] };
+    if (who.phone) ud.ph = [await sha256(normPhone(who.phone))];
+    if (who.name) {
+      const [fn, ...rest] = who.name.trim().toLowerCase().split(/\s+/);
+      ud.fn = [await sha256(fn)];
+      if (rest.length) ud.ln = [await sha256(rest.join(" "))];
+    }
+    if (who.gov) ud.st = [await sha256(who.gov.trim().toLowerCase())];
+    ud.country = [await sha256("eg")];
+    const body = JSON.stringify({ event_name: event, event_id: eventId, event_source_url: location.href, user_data: ud, custom_data: custom });
+    // sendBeacon survives the jump to WhatsApp after an order; fetch(keepalive) is the fallback.
+    if (!navigator.sendBeacon?.(config.capi, new Blob([body], { type: "text/plain" }))) {
+      fetch(config.capi, { method: "POST", body, keepalive: true }).catch(() => {});
+    }
+  } catch { /* measurement must never break the shop */ }
+}
+// PageView: same id as the browser Pixel's PageView in <head>.
+if ((window as any).__vpv) capi("PageView", (window as any).__vpv);
+
 function track(event: PixelEvent, lines: Array<[string, number]> = [], extra: { value?: number; orderNo?: string } = {}) {
   try {
     const value = extra.value ?? lines.reduce((a, [id, q]) => a + catalog[id].price * q, 0);
     const money = lines.length || extra.value ? { value, currency: "EGP" } : {};
-    // Meta Pixel
+    // Meta Pixel + Conversions API, sharing one event id.
     // RemoveFromCart isn't a Meta standard event, so it goes out as a custom one.
-    window.fbq?.(event === "RemoveFromCart" ? "trackCustom" : "track", event, lines.length
+    const metaData = lines.length
       ? { ...money, content_type: "product", content_ids: lines.map(([id]) => id), contents: lines.map(([id, q]) => ({ id, quantity: q })), num_items: lines.reduce((a, [, q]) => a + q, 0), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
-      : money);
+      : money;
+    const eventId = event === "Purchase" && extra.orderNo ? `order.${extra.orderNo}` : newEventId(event);
+    window.fbq?.(event === "RemoveFromCart" ? "trackCustom" : "track", event, metaData, { eventID: eventId });
+    if (window.fbq) capi(event, eventId, metaData);
     // TikTok Pixel — an order sent on WhatsApp is "PlaceAnOrder" (payment comes later).
     const tt = event === "Purchase" ? "PlaceAnOrder" : event;
     window.ttq?.track?.(tt, lines.length
@@ -465,6 +514,7 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
     `${S.name}: ${v("#f-name")}`, `${S.phone}: ${v("#f-phone")}`, `${S.gov}: ${v("#f-gov")}`, `${S.addr}: ${v("#f-addr")}`,
     ...(v("#f-note") ? [`${S.notes}: ${v("#f-note")}`] : []),
   ].join("\n");
+  who = { phone: v("#f-phone"), name: v("#f-name"), gov: v("#f-gov") };
   track("Purchase", ids.map((id) => [id, cart[id]] as [string, number]), { value: sub, orderNo });
   // The order is "placed" when it is sent on WhatsApp; payment happens later (cash on delivery / InstaPay).
   ga("purchase", {

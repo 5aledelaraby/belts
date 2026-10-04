@@ -63,6 +63,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
   const config = {
     shipping: site.shipping, whatsapp: site.whatsapp.international, instapay: site.instapay, deliveryDays: site.deliveryDays,
     vendor: { lenis: lazyVendor("lenis"), flip: lazyVendor("Flip") },
+    capi: site.pixels.meta ? site.capi : "",
   };
 
   return (
@@ -110,7 +111,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         {/* The main (LCP) image of each page is preloaded by React from its fetchPriority="high" <img>. */}
         {site.pixels.meta && (
           /* Meta Pixel — the base code loads fbevents.js asynchronously */
-          <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${site.pixels.meta}');fbq('track','PageView');` }} />
+          <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${site.pixels.meta}');window.__vpv='PageView.'+Date.now().toString(36)+'.'+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__vpv});` }} />
         )}
         {site.pixels.tiktok && (
           /* TikTok Pixel — the base code loads events.js asynchronously */

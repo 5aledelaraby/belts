@@ -39,7 +39,7 @@ export const html = `
 </ul>
 
 <h2>6. Other services we use</h2>
-<p>The site is hosted on GitHub Pages, fonts come from Google Fonts, and orders are sent through WhatsApp. Each of these has its own privacy policy for technical data. If you follow a link to another site or app, this policy doesn't cover it.</p>
+<p>The site is hosted on GitHub Pages and served through Cloudflare for security and speed, fonts come from Google Fonts, and orders are sent through WhatsApp. Each of these has its own privacy policy for technical data. If you follow a link to another site or app, this policy doesn't cover it.</p>
 
 <h2>7. Security</h2>
 <p>The site runs on HTTPS, so your connection to it is encrypted, and we take reasonable precautions so your data isn't lost, leaked or altered. Even so, no method of transmission or storage on the internet is 100% secure.</p>
