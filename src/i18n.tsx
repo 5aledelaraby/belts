@@ -33,7 +33,7 @@ export const clientStrings = {
     total: "الإجمالي", payment: "الدفع", payInsta: "InstaPay على {n} (هبعت صورة التحويل)", payCod: "عند الاستلام",
     name: "الاسم", phone: "الموبايل", gov: "المحافظة", addr: "العنوان", notes: "ملاحظات / مقاس",
     openingWa: "بنفتح واتساب برسالة الطلب، ابعتيها من هناك", beltAlt: "حزام", orderOne: "السلام عليكم، عايزة أطلب حزام {name} ({price} جنيه)",
-    noFavs: "لسه ما ضفتيش حاجة للمفضلة ♡",
+    noFavs: "لسه ما ضفتيش حاجة للمفضلة ♡", orderNo: "رقم الطلب",
   },
   en: {
     favAdded: "Added to favourites 💗", bagAdded: "Added to bag 🛍", free: "Free", currency: "EGP",
@@ -45,7 +45,7 @@ export const clientStrings = {
     total: "Total", payment: "Payment", payInsta: "InstaPay to {n} (I'll send the transfer screenshot)", payCod: "Cash on delivery",
     name: "Name", phone: "Mobile", gov: "Governorate", addr: "Address", notes: "Notes / size",
     openingWa: "Opening WhatsApp with your order — just tap send", beltAlt: "Belt", orderOne: "Hello, I'd like to order the {name} belt ({price} EGP)",
-    noFavs: "No favourites yet ♡",
+    noFavs: "No favourites yet ♡", orderNo: "Order no.",
   },
 } satisfies Record<Lang, Record<string, string>>;
 export type ClientStrings = typeof clientStrings.ar;

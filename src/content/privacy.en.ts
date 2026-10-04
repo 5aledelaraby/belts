@@ -26,7 +26,7 @@ export const html = `
 <ul>
 <li>To confirm and deliver your order.</li>
 <li>To contact you about your order, a return or an exchange.</li>
-<li>To improve the site and our ads: we may use measurement tools from platforms such as TikTok, Snapchat and Meta, which tell us how many visits came from our ads without telling us who you are.</li>
+<li>To improve the site and our ads: we may use measurement tools such as Google Analytics and tools from platforms such as TikTok, Snapchat and Meta, which tell us how many visits came from our ads without telling us who you are.</li>
 </ul>
 
 <h2>5. Sharing your data</h2>

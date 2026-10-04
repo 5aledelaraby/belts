@@ -88,6 +88,13 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
+        {site.ga4 && (
+          <>
+            {/* Google Analytics 4 — async, so it never blocks the page from showing */}
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4}`}></script>
+            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","${site.ga4}",{page_language:"${lang}",debug_mode:/[?&]ga_debug=1/.test(location.search)||undefined});` }} />
+          </>
+        )}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={fonts} />

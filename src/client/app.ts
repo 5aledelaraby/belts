@@ -35,6 +35,22 @@ function track(event: "AddToCart" | "InitiateCheckout" | "Contact" | "AddToWishl
   } catch { /* never block ordering */ }
 }
 
+/* ---------- Google Analytics 4 events ----------
+   gtag() is defined in <head> only when a Measurement ID is set in src/data/site.ts.
+   Add ?ga_debug=1 to any page URL to see each event in the browser console and in GA4 DebugView. */
+const gaDebug = /[?&]ga_debug=1/.test(location.search);
+function ga(event: string, params: Record<string, unknown>) {
+  try {
+    const g = (window as any).gtag as undefined | ((...a: unknown[]) => void);
+    if (gaDebug) console.info(`[GA4] ${event}`, params, g ? "→ sent" : "→ GA4 not loaded (no Measurement ID)");
+    g?.("event", event, params);
+  } catch { /* analytics must never break the shop */ }
+}
+const gaItem = (id: string, quantity = 1) => {
+  const p = catalog[id];
+  return { item_id: id, item_name: p.name, item_brand: "Vicuna", item_category: p.styleName, price: p.price, quantity };
+};
+
 /* ---------- toast ---------- */
 const toastEl = $("[data-toast]")!;
 let toastTimer = 0;
@@ -338,12 +354,20 @@ function add(id: string, from?: Element | null) {
   setQty(id, (cart[id] || 0) + 1);
   toast(`${S.bagAdded} ${catalog[id].name}`);
   track("AddToCart", catalog[id].price);
+  ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
 }
 
 const drawer = $<HTMLElement>("[data-cart]")!;
 const scrim = $<HTMLElement>("[data-scrim]")!;
 const sheet = $<HTMLElement>("[data-sheet]")!;
-function openCart() { drawer.dataset.open = "true"; drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false; lockScroll(true); $<HTMLElement>("[data-cart-close]")!.focus(); }
+let checkoutSent = false;
+function openCart() {
+  const ids = Object.keys(cart);
+  if (ids.length && !checkoutSent) {
+    checkoutSent = true;
+    ga("begin_checkout", { currency: "EGP", value: subtotal(), items: ids.map((id) => gaItem(id, cart[id])) });
+  }
+  drawer.dataset.open = "true"; drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false; lockScroll(true); $<HTMLElement>("[data-cart-close]")!.focus(); }
 function closeOverlays() {
   drawer.dataset.open = "false"; drawer.setAttribute("aria-hidden", "true");
   sheet.dataset.open = "false";
@@ -366,8 +390,11 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
   if (missing.length) { err.textContent = S.missing + missing.join(S.sep); return; }
   err.textContent = "";
   const sub = subtotal(), ship = shippingCost(sub), pay = payMethod();
+  // Short order number (e.g. V-1004-7K3P) so a WhatsApp order can be matched to its GA4 purchase.
+  const d = new Date();
+  const orderNo = `V-${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   const msg = [
-    S.orderTitle, "",
+    S.orderTitle, `${S.orderNo}: ${orderNo}`, "",
     ...ids.map((id) => `• ${catalog[id].name} × ${cart[id]} = ${catalog[id].price * cart[id]} ${S.currency}`), "",
     `${S.products}: ${sub} ${S.currency}`,
     `${S.shipping} (${shipMethod() === "express" ? S.express : S.standard}): ${ship === 0 ? S.free : `${ship} ${S.currency}`}`,
@@ -377,8 +404,14 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
     ...(v("#f-note") ? [`${S.notes}: ${v("#f-note")}`] : []),
   ].join("\n");
   track("InitiateCheckout", sub + ship);
+  // The order is "placed" when it is sent on WhatsApp; payment happens later (cash on delivery / InstaPay).
+  ga("purchase", {
+    transaction_id: orderNo, currency: "EGP", value: sub, shipping: ship,
+    payment_type: pay === "instapay" ? "InstaPay" : "Cash on delivery",
+    items: ids.map((id) => gaItem(id, cart[id])),
+  });
   const a = document.createElement("a");
-  a.href = wa(msg); a.target = "_blank"; a.rel = "noopener";
+  a.href = wa(msg); a.target = "_blank"; a.rel = "noopener"; a.dataset.noTrack = "";
   document.body.appendChild(a); a.click(); a.remove();
   toast(S.openingWa);
 });
@@ -539,3 +572,16 @@ if (grid) applyFilters(false);
 effects();
 
 export {};
+
+/* ---------- GA4: view_item on product pages, contact on WhatsApp links ---------- */
+{
+  const m = (document.body.dataset.page || "").match(/^p\/([^/]+)\/$/);
+  if (m && catalog[m[1]]) ga("view_item", { currency: "EGP", value: catalog[m[1]].price, items: [gaItem(m[1])] });
+
+  document.addEventListener("click", (e) => {
+    const a = (e.target as Element).closest<HTMLAnchorElement>('a[href*="wa.me/20"]');
+    if (!a || "noTrack" in a.dataset) return;
+    const where = a.closest("[data-wa-fab]") ? "floating_button" : a.closest("footer") ? "footer" : a.closest("[data-quick]") ? "quick_view" : a.closest(".post-body, article") ? "page_content" : "page";
+    ga("contact", { method: "whatsapp", location: where, page: location.pathname });
+  });
+}
