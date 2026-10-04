@@ -44,7 +44,7 @@ export const Hero = () => {
             <div className="flex -space-x-3 space-x-reverse">
               {["lace-black", "croc-pink", "sash-green", "ruffle-red"].map((id) => (
                 <span key={id} className="grid size-10 place-items-center overflow-hidden rounded-full border-2 border-white bg-white">
-                  <img src={img(id).src} alt="" className="size-full object-contain p-1 mix-blend-multiply" />
+                  <img src={img(id).src} width={img(id).width} height={img(id).height} alt="" decoding="async" fetchPriority="low" className="size-full object-contain p-1 mix-blend-multiply" />
                 </span>
               ))}
             </div>
@@ -58,7 +58,7 @@ export const Hero = () => {
               alt={tr("تلات مانيكان لابسين أحزمة خصر: كونياك وأبيض وكشكشة سودا", "Three mannequins wearing waist belts: cognac, white and a black ruffle")} className="size-full scale-[1.18] object-cover object-[50%_60%]" fetchPriority="high" />
           </figure>
           {floaters.map((f) => (
-            <img key={f.id} src={img(f.id).src} alt="" aria-hidden="true"
+            <img key={f.id} src={img(f.id).src} width={img(f.id).width} height={img(f.id).height} alt="" aria-hidden="true" decoding="async" fetchPriority="low"
               className={`floaty pointer-events-none absolute rounded-[28px] bg-white p-2 shadow-[var(--shadow-lift)] ${f.cls}`}
               style={{ ["--r" as string]: f.r, ["--d" as string]: f.d }} />
           ))}
@@ -81,7 +81,7 @@ export const Stories = ({ current }: { current?: string }) => {
       </a>
       {styles.map((s) => (
         <a key={s.id} href={url(`${s.id}/`)} className="story" aria-current={current === s.id ? "page" : undefined}>
-          <span className="story-ring"><span><img src={img(first(s.id).id).src} alt="" loading="lazy" /></span></span>
+          <span className="story-ring"><span><img src={img(first(s.id).id).src} width={img(first(s.id).id).width} height={img(first(s.id).id).height} alt="" loading="lazy" decoding="async" /></span></span>
           {sText(s, lang).name}
         </a>
       ))}
@@ -126,7 +126,7 @@ export const ProductCard = ({ p, index, paged = true }: { p: Product; index: num
       <div className="card-media">
         <a href={href} className="absolute inset-0" aria-label={name}>
           <img className="img-main" src={im.src} srcSet={im.srcset} sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
-            width={im.width} height={im.height} alt={tr(productSeo(p).alt, `${name} women's waist belt by Vicuna`)} loading={index < 4 ? "eager" : "lazy"} decoding="async" data-img />
+            width={im.width} height={im.height} alt={tr(productSeo(p).alt, `${name} women's waist belt by Vicuna`)} loading={index < 4 ? "eager" : "lazy"} fetchPriority={index < 4 ? "low" : undefined} decoding="async" data-img />
           <img className="img-alt" src={dt.src} srcSet={dt.srcset} sizes="(max-width:640px) 50vw, 25vw"
             width={dt.width} height={dt.height} alt={tr(productSeo(p).altDetail, `${name} belt knot detail`)} loading="lazy" decoding="async" />
         </a>
@@ -275,7 +275,13 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
 
       <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
         <div className="product-grid grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4" data-grid>
-          {list.map((p, i) => <ProductCard key={p.id} p={p} index={i} />)}
+          {list.slice(0, PAGE_SIZE).map((p, i) => <ProductCard key={p.id} p={p} index={i} />)}
+          {/* Cards past the first page wait in an inert <template> (no parsing/layout cost) until the shopper filters or taps "show more". */}
+          {list.length > PAGE_SIZE && (
+            <template data-more-cards>
+              {list.slice(PAGE_SIZE).map((p, i) => <ProductCard key={p.id} p={p} index={i + PAGE_SIZE} />)}
+            </template>
+          )}
           {!only && <EditorialInGrid />}
         </div>
         <div className="py-16 text-center" data-empty hidden>
@@ -471,7 +477,7 @@ export const StyleHero = ({ s }: { s: Style }) => {
         </div>
         <div className="relative mx-auto h-[280px] w-full max-w-[460px] sm:h-[340px]">
           {list.map((p, i) => (
-            <img key={p.id} src={img(p.id).src} srcSet={img(p.id).srcset} sizes="260px" alt={tr(`حزام ${pName(p, lang)}`, `${pName(p, lang)} belt`)}
+            <img key={p.id} src={img(p.id).src} srcSet={img(p.id).srcset} sizes="260px" width={img(p.id).width} height={img(p.id).height} decoding="async" alt={tr(`حزام ${pName(p, lang)}`, `${pName(p, lang)} belt`)}
               className={`floaty absolute w-[58%] rounded-[28px] bg-white p-3 shadow-[var(--shadow-lift)] ${["top-0 start-0", "top-[22%] end-0", "bottom-0 start-[18%]"][i]}`}
               style={{ ["--r" as string]: ["-8deg", "7deg", "-2deg"][i], ["--d" as string]: `${-i * 1.8}s` }} />
           ))}

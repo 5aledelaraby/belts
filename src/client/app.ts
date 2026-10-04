@@ -7,7 +7,7 @@ declare global {
 }
 
 interface Item { name: string; price: number; style: string; styleName: string; hex: string; texture: string; src: string; srcset: string; large: string }
-interface Config { shipping: { standard: number; express: number; freeOver: number }; whatsapp: string; instapay: string; deliveryDays: number }
+interface Config { shipping: { standard: number; express: number; freeOver: number }; whatsapp: string; instapay: string; deliveryDays: number; vendor: { lenis: string; flip: string } }
 
 const { config, catalog, strings: S } = JSON.parse(document.getElementById("catalog")!.textContent!) as { config: Config; catalog: Record<string, Item>; strings: Record<string, string> };
 const fill = (s: string, vars: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k]));
@@ -16,7 +16,15 @@ const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = doc
 const html = document.documentElement;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(pointer: fine)").matches;
-const { gsap, ScrollTrigger, Flip, Lenis } = window;
+const { gsap, ScrollTrigger } = window;
+let Flip: any = window.Flip;
+/** Load a script once; resolves when it has run. */
+const loaded: Record<string, Promise<void>> = {};
+const loadScript = (src: string) => (loaded[src] ??= new Promise<void>((ok, fail) => {
+  const s = document.createElement("script"); s.src = src; s.async = true; s.onload = () => ok(); s.onerror = fail; document.head.appendChild(s);
+}));
+/** Run when the browser is idle, so start-up work doesn't block taps and scrolling. */
+const idle = (fn: () => void, timeout = 2000) => ("requestIdleCallback" in window ? (window as any).requestIdleCallback(fn, { timeout }) : setTimeout(fn, 200));
 const motion = !!gsap && !reduced;
 const wa = (text: string) => `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(text)}`;
 const store = {
@@ -66,7 +74,9 @@ const header = $<HTMLElement>(".site-header")!;
 
 /* ---------- smooth scroll ---------- */
 let lenis: any = null;
-if (Lenis && !reduced) {
+// Phones and tablets already scroll smoothly by touch, so Lenis is only loaded for mouse/trackpad users.
+if (finePointer && !reduced) idle(() => loadScript(config.vendor.lenis).then(() => {
+  const Lenis = window.Lenis; if (!Lenis) return;
   lenis = new Lenis({ lerp: 0.09, smoothWheel: true, anchors: { offset: -(header.offsetHeight + 40) } });
   if (gsap && ScrollTrigger) {
     lenis.on("scroll", ScrollTrigger.update);
@@ -76,7 +86,7 @@ if (Lenis && !reduced) {
     const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
   }
-}
+}).catch(() => {}));
 const lockScroll = (on: boolean) => { if (lenis) on ? lenis.stop() : lenis.start(); document.body.style.overflow = on ? "hidden" : ""; };
 const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(header.offsetHeight + 60) }) : el.scrollIntoView({ behavior: reduced ? "auto" : "smooth" }));
 
@@ -453,6 +463,19 @@ $("[data-q-add]", quick)!.addEventListener("click", (e) => { add(quickId, e.curr
 const shop = $<HTMLElement>("[data-shop]");
 const grid = $<HTMLElement>("[data-grid]");
 const cards = grid ? $$<HTMLElement>("[data-card]", grid) : [];
+/** Move the cards waiting in <template data-more-cards> into the grid (once, on first filter / sort / "show more"). */
+let hydrated = false;
+function hydrateCards() {
+  if (hydrated || !grid) return;
+  hydrated = true;
+  const t = $<HTMLTemplateElement>("template[data-more-cards]", grid);
+  if (!t) return;
+  const extra = $$<HTMLElement>("[data-card]", t.content);
+  grid.insertBefore(t.content, t);
+  t.remove();
+  cards.push(...extra);
+  renderFavs();
+}
 const PAGE = 12;
 const filters = { style: "all", color: "", price: "all", fav: false, sort: "featured", limit: PAGE };
 const NEW = new Set(Object.keys(catalog).filter((id) => $(`[data-card][data-id="${id}"] .badge`)));
@@ -482,6 +505,7 @@ function syncControls() {
 }
 function applyFilters(animate = true) {
   if (!grid) return;
+  hydrateCards();
   const state = animate && motion && Flip ? Flip.getState(cards) : null;
   const visible = sorted(cards.filter(matches));
   const shown = visible.slice(0, filters.limit);
@@ -509,7 +533,8 @@ function applyFilters(animate = true) {
   }
 }
 if (shop && grid) {
-  if (gsap && Flip) gsap.registerPlugin(Flip);
+  // Flip (the re-ordering animation) is fetched once the page is idle; filtering works without it meanwhile.
+  if (gsap && motion) idle(() => loadScript(config.vendor.flip).then(() => { Flip = window.Flip; if (Flip) gsap.registerPlugin(Flip); }).catch(() => {}), 4000);
   // the mobile filter sheet reuses the same controls
   const tpl = $<HTMLTemplateElement>("[data-sheet-template]", shop);
   if (tpl) sheet.appendChild(tpl.content.cloneNode(true));
@@ -569,7 +594,7 @@ $$<HTMLAnchorElement>('a[href*="#"]').forEach((a) => a.addEventListener("click",
 renderFavs();
 renderCart();
 if (grid) applyFilters(false);
-effects();
+idle(effects, 1200);
 
 export {};
 

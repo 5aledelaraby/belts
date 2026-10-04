@@ -43,6 +43,7 @@ const pagesFor = (lang: Lang): Page[] => {
   const home = wrap("", (
     <Layout
       path=""
+     
       title={tr(`${site.brand} | أحزمة خصر بالربط — توصيل لكل مصر`, `${site.brand} | Tie waist belts — delivered across Egypt`)}
       description={tr(
         `أحزمة خصر بالربط من جلد PU مستورد: دانتيل، فيونكة عريضة، شريط رفيع، كروكو، ثعبان وكشكشة. من 120 جنيه، توصيل خلال ${site.deliveryDays} أيام عمل، والدفع عند الاستلام.`,

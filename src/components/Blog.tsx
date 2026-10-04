@@ -112,7 +112,7 @@ export const BlogPost = ({ p }: { p: Post }) => {
               {featured.map((q) => (
                 <a key={q.id} href={url(`p/${q.id}/`)} className="group rounded-2xl bg-blush p-2.5 transition-transform hover:-translate-y-1">
                   <span className="block aspect-square overflow-hidden rounded-xl bg-white">
-                    <img src={img(q.id).src} alt={`حزام ${q.name}`} loading="lazy" className="size-full object-contain p-2 mix-blend-multiply transition-transform duration-500 group-hover:scale-110" />
+                    <img src={img(q.id).src} width={img(q.id).width} height={img(q.id).height} alt={`حزام ${q.name}`} loading="lazy" decoding="async" className="size-full object-contain p-2 mix-blend-multiply transition-transform duration-500 group-hover:scale-110" />
                   </span>
                   <span className="mt-2 block px-1 text-[14px] font-bold group-hover:text-berry">{q.name}</span>
                   <span className="block px-1 text-[13px] font-extrabold text-berry"><span className="num">{priceOf(q)}</span> جنيه</span>
@@ -139,7 +139,7 @@ export const BlogPost = ({ p }: { p: Post }) => {
         <section className="mx-auto max-w-[1400px] px-4 pt-16 sm:px-6">
           <h2 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] font-bold">مقالات ممكن تعجبك</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((q, i) => <PostCard key={q.slug} p={q} index={i} paged={false} />)}
+            {related.map((q, i) => <PostCard key={q.slug} p={q} index={i + 3} paged={false} />)}
           </div>
         </section>
       )}

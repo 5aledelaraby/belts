@@ -56,7 +56,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <div className="flex flex-col gap-3">
               {gallery.slice(1).map((g, i) => (
                 <button key={i} className="aspect-[3/4] overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1" data-lightbox="product" data-full={g.im.large} data-caption={g.alt} aria-label={`${tr("تكبير", "Enlarge")}: ${g.alt}`}>
-                  <img src={g.im.src} alt={g.alt} loading="lazy" className="size-full object-cover" />
+                  <img src={g.im.src} width={g.im.width} height={g.im.height} alt={g.alt} loading="lazy" decoding="async" className="size-full object-cover" />
                 </button>
               ))}
             </div>
@@ -131,7 +131,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
                 return (
                   <div key={q.id} className="flex flex-col rounded-3xl bg-white p-2.5 shadow-[var(--shadow-card)]">
                     <button className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-blush" data-lightbox="look" data-full={qi.large} data-caption={pName(q, lang)} aria-label={`${tr("تكبير", "Enlarge")}: ${pName(q, lang)}`}>
-                      <img src={qi.src} srcSet={qi.srcset} sizes="25vw" alt={tr(`حزام ${pName(q, lang)}`, `${pName(q, lang)} belt`)} loading="lazy" className="absolute inset-0 size-full object-contain p-[8%] mix-blend-multiply transition-transform duration-500 hover:scale-110" />
+                      <img src={qi.src} srcSet={qi.srcset} sizes="25vw" width={qi.width} height={qi.height} decoding="async" alt={tr(`حزام ${pName(q, lang)}`, `${pName(q, lang)} belt`)} loading="lazy" className="absolute inset-0 size-full object-contain p-[8%] mix-blend-multiply transition-transform duration-500 hover:scale-110" />
                     </button>
                     <a href={url(productUrl(q.id))} className="mt-2.5 px-1 text-[14px] font-bold hover:text-berry">{pName(q, lang)}</a>
                     <div className="mt-1 flex items-center justify-between px-1">

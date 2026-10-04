@@ -23,7 +23,7 @@ interface Props {
 }
 
 const fonts =
-  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=El+Messiri:wght@500;600;700&family=Italiana&family=Marcellus&display=swap";
+  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@700&family=Marcellus&display=swap";
 
 const marqueeFor = (en: boolean) => en ? [
   `Free shipping over ${site.shipping.freeOver} EGP`,
@@ -58,7 +58,12 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
       }];
     }),
   );
-  const config = { shipping: site.shipping, whatsapp: site.whatsapp.international, instapay: site.instapay, deliveryDays: site.deliveryDays };
+  // gsap + ScrollTrigger load with the page; Lenis (desktop smooth scroll) and Flip (filter animation) load on demand.
+  const lazyVendor = (name: string) => hrefFor("ar", assets.vendor.find((v) => v.includes(`/${name}.`))!);
+  const config = {
+    shipping: site.shipping, whatsapp: site.whatsapp.international, instapay: site.instapay, deliveryDays: site.deliveryDays,
+    vendor: { lenis: lazyVendor("lenis"), flip: lazyVendor("Flip") },
+  };
 
   return (
     <html lang={lang} dir={en ? "ltr" : "rtl"}>
@@ -96,9 +101,13 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
             <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","${site.ga4}",{page_language:"${lang}",debug_mode:/[?&]ga_debug=1/.test(location.search)||undefined});` }} />
           </>
         )}
+        {/* The main (LCP) image of each page is preloaded by React from its fetchPriority="high" <img>. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href={fonts} />
+        {/* Fonts: fetched early but applied without blocking the first paint (text shows in a system font, then swaps). */}
+        <link rel="preload" as="style" href={fonts} />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href=${JSON.stringify(fonts)};document.head.appendChild(l)})()` }} />
+        <noscript><link rel="stylesheet" href={fonts} /></noscript>
         <link rel="stylesheet" href={hrefFor("ar", assets.css)} />
         {(schema ?? schemaFor(lang, path, title)).map((json, i) => (
           <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json).replace(/</g, "\\u003c") }} />
@@ -288,7 +297,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         </a>
 
         <script id="catalog" type="application/json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ config, catalog, strings: clientStrings[lang] }) }} />
-        {assets.vendor.map((v) => <script key={v} src={hrefFor("ar", v)} defer></script>)}
+        {assets.vendor.filter((v) => /\/(gsap|ScrollTrigger)\./.test(v)).map((v) => <script key={v} src={hrefFor("ar", v)} defer></script>)}
         <script src={hrefFor("ar", assets.js)} defer></script>
       </body>
     </html>
