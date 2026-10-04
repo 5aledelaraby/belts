@@ -73,11 +73,25 @@ const gaItem = (id: string, quantity = 1) => {
 /* ---------- toast ---------- */
 const toastEl = $("[data-toast]")!;
 let toastTimer = 0;
-function toast(msg: string) {
-  toastEl.textContent = msg;
+function toast(msg: string, action?: { label: string; run: () => void }, ms = 2200) {
+  toastEl.textContent = "";
+  const text = document.createElement("span"); text.textContent = msg; toastEl.appendChild(text);
+  if (action) {
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "toast-btn"; btn.textContent = action.label;
+    btn.addEventListener("click", () => { toastEl.dataset.show = "false"; action.run(); });
+    toastEl.appendChild(btn);
+  }
   toastEl.dataset.show = "true";
   clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => (toastEl.dataset.show = "false"), 2200);
+  toastTimer = window.setTimeout(() => (toastEl.dataset.show = "false"), ms);
+}
+/** Gently bounce the bag icon in the header to point the shopper at it. */
+function nudgeBag() {
+  const bag = $<HTMLElement>("[data-cart-open]");
+  if (!bag) return;
+  bag.classList.remove("nudge"); void bag.offsetWidth; bag.classList.add("nudge");
+  setTimeout(() => bag.classList.remove("nudge"), 2000);
 }
 
 /* ---------- layout metrics for sticky offsets ---------- */
@@ -390,7 +404,8 @@ function add(id: string, from?: Element | null) {
 }
 function addNow(id: string) {
   setQty(id, (cart[id] || 0) + 1);
-  toast(`${S.bagAdded} ${catalog[id].name}`);
+  toast(S.bagAdded, { label: S.openBag, run: () => $<HTMLElement>("[data-cart-open]")!.click() }, 4000);
+  nudgeBag();
   track("AddToCart", [[id, 1]]);
   ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
 }

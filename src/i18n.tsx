@@ -24,7 +24,7 @@ export const useHref = () => {
 /** Strings the browser script needs (toasts, cart, WhatsApp order message). */
 export const clientStrings = {
   ar: {
-    favAdded: "اتضاف للمفضلة 💗", bagAdded: "اتضاف للشنطة 🛍", free: "مجاني", currency: "جنيه",
+    favAdded: "اتضاف للمفضلة 💗", bagAdded: "✅ اتحط في الشنطة — دوسي على أيقونة الشنطة فوق 👆", openBag: "افتحي الشنطة", free: "مجاني", currency: "جنيه",
     emptyTitle: "الشنطة فاضية", emptyHint: "اختاري موديل ودوسي «+».",
     leftForFree: "فاضل {n} جنيه وتاخدي شحن مجاني", gotFree: "🎉 طلبك عليه شحن مجاني",
     inc: "زيادة", dec: "تقليل", needItem: "ضيفي حزام واحد على الأقل قبل ما تبعتي الطلب.", missing: "ناقص: ",
@@ -36,7 +36,7 @@ export const clientStrings = {
     noFavs: "لسه ما ضفتيش حاجة للمفضلة ♡", orderNo: "رقم الطلب",
   },
   en: {
-    favAdded: "Added to favourites 💗", bagAdded: "Added to bag 🛍", free: "Free", currency: "EGP",
+    favAdded: "Added to favourites 💗", bagAdded: "✅ Added to your bag — tap the bag icon above 👆", openBag: "Open bag", free: "Free", currency: "EGP",
     emptyTitle: "Your bag is empty", emptyHint: "Pick a belt and tap “+”.",
     leftForFree: "{n} EGP more for free shipping", gotFree: "🎉 Your order ships free",
     inc: "Increase", dec: "Decrease", needItem: "Add at least one belt before sending your order.", missing: "Missing: ",
