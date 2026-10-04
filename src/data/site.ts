@@ -65,7 +65,7 @@ export const site = {
 
   /** Meta Conversions API endpoint: the Cloudflare Worker in workers/capi (route vicuna-eg.com/capi).
    *  Empty = only the browser Pixel sends events. Set to "/capi" once the Worker is deployed. */
-  capi: "",
+  capi: "/capi",
 
   updated: "4 أكتوبر 2026",
   updatedEn: "4 October 2026",
