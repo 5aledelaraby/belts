@@ -60,7 +60,7 @@ export const site = {
   pixels: {
     meta: "2311877842998870",
     tiktok: "",
-    snapchat: "",
+    snapchat: "68610bce-a5fc-4a69-bfb2-c5623a18b560",
   },
 
   /** Meta Conversions API endpoint: the Cloudflare Worker in workers/capi (route vicuna-eg.com/capi).

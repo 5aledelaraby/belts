@@ -98,8 +98,21 @@ function track(event: PixelEvent, lines: Array<[string, number]> = [], extra: { 
     window.ttq?.track?.(tt, lines.length
       ? { ...money, content_type: "product", contents: lines.map(([id, q]) => ({ content_id: id, content_name: catalog[id].name, quantity: q, price: catalog[id].price })), ...(extra.orderNo ? { order_id: extra.orderNo } : {}) }
       : money);
+    // Snap Pixel — same event id as Meta (client_dedup_id), order number as transaction_id, hashed phone on orders.
     const snap = ({ ViewContent: "VIEW_CONTENT", AddToCart: "ADD_CART", InitiateCheckout: "START_CHECKOUT", Purchase: "PURCHASE", Contact: "CUSTOM_EVENT_1", AddToWishlist: "SAVE" } as Record<string, string>)[event];
-    if (snap) window.snaptr?.("track", snap, money);
+    if (snap && window.snaptr) {
+      const sp: Record<string, unknown> = { client_dedup_id: eventId };
+      if (lines.length || extra.value) { sp.price = value; sp.currency = "EGP"; }
+      if (lines.length) {
+        sp.item_ids = lines.map(([id]) => id);
+        sp.item_category = catalog[lines[0][0]].styleName;
+        sp.number_items = lines.reduce((a, [, q]) => a + q, 0);
+      }
+      if (extra.orderNo) sp.transaction_id = extra.orderNo;
+      if (event === "Purchase" && who.phone) {
+        sha256(normPhone(who.phone)).then((h) => window.snaptr?.("track", snap, { ...sp, user_hashed_phone_number: h }), () => window.snaptr?.("track", snap, sp));
+      } else window.snaptr("track", snap, sp);
+    }
   } catch { /* never block ordering */ }
 }
 
