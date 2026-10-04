@@ -4,7 +4,7 @@ import { styles, products, priceOf, productUrl, pName, sText, tName } from "./da
 import { ProductPage } from "./components/ProductPage";
 import { Layout } from "./components/Layout";
 import {
-  Hero, Stories, Perks, Shop, ShopByStyle, Lookbook, TieSteps, Faq, InnerCircle, StyleHero,
+  Hero, Stories, Perks, Shop, ShopByStyle, Lookbook, TieSteps, HowToOrder, Faq, InnerCircle, StyleHero,
 } from "./components/Sections";
 import { productSeo } from "./data/seo-copy";
 import { BlogIndex, BlogPost } from "./components/Blog";
@@ -60,6 +60,7 @@ const pagesFor = (lang: Lang): Page[] => {
       <ShopByStyle />
       <Lookbook />
       <TieSteps />
+      <HowToOrder />
       <Faq />
       <InnerCircle />
     </Layout>

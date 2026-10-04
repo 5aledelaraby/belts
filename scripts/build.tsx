@@ -35,6 +35,8 @@ async function buildImages() {
     { key: "mood-lace", file: path.join(SRC, "assets/site/mood-lace.jpg"), widths: [500, 900, 1400] },
     { key: "mood-bow", file: path.join(SRC, "assets/site/mood-bow.jpg"), widths: [500, 900, 1400] },
     { key: "mood-green", file: path.join(SRC, "assets/site/mood-green.jpg"), widths: [640, 1100, 1600] },
+    // "How to order" screenshots (regenerate with scripts/how-to-shots.cjs)
+    ...["ar", "en"].flatMap((l) => [1, 2, 3].map((n) => ({ key: `how-${l}-${n}`, file: path.join(SRC, `assets/site/how-${l}-${n}.jpg`), widths: [400, 780] }))),
   ];
 
   await Promise.all(

@@ -455,6 +455,39 @@ export const TieSteps = () => {
   );
 };
 
+/* ---------- how to order, with real screenshots (home) ---------- */
+export const HowToOrder = () => {
+  const lang = useLang(); const tr = useTr();
+  const steps = [
+    tr("اختاري الحزام اللي يعجبك واضغطي عليه", "Pick the belt you love and tap it"),
+    tr("دوسي «أضيفي للشنطة» على طول من الشبكة", "Tap “Add to bag” right from the grid"),
+    tr("افتحي الشنطة وابعتي طلبك على واتساب في ثانية", "Open your bag and send your order on WhatsApp in a second"),
+  ];
+  return (
+    <section id="how-to-order" className="mx-auto max-w-[1400px] scroll-mt-24 px-4 pt-20 sm:px-6">
+      <div className="flex items-center gap-3">
+        <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("إزاي تطلبي من Vicuna", "How to order from Vicuna")}</h2>
+        <Sparkle className="size-7 text-berry" />
+      </div>
+      <ol className="mt-8 grid gap-4 md:grid-cols-3">
+        {steps.map((text, i) => {
+          const im = img(`how-${lang}-${i + 1}`);
+          return (
+            <li key={text} className="relative overflow-hidden rounded-[28px] bg-white p-3 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
+              <img src={im.src} srcSet={im.srcset} sizes="(max-width:768px) 92vw, 30vw" width={im.width} height={im.height} loading="lazy" decoding="async"
+                alt={tr(`الخطوة ${i + 1}: ${text}`, `Step ${i + 1}: ${text}`)} className="aspect-[4/5] w-full rounded-[20px] border border-petal object-cover" />
+              <div className="flex items-start gap-3 px-2 pb-2 pt-4">
+                <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-berry text-[20px] font-extrabold text-white num">{i + 1}</span>
+                <p className="pt-1.5 text-[17px] font-bold leading-snug">{text}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+};
+
 /* ---------- faq ---------- */
 export const Faq = () => {
   const lang = useLang();
