@@ -342,7 +342,6 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
               {list.slice(PAGE_SIZE).map((p, i) => <ProductCard key={p.id} p={p} index={i + PAGE_SIZE} />)}
             </template>
           )}
-          {!only && <EditorialInGrid />}
         </div>
         <div className="py-16 text-center" data-empty hidden>
           <Bow className="mx-auto w-24 text-rose" />
