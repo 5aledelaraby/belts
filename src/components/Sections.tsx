@@ -55,6 +55,7 @@ export const Hero = () => {
         </div>
 
         <div className="relative z-10 mx-auto w-[78%] max-w-[480px] pb-12 pt-4 lg:w-full lg:py-12">
+          <span className="hero-glow" aria-hidden="true" />
           <figure className="arch relative aspect-[4/5] overflow-hidden border-[6px] border-white bg-white shadow-[var(--shadow-lift)]" data-tilt>
             <img data-parallax src={h.src} srcSet={h.srcset} sizes="(max-width:1024px) 78vw, 480px" width={h.width} height={h.height}
               alt={tr("تلات مانيكان لابسين أحزمة خصر: كونياك وأبيض وكشكشة سودا", "Three mannequins wearing waist belts: cognac, white and a black ruffle")} className="size-full scale-[1.18] object-cover object-[50%_60%]" fetchPriority="high" />

@@ -467,3 +467,16 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .spec-table > div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 9px 20px; font-size: 13.5px; border-top: 1px solid rgb(0 0 0 / .05); }
 .spec-table dt { color: var(--color-mauve); font-weight: 700; }
 .spec-table dd { margin: 0; }
+
+/* hero: a soft red-pink halo breathing behind the photo */
+.hero-glow { position: absolute; inset: 6% 2% 10%; border-radius: 999px 999px 40px 40px; pointer-events: none; z-index: -1;
+  background: radial-gradient(closest-side, rgb(200 16 46 / .28), rgb(237 160 168 / .22) 55%, transparent 100%); filter: blur(28px); animation: glow-breathe 10s ease-in-out infinite; }
+@keyframes glow-breathe { 0%, 100% { transform: scale(.94); opacity: .75 } 50% { transform: scale(1.06); opacity: 1 } }
+
+/* WhatsApp help bubble */
+.wa-help { position: fixed; z-index: 46; left: 50%; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 68px); transform: translate(-50%, 10px); opacity: 0; pointer-events: none;
+  white-space: nowrap; padding: 9px 16px; border-radius: 999px; background: #fff; color: var(--color-plum); font-size: 13.5px; font-weight: 800;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / .06), 0 14px 30px -12px rgb(0 0 0 / .35); transition: opacity .4s, transform .5s var(--ease-bounce); }
+.wa-help::after { content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; background: #fff; transform: translateX(-50%) rotate(45deg); }
+.wa-help[data-show="true"] { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+@media (min-width: 768px) { .wa-help { left: auto; right: 96px; bottom: 36px; transform: translateX(10px); } .wa-help[data-show="true"] { transform: none; } .wa-help::after { left: auto; right: -5px; bottom: 50%; transform: translateY(50%) rotate(45deg); } }

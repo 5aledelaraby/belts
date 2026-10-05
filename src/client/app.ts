@@ -330,6 +330,25 @@ document.addEventListener("pointerdown", (e) => {
   setTimeout(() => w.remove(), 650);
 }, { passive: true });
 
+/* ---------- WhatsApp help bubble: once per visitor, after 30s idle, for 8s ---------- */
+{
+  const bub = $("[data-wa-help]");
+  if (bub && !store.get<boolean>("vicuna-help-shown", false) && innerWidth >= 360) {
+    let idle = 0;
+    const busy = () => !!document.querySelector('.drawer[data-open="true"], .sheet[data-open="true"], dialog[open], .upsell[data-show="true"], .bday[data-show="true"]');
+    const arm = () => { clearTimeout(idle); idle = window.setTimeout(show, 30000); };
+    const show = () => {
+      if (busy()) return arm();
+      store.set("vicuna-help-shown", true);
+      bub.dataset.show = "true";
+      setTimeout(() => (bub.dataset.show = "false"), 8000);
+      for (const ev of ["pointerdown", "scroll", "keydown"]) removeEventListener(ev, arm);
+    };
+    for (const ev of ["pointerdown", "scroll", "keydown"]) addEventListener(ev, arm, { passive: true });
+    arm();
+  }
+}
+
 /* ---------- back-to-top arrow (after one screen of scrolling) ---------- */
 {
   const btn = document.querySelector<HTMLElement>("[data-to-top]");
