@@ -42,6 +42,7 @@ async function buildImages() {
     { key: "founder", file: path.join(SRC, "assets/site/founder.jpg"), widths: [480, 900] },
     { key: "founder-work", file: path.join(SRC, "assets/site/founder-work.jpg"), widths: [480, 900] },
     { key: "navy-belt", file: path.join(SRC, "assets/site/navy-belt.jpg"), widths: [600, 1100] },
+    { key: "founder-collage", file: path.join(SRC, "assets/site/founder-collage.jpg"), widths: [800, 1400, 2000] },
     ...[1, 2, 3].map((n) => ({ key: `leather-${n}`, file: path.join(SRC, `assets/site/leather-${n}.jpg`), widths: [480, 960] })),
     { key: "leather-detail-poster", file: path.join(SRC, "assets/site/leather-detail-poster.jpg"), widths: [720] },
   ];

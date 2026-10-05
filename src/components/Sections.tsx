@@ -372,8 +372,7 @@ export const TieSteps = () => {
 /* ---------- real photos: the founder at work, a finished belt, then the laser clip (home, just above "on the body") ---------- */
 export const MadeByHand = () => {
   const tr = useTr();
-  const poster = img("laser-poster"), f = img("founder"), w = img("founder-work"), nb = img("navy-belt");
-  const real = <span className="real-badge">📷 {tr("صورة حقيقية", "Real photo")}</span>;
+  const poster = img("laser-poster"), f = img("founder"), nb = img("navy-belt"), col = img("founder-collage");
   return (
     <section className="mx-auto max-w-[1400px] px-4 pt-20 sm:px-6">
       <div className="max-w-2xl" data-reveal>
@@ -382,23 +381,14 @@ export const MadeByHand = () => {
         <p className="mt-3 leading-8 text-mauve">{tr("اللي بتشوفيه هو اللي هيوصلك بالظبط: نفس الحزام، نفس الخامة، ونفس الإيد اللي فصّلته وراجعته قبل ما يتشحن.", "What you see is exactly what you get: the same belt, the same material, and the same hands that made it and checked it before shipping.")}</p>
       </div>
 
-      <div className="real-grid mt-8" data-reveal>
-        <figure className="real-a">
-          <img src={f.src} srcSet={f.srcset} sizes="(max-width:768px) 56vw, 420px" width={f.width} height={f.height} loading="lazy" decoding="async"
-            alt={tr("خالد العربي ماسك المانيكان بحزام كحلي", "Khaled Elaraby holding the mannequin with a navy belt")} />
-          {real}
-        </figure>
-        <figure className="real-b">
-          <img src={nb.src} srcSet={nb.srcset} sizes="(max-width:768px) 40vw, 420px" width={nb.width} height={nb.height} loading="lazy" decoding="async"
-            alt={tr("حزام فيونكة كحلي بعد التفصيل", "A finished navy bow belt")} />
-          {real}
-        </figure>
-        <figure className="real-c">
-          <img src={w.src} srcSet={w.srcset} sizes="(max-width:768px) 40vw, 420px" width={w.width} height={w.height} loading="lazy" decoding="async"
-            alt={tr("خالد العربي بيظبط الحزام على المانيكان", "Khaled Elaraby fitting the belt on the mannequin")} />
-          {real}
-        </figure>
-      </div>
+      <figure className="real-collage mt-8" data-reveal>
+        <img src={col.src} srcSet={col.srcset} sizes="(max-width:1400px) 94vw, 1350px" width={col.width} height={col.height} loading="lazy" decoding="async"
+          alt={tr("خالد العربي بيفصّل ويظبط حزام فيونكة كحلي على المانيكان", "Khaled Elaraby making and fitting a navy bow belt on the mannequin")} />
+      </figure>
+      <figure className="real-belt mt-3" data-reveal>
+        <img src={nb.src} srcSet={nb.srcset} sizes="(max-width:768px) 80vw, 460px" width={nb.width} height={nb.height} loading="lazy" decoding="async"
+          alt={tr("حزام فيونكة كحلي بعد التفصيل", "The finished navy bow belt")} />
+      </figure>
 
       <figure className="founder-note mt-5" data-reveal>
         <img src={f.src} srcSet={f.srcset} sizes="72px" width={f.width} height={f.height} loading="lazy" decoding="async" alt="" />
@@ -412,7 +402,6 @@ export const MadeByHand = () => {
         <div className="relative aspect-video overflow-hidden rounded-[22px] bg-plum">
           <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
             muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
-          <span className="real-badge">🎥 {tr("فيديو حقيقي", "Real video")}</span>
         </div>
         <div className="px-3 pb-5 lg:px-4 lg:pb-0">
           <span className="eyebrow text-berry">{tr("مصنوع بإيدينا", "Made by hand")}</span>
