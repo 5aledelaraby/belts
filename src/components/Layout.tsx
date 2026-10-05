@@ -70,6 +70,8 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Search-engine and audit bots get the page but none of the tracking (no fake visits in Meta, Snap or GA). */}
+        <script dangerouslySetInnerHTML={{ __html: `window.__bot=/bot|crawl|spider|slurp|Google-InspectionTool|Chrome-Lighthouse|HeadlessChrome|facebookexternalhit|Snap URL Preview/i.test(navigator.userAgent)` }} />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords[lang]} />
@@ -103,22 +105,22 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         {site.ga4 && (
           <>
             {/* Google Analytics 4 — async, so it never blocks the page from showing */}
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${site.ga4}`}></script>
+            <script dangerouslySetInnerHTML={{ __html: `if(!window.__bot){var g=document.createElement("script");g.async=1;g.src="https://www.googletagmanager.com/gtag/js?id=${site.ga4}";document.head.appendChild(g)}` }} />
             <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","${site.ga4}",{page_language:"${lang}",debug_mode:/[?&]ga_debug=1/.test(location.search)||undefined});` }} />
           </>
         )}
         {/* The main (LCP) image of each page is preloaded by React from its fetchPriority="high" <img>. */}
         {site.pixels.meta && (
           /* Meta Pixel — the base code loads fbevents.js asynchronously */
-          <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${site.pixels.meta}');window.__vpv='PageView.'+Date.now().toString(36)+'.'+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__vpv});` }} />
+          <script dangerouslySetInnerHTML={{ __html: `if(!window.__bot){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${site.pixels.meta}');window.__vpv='PageView.'+Date.now().toString(36)+'.'+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__vpv});}` }} />
         )}
         {site.pixels.tiktok && (
           /* TikTok Pixel — the base code loads events.js asynchronously */
-          <script dangerouslySetInnerHTML={{ __html: `!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=d.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=d.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};ttq.load('${site.pixels.tiktok}');ttq.page()}(window,document,'ttq');` }} />
+          <script dangerouslySetInnerHTML={{ __html: `if(!window.__bot){!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=d.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=d.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};ttq.load('${site.pixels.tiktok}');ttq.page()}(window,document,'ttq');}` }} />
         )}
         {site.pixels.snapchat && (
           /* Snap Pixel — scevent.min.js loads asynchronously; PAGE_VIEW carries a dedup id for a future Snap CAPI */
-          <script dangerouslySetInnerHTML={{ __html: `(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function(){a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};a.queue=[];var s='script',r=t.createElement(s);r.async=!0;r.src=n;var u=t.getElementsByTagName(s)[0];u.parentNode.insertBefore(r,u)})(window,document,'https://sc-static.net/scevent.min.js');snaptr('init','${site.pixels.snapchat}',{});snaptr('track','PAGE_VIEW',{client_dedup_id:window.__vpv||('PageView.'+Date.now().toString(36))});` }} />
+          <script dangerouslySetInnerHTML={{ __html: `if(!window.__bot){(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function(){a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};a.queue=[];var s='script',r=t.createElement(s);r.async=!0;r.src=n;var u=t.getElementsByTagName(s)[0];u.parentNode.insertBefore(r,u)})(window,document,'https://sc-static.net/scevent.min.js');snaptr('init','${site.pixels.snapchat}',{});snaptr('track','PAGE_VIEW',{client_dedup_id:window.__vpv||('PageView.'+Date.now().toString(36))});}` }} />
         )}
         {/* WhatsApp is only opened on a tap, so a cheap DNS lookup is enough (a full preconnect would be wasted on most visits) */}
         <link rel="dns-prefetch" href="https://wa.me" />

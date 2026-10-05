@@ -58,6 +58,7 @@ const normPhone = (p: string) => {
 type Who = { phone?: string; name?: string; gov?: string };
 let who: Who = {};
 async function capi(event: string, eventId: string, custom: Record<string, unknown> = {}) {
+  if ((window as unknown as { __bot?: boolean }).__bot) return;
   if (!config.capi) return;
   try {
     const fbclid = new URLSearchParams(location.search).get("fbclid");
