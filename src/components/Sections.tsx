@@ -369,35 +369,55 @@ export const TieSteps = () => {
   );
 };
 
-/* ---------- made by hand: the founder, the laser clip (home) ---------- */
+/* ---------- real photos: the founder at work, a finished belt, then the laser clip (home, just above "on the body") ---------- */
 export const MadeByHand = () => {
   const tr = useTr();
-  const poster = img("laser-poster"), f = img("founder"), w = img("founder-work");
+  const poster = img("laser-poster"), f = img("founder"), w = img("founder-work"), nb = img("navy-belt");
+  const real = <span className="real-badge">📷 {tr("صورة حقيقية", "Real photo")}</span>;
   return (
     <section className="mx-auto max-w-[1400px] px-4 pt-20 sm:px-6">
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-center">
-        <div className="order-2 px-1 lg:order-1 lg:pe-8" data-reveal>
-          <span className="eyebrow text-berry">{tr("مصنوع بإيدينا", "Made by hand")}</span>
-          <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3rem)] font-bold leading-tight">{tr("كل حزام بيتقص بالليزر، وبيتخيّط بإيد", "Every belt is laser-cut, then sewn by hand")}</h2>
-          <p className="mt-3 max-w-md leading-8 text-mauve">{tr("من التصميم للقص للخياطة، كل حزام بيعدّي على إيدينا قبل ما يوصلك. وقبل الشحن، بيتجرب على المانيكان ونتأكد من كل غرزة وكل عقدة.", "From design to cutting to sewing, every belt passes through our hands. Before it ships, it's tried on the mannequin and every stitch and knot is checked.")}</p>
-          <figure className="founder-note mt-6">
-            <img src={f.src} srcSet={f.srcset} sizes="72px" width={f.width} height={f.height} loading="lazy" decoding="async" alt={tr("خالد العربي مؤسس فيكونا", "Khaled Elaraby, founder of Vicuna")} />
-            <figcaption>
-              <span className="block text-[15px] font-extrabold">{tr("خالد العربي", "Khaled Elaraby")}</span>
-              <span className="block text-[13px] text-mauve">{tr("مؤسس فيكونا، وبيراجع كل حزام بنفسه قبل ما يتشحن", "Founder of Vicuna — checks every belt himself before it ships")}</span>
-            </figcaption>
-          </figure>
+      <div className="max-w-2xl" data-reveal>
+        <span className="eyebrow text-berry">{tr("من غير فلاتر ولا مونتاج", "No filters, no staging")}</span>
+        <h2 className="mt-3 font-display text-[clamp(1.9rem,4.4vw,3.2rem)] font-bold leading-tight">{tr("كل الصور هنا", "Every photo here is")} <span className="text-berry">{tr("حقيقية", "real")}</span> {tr("ومن ورشتنا", "— from our workshop")}</h2>
+        <p className="mt-3 leading-8 text-mauve">{tr("اللي بتشوفيه هو اللي هيوصلك بالظبط: نفس الحزام، نفس الخامة، ونفس الإيد اللي فصّلته وراجعته قبل ما يتشحن.", "What you see is exactly what you get: the same belt, the same material, and the same hands that made it and checked it before shipping.")}</p>
+      </div>
+
+      <div className="real-grid mt-8" data-reveal>
+        <figure className="real-a">
+          <img src={f.src} srcSet={f.srcset} sizes="(max-width:768px) 56vw, 420px" width={f.width} height={f.height} loading="lazy" decoding="async"
+            alt={tr("خالد العربي ماسك المانيكان بحزام كحلي", "Khaled Elaraby holding the mannequin with a navy belt")} />
+          {real}
+        </figure>
+        <figure className="real-b">
+          <img src={nb.src} srcSet={nb.srcset} sizes="(max-width:768px) 40vw, 420px" width={nb.width} height={nb.height} loading="lazy" decoding="async"
+            alt={tr("حزام فيونكة كحلي بعد التفصيل", "A finished navy bow belt")} />
+          {real}
+        </figure>
+        <figure className="real-c">
+          <img src={w.src} srcSet={w.srcset} sizes="(max-width:768px) 40vw, 420px" width={w.width} height={w.height} loading="lazy" decoding="async"
+            alt={tr("خالد العربي بيظبط الحزام على المانيكان", "Khaled Elaraby fitting the belt on the mannequin")} />
+          {real}
+        </figure>
+      </div>
+
+      <figure className="founder-note mt-5" data-reveal>
+        <img src={f.src} srcSet={f.srcset} sizes="72px" width={f.width} height={f.height} loading="lazy" decoding="async" alt="" />
+        <figcaption>
+          <span className="block text-[15px] font-extrabold">{tr("خالد العربي", "Khaled Elaraby")}</span>
+          <span className="block text-[13px] text-mauve">{tr("مؤسس فيكونا، وبيراجع كل حزام بنفسه قبل ما يتشحن", "Founder of Vicuna — checks every belt himself before it ships")}</span>
+        </figcaption>
+      </figure>
+
+      <div className="mt-8 grid items-center gap-6 overflow-hidden rounded-[30px] bg-cream p-3 sm:p-4 lg:grid-cols-[1.4fr_1fr]" data-reveal>
+        <div className="relative aspect-video overflow-hidden rounded-[22px] bg-plum">
+          <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
+            muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
+          <span className="real-badge">🎥 {tr("فيديو حقيقي", "Real video")}</span>
         </div>
-        <div className="order-1 grid grid-cols-[1.35fr_1fr] gap-3 lg:order-2" data-reveal>
-          <div className="relative row-span-2 overflow-hidden rounded-[26px] bg-plum">
-            <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
-              muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
-            <span className="tag absolute bottom-3 start-3">✂️ {tr("قص بالليزر", "Laser cut")}</span>
-          </div>
-          <img src={f.src} srcSet={f.srcset} sizes="(max-width:1024px) 38vw, 300px" width={f.width} height={f.height} loading="lazy" decoding="async"
-            alt={tr("خالد العربي بيظبط حزام على المانيكان", "Khaled Elaraby fitting a belt on the mannequin")} className="aspect-[4/5] w-full rounded-[26px] object-cover object-top" />
-          <img src={w.src} srcSet={w.srcset} sizes="(max-width:1024px) 38vw, 300px" width={w.width} height={w.height} loading="lazy" decoding="async"
-            alt={tr("ضبط فيونكة الحزام بالإيد", "Shaping the bow by hand")} className="aspect-[4/5] w-full rounded-[26px] object-cover" />
+        <div className="px-3 pb-5 lg:px-4 lg:pb-0">
+          <span className="eyebrow text-berry">{tr("مصنوع بإيدينا", "Made by hand")}</span>
+          <h3 className="mt-2 font-display text-[clamp(1.6rem,3.4vw,2.4rem)] font-bold leading-tight">{tr("كل حزام بيتقص بالليزر، وبيتخيّط بإيد", "Every belt is laser-cut, then sewn by hand")}</h3>
+          <p className="mt-2 leading-8 text-mauve">{tr("القص بالليزر بيخلّي الحواف نضيفة ومظبوطة، وبعدها الخياطة والتشطيب بالإيد، وكل حزام بيتجرب على المانيكان قبل الشحن.", "Laser cutting keeps every edge clean and precise; then it's sewn and finished by hand, and tried on the mannequin before it ships.")}</p>
         </div>
       </div>
     </section>
@@ -408,10 +428,11 @@ export const MadeByHand = () => {
 export const Bespoke = () => {
   const tr = useTr();
   const shots = [img("leather-1"), img("leather-3"), img("leather-2")];
+  const dp = img("leather-detail-poster");
   const steps = [
-    [tr("اختاري الجلد واللون", "Choose the leather and colour"), tr("ابعتيلنا على واتساب وهنوريكي الألوان والنقشات المتاحة بالصور والفيديو.", "Message us on WhatsApp and we'll show you the available colours and textures in photos and video.")],
-    [tr("موظفة من عندنا بتقابلك", "One of our team comes to you"), tr("بتاخد مقاسك بنفسها، وتتفق معاكي على التفاصيل المميزة اللي تناسبك ❤️", "She takes your measurements in person and agrees with you on the special details that suit you ❤️")],
-    [tr("بنفصّله ونأكد معاكي", "We make it and check with you"), tr("بنبعتلك صورته قبل الشحن، ويوصلك لحد البيت.", "We send you a photo before shipping, then deliver it to your door.")],
+    [tr("ابعتيلنا إنك مهتمة", "Tell us you're interested"), tr("رسالة واحدة على واتساب، وإحنا نرتّب معاكي معاد يناسبك.", "One WhatsApp message and we'll arrange a time that suits you.")],
+    [tr("بنبعتلك موظفة من عندنا", "We send one of our team to you"), tr("بتاخد مقاساتك، وتوريكي خامات الجلد على الطبيعة، وتتفق معاكي على التفاصيل والسعر.", "She takes your measurements, shows you the leathers in person, and agrees the details and price with you.")],
+    [tr("بنفصّله ونبعتهولك ❤️", "We make it and send it to you ❤️"), tr("بيتفصّل على مقاسك بالظبط، ويوصلك لحد البيت.", "Made exactly to your size and delivered to your door.")],
   ];
   return (
     <section id="bespoke" className="px-3 pt-20 sm:px-5">
@@ -433,15 +454,22 @@ export const Bespoke = () => {
               <a className="btn btn-berry btn-shine" target="_blank" rel="noopener" href={waLink(tr("السلام عليكم، عايزة أفصّل حزام جلد طبيعي على مقاسي ✂️", "Hello, I'd like a natural leather belt made to my size ✂️"))}>
                 <Icon name="wa" className="size-4" /> {tr("اطلبي تفصيلك", "Request yours")}
               </a>
-              <span className="text-[12.5px] text-white/70">{tr("السعر حسب الجلد والمقاس، وبنقولك عليه قبل أي حاجة", "Priced by leather and size — we confirm it with you first")}</span>
+              <span className="text-[12.5px] text-white/70">{tr("السعر بتتفقي عليه مع الموظفة قبل التفصيل", "You agree the price with our team before we start")}</span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3" data-reveal>
-            {shots.map((im, i) => (
+            <div className="relative row-span-2 overflow-hidden rounded-[22px] bg-[#3a1a0b]">
+              <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["leather-detail.mp4"]} poster={dp.src}
+                muted loop playsInline preload="none" aria-label={tr("تفاصيل حزام جلد طبيعي متفصّل على المقاس", "Details of a made-to-measure natural leather belt")} />
+              <span className="tag absolute bottom-3 start-3">{tr("من شغلنا", "Our work")} ✂️</span>
+            </div>
+            {shots.slice(0, 2).map((im, i) => (
               <img key={i} src={im.src} srcSet={im.srcset} sizes="(max-width:1024px) 46vw, 340px" width={im.width} height={im.height} loading="lazy" decoding="async"
                 alt={tr("خامات جلد طبيعي بألوان ونقشات مختلفة", "Natural leathers in different colours and textures")}
-                className={`w-full rounded-[22px] object-cover ${i === 0 ? "col-span-2 aspect-[16/9]" : "aspect-square"}`} />
+                className="aspect-[4/5] size-full rounded-[22px] object-cover" />
             ))}
+            <img src={shots[2].src} srcSet={shots[2].srcset} sizes="(max-width:1024px) 92vw, 680px" width={shots[2].width} height={shots[2].height} loading="lazy" decoding="async"
+              alt={tr("خامات جلد طبيعي متعلقة بألوانها", "Natural leathers hanging in many colours")} className="col-span-2 aspect-[16/7] w-full rounded-[22px] object-cover" />
           </div>
         </div>
       </div>
@@ -456,6 +484,7 @@ export const OnBody = () => {
     <section className="pt-20">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("على الطبيعة", "On the body")} <span className="text-berry">♡</span></h2>
+        <p className="mt-2 text-mauve">{tr("بنات حقيقيين لابسين أحزمتنا، من غير فلاتر ولا تعديل في الشكل.", "Real women wearing our belts — no filters, no retouching of the look.")}</p>
       </div>
       <div className="onbody no-scrollbar mt-6" data-lenis-prevent data-reveal>
         {[1, 2, 3, 4, 5, 6, 7].map((n) => {

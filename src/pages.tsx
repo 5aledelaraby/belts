@@ -57,10 +57,10 @@ const pagesFor = (lang: Lang): Page[] => {
       <Stories />
       <Perks />
       <Shop />
-      <MadeByHand />
       <ShopByStyle />
       <Bespoke />
       <TieSteps />
+      <MadeByHand />
       <OnBody />
       <Faq />
     </Layout>

@@ -427,3 +427,20 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .bespoke > * { position: relative; }
 .bespoke .btn-berry { background: #F6D7A7; color: #4E230F; box-shadow: 0 10px 24px -10px rgb(0 0 0 / .5); }
 .bespoke .btn-berry:hover { background: #fff; }
+
+/* real photos collage */
+.real-grid { display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto; gap: 10px; }
+.real-grid figure { position: relative; margin: 0; overflow: hidden; border-radius: 24px; background: var(--color-cream); }
+.real-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-soft); }
+.real-grid figure:hover img { transform: scale(1.04); }
+.real-a { grid-row: span 2; }
+.real-a img { aspect-ratio: auto; object-position: 50% 20%; }
+.real-b img { aspect-ratio: 1 / 1; object-position: 50% 45%; }
+.real-c img { aspect-ratio: 1 / 1; object-position: 35% 40%; }
+@media (min-width: 900px) {
+  .real-grid { grid-template-columns: 1fr 1.25fr 1fr; grid-template-rows: auto; gap: 16px; }
+  .real-a { grid-row: auto; }
+  .real-grid img, .real-a img, .real-b img, .real-c img { aspect-ratio: 4 / 5; max-height: 540px; }
+  .real-b { transform: translateY(-14px); }
+}
+.real-badge { position: absolute; top: 10px; inset-inline-start: 10px; padding: 4px 10px; border-radius: 999px; background: rgb(255 255 255 / .9); color: var(--color-plum); font-size: 11.5px; font-weight: 800; backdrop-filter: blur(6px); box-shadow: 0 2px 8px -4px rgb(0 0 0 / .3); }
