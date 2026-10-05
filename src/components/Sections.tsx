@@ -342,29 +342,30 @@ export const ShopByStyle = () => {
   );
 };
 
-/* ---------- tie steps ---------- */
+/* ---------- tie steps: one compact card, three short lines ---------- */
 export const TieSteps = () => {
   const tr = useTr();
+  const steps = [
+    [tr("حطّيه على الخصر", "Place it on your waist"), tr("العريض قدّام", "wide part in front")],
+    [tr("لفّي الشريطين", "Wrap the straps"), tr("ورجّعيهم لقدّام", "and bring them forward")],
+    [tr("اربطي بطريقتك", "Tie it your way"), tr("فيونكة أو عقدة", "a bow or a knot")],
+  ];
   return (
-  <section id="tie" className="mx-auto max-w-[1400px] scroll-mt-24 px-4 pt-20 sm:px-6">
-    <div className="flex items-center gap-3">
-      <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("طريقة الربط", "How to tie")}</h2>
-      <Bow className="w-16 text-berry" w={2} />
+  <section id="tie" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 pt-14 sm:px-6">
+    <div className="tie-card" data-reveal>
+      <div className="flex items-center gap-2">
+        <h2 className="font-display text-[22px] font-bold sm:text-[26px]">{tr("طريقة الربط", "How to tie")}</h2>
+        <Bow className="w-10 text-berry" w={2.2} />
+      </div>
+      <ol className="tie-steps">
+        {steps.map(([t, d], i) => (
+          <li key={t}>
+            <span className="tie-num num">{i + 1}</span>
+            <span className="min-w-0"><b className="block text-[14px] leading-snug">{t}</b><span className="block text-[12.5px] leading-snug text-mauve">{d}</span></span>
+          </li>
+        ))}
+      </ol>
     </div>
-    <ol className="mt-8 grid gap-4 md:grid-cols-3">
-      {[
-        [tr("حطّي الحزام على الخصر", "Place it on your waist"), tr("الجزء العريض من قدّام، والشريطين من ورا.", "The wide part at the front, the two straps behind.")],
-        [tr("لفّي الشريطين", "Wrap the straps"), tr("عدّيهم حوالين الوسط ورجّعيهم لقدّام فوق الحزام.", "Cross them around your waist and bring them back to the front over the belt.")],
-        [tr("اربطي بطريقتك", "Tie it your way"), tr("فيونكة في النص أو على جنب، أو عقدة بسيطة وسيبي الأطراف نازلة.", "A bow at the centre or to the side, or a simple knot with the ends falling.")],
-      ].map(([t, d], i) => (
-        <li key={t} data-reveal style={{ ["--i" as string]: i }} className="relative overflow-hidden rounded-[28px] bg-white p-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
-          <span className="grid size-12 place-items-center rounded-2xl bg-berry text-[22px] font-extrabold text-white num">{i + 1}</span>
-          <h3 className="mt-4 text-[19px] font-bold">{t}</h3>
-          <p className="mt-1.5 text-mauve">{d}</p>
-          <Bow className="absolute -bottom-3 -end-3 w-24 text-petal" w={2} />
-        </li>
-      ))}
-    </ol>
   </section>
   );
 };

@@ -450,3 +450,10 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .real-collage, .real-belt { max-width: 1000px; margin-inline: auto; }
 .real-belt { display: grid; place-items: center; padding: 18px; }
 .real-belt img { display: block; width: min(78%, 420px); height: auto; }
+
+/* compact how-to-tie */
+.tie-card { border-radius: 24px; background: #fff; padding: 16px 18px; box-shadow: var(--shadow-card); }
+.tie-steps { margin-top: 12px; display: grid; gap: 10px; }
+.tie-steps li { display: flex; align-items: center; gap: 10px; }
+.tie-num { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 999px; background: var(--color-petal); color: var(--color-berry); font-size: 13px; font-weight: 800; }
+@media (min-width: 640px) { .tie-steps { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
