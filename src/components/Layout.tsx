@@ -23,8 +23,6 @@ interface Props {
   children: ReactNode;
 }
 
-const fonts =
-  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@700&family=Marcellus&family=Great+Vibes&display=swap";
 
 const marqueeFor = (en: boolean) => en ? [
   "2nd belt 25% off · 3rd belt 35% off",
@@ -124,12 +122,9 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         )}
         {/* WhatsApp is only opened on a tap, so a cheap DNS lookup is enough (a full preconnect would be wasted on most visits) */}
         <link rel="dns-prefetch" href="https://wa.me" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        {/* Fonts: fetched early but applied without blocking the first paint (text shows in a system font, then swaps). */}
-        <link rel="preload" as="style" href={fonts} />
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href=${JSON.stringify(fonts)};document.head.appendChild(l)})()` }} />
-        <noscript><link rel="stylesheet" href={fonts} /></noscript>
+        {/* Fonts are self-hosted; the two used above the fold are preloaded so headings don't flash. */}
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="" href={hrefFor("ar", "assets/fonts/el-messiri-arabic-700-normal.woff2")} />
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="" href={hrefFor("ar", "assets/fonts/cairo-arabic-400-normal.woff2")} />
         <link rel="stylesheet" href={hrefFor("ar", assets.css)} />
         {(schema ?? schemaFor(lang, path, title)).map((json, i) => (
           <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json).replace(/</g, "\\u003c") }} />

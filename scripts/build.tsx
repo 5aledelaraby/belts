@@ -153,7 +153,13 @@ async function buildBundles() {
   const tw = process.env.TAILWIND_BIN || "tailwindcss";
   const tmp = path.join(OUT, "assets", "_tw.css");
   execFileSync(tw, ["-i", path.join(SRC, "styles/app.css"), "-o", tmp, "--minify"], { cwd: ROOT, stdio: "pipe" });
-  const cssText = await readFile(tmp, "utf8");
+  // Self-hosted fonts: the @font-face rules go at the top of the stylesheet; the woff2 files sit next to it in assets/fonts/.
+  await mkdir(path.join(OUT, "assets", "fonts"), { recursive: true });
+  for (const f of await readdir(path.join(SRC, "assets/fonts"))) {
+    if (f.endsWith(".woff2")) await copyFile(path.join(SRC, "assets/fonts", f), path.join(OUT, "assets", "fonts", f));
+  }
+  const fontCss = await readFile(path.join(SRC, "assets/fonts/fonts.css"), "utf8");
+  const cssText = fontCss + (await readFile(tmp, "utf8"));
   await rm(tmp);
   assets.css = `assets/app.${hash(cssText)}.css`;
   await writeFile(path.join(OUT, assets.css), cssText);
