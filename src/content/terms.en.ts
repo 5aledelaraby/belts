@@ -35,7 +35,7 @@ export const html = `
 
 <h2>4. Products</h2>
 <ul>
-<li>Our belts are made of imported PU leather or lace depending on the design; the material is listed on each product. Natural leather belts are made to measure only, ordered on WhatsApp, with the price and size confirmed with you before we start. Because they are made to your size, they can only be returned if faulty or not made to the agreed size.</li>
+<li>Our belts are made of imported PU leather or lace depending on the design; the material is listed on each product. Natural leather belts are made to measure only, ordered on WhatsApp, available in Cairo and Giza only, with the price and size confirmed with you before we start. Because they are made to your size, they can only be returned if faulty or not made to the agreed size.</li>
 <li>Standard size: ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long, fitting every size. Custom sizes are made to order.</li>
 <li>We show colours and details as accurately as we can, but colours can vary slightly between screens.</li>
 <li>If a product isn't what you expected for any reason, you can return or exchange it under our <a href="${url("returns/")}">returns policy</a>.</li>

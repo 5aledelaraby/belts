@@ -431,7 +431,7 @@ export const Bespoke = () => {
   const dp = img("leather-detail-poster");
   const steps = [
     [tr("ابعتيلنا إنك مهتمة", "Tell us you're interested"), tr("رسالة واحدة على واتساب، وإحنا نرتّب معاكي معاد يناسبك.", "One WhatsApp message and we'll arrange a time that suits you.")],
-    [tr("بنبعتلك موظفة من عندنا", "We send one of our team to you"), tr("بتاخد مقاساتك، وتوريكي خامات الجلد على الطبيعة، وتتفق معاكي على التفاصيل والسعر.", "She takes your measurements, shows you the leathers in person, and agrees the details and price with you.")],
+    [tr("بنبعتلك موظفة من عندنا", "We send one of our team to you"), tr("في القاهرة والجيزة: بتاخد مقاساتك، وتوريكي خامات الجلد على الطبيعة، وتتفق معاكي على التفاصيل والسعر.", "In Cairo and Giza: she takes your measurements, shows you the leathers in person, and agrees the details and price with you.")],
     [tr("بنفصّله ونبعتهولك ❤️", "We make it and send it to you ❤️"), tr("بيتفصّل على مقاسك بالظبط، ويوصلك لحد البيت.", "Made exactly to your size and delivered to your door.")],
   ];
   return (
@@ -454,7 +454,7 @@ export const Bespoke = () => {
               <a className="btn btn-berry btn-shine" target="_blank" rel="noopener" href={waLink(tr("السلام عليكم، عايزة أفصّل حزام جلد طبيعي على مقاسي ✂️", "Hello, I'd like a natural leather belt made to my size ✂️"))}>
                 <Icon name="wa" className="size-4" /> {tr("اطلبي تفصيلك", "Request yours")}
               </a>
-              <span className="text-[12.5px] text-white/70">{tr("السعر بتتفقي عليه مع الموظفة قبل التفصيل", "You agree the price with our team before we start")}</span>
+              <span className="text-[12.5px] text-white/70">{tr("📍 متاحة في القاهرة والجيزة بس · السعر بتتفقي عليه مع الموظفة قبل التفصيل", "📍 Cairo and Giza only · you agree the price with our team before we start")}</span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3" data-reveal>
