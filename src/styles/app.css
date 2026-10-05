@@ -417,4 +417,13 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .founder-note { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--color-cream); width: fit-content; max-width: 100%; }
 [dir="rtl"] .founder-note { padding: 10px 10px 10px 16px; }
 .founder-note img { width: 56px; height: 56px; flex: none; border-radius: 999px; object-fit: cover; object-position: 50% 8%; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--color-berry); }
-.bespoke { background: radial-gradient(90% 70% at 100% 0%, rgb(200 16 46 / .35), transparent 60%), #121212; }
+/* cognac leather tones, with a soft grain */
+.bespoke { position: relative; background:
+  radial-gradient(80% 70% at 100% 0%, rgb(246 215 167 / .28), transparent 60%),
+  radial-gradient(70% 60% at 0% 100%, rgb(60 20 8 / .55), transparent 65%),
+  linear-gradient(135deg, #8A4422 0%, #6E3418 55%, #4E230F 100%); }
+.bespoke::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.bespoke > * { position: relative; }
+.bespoke .btn-berry { background: #F6D7A7; color: #4E230F; box-shadow: 0 10px 24px -10px rgb(0 0 0 / .5); }
+.bespoke .btn-berry:hover { background: #fff; }

@@ -409,8 +409,8 @@ export const Bespoke = () => {
   const tr = useTr();
   const shots = [img("leather-1"), img("leather-3"), img("leather-2")];
   const steps = [
-    [tr("اختاري الجلد واللون", "Choose the leather and colour"), tr("ابعتيلنا وهنوريكي الألوان والنقشات المتاحة بالصور والفيديو.", "Message us and we'll show you the available colours and textures in photos and video.")],
-    [tr("ابعتي مقاسك", "Send your measurement"), tr("مقاس وسطك والعرض اللي يريحك، وإحنا نقولك بالظبط تقيسي إزاي.", "Your waist and the width you like — we'll tell you exactly how to measure.")],
+    [tr("اختاري الجلد واللون", "Choose the leather and colour"), tr("ابعتيلنا على واتساب وهنوريكي الألوان والنقشات المتاحة بالصور والفيديو.", "Message us on WhatsApp and we'll show you the available colours and textures in photos and video.")],
+    [tr("موظفة من عندنا بتقابلك", "One of our team comes to you"), tr("بتاخد مقاسك بنفسها، وتتفق معاكي على التفاصيل المميزة اللي تناسبك ❤️", "She takes your measurements in person and agrees with you on the special details that suit you ❤️")],
     [tr("بنفصّله ونأكد معاكي", "We make it and check with you"), tr("بنبعتلك صورته قبل الشحن، ويوصلك لحد البيت.", "We send you a photo before shipping, then deliver it to your door.")],
   ];
   return (
@@ -418,14 +418,14 @@ export const Bespoke = () => {
       <div className="bespoke mx-auto max-w-[1400px] overflow-hidden rounded-[36px]">
         <div className="grid gap-8 p-5 sm:p-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div data-reveal>
-            <span className="eyebrow text-rose">{tr("خدمة التفصيل", "Made to measure")}</span>
-            <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,3.2rem)] font-bold leading-tight text-white">{tr("حزام جلد طبيعي،", "A natural leather belt,")} <span className="text-rose">{tr("متفصّل على مقاسك بالظبط", "made exactly to your size")}</span></h2>
-            <p className="mt-3 max-w-lg leading-8 text-white/75">{tr("لو عايزة حاجة مختلفة ليكي إنتي بس: اختاري من خامات الجلد الطبيعي عندنا، وإحنا نفصّلك الحزام بالمقاس والعرض والشكل اللي تحبيه. حتة واحدة معمولة عشانك.", "Want something that's yours alone? Pick from our natural leathers and we'll make your belt to the size, width and shape you love — one piece, made for you.")}</p>
+            <span className="eyebrow text-[#F6D7A7]">{tr("خدمة التفصيل", "Made to measure")}</span>
+            <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,3.2rem)] font-bold leading-tight text-white">{tr("حزام جلد طبيعي،", "A natural leather belt,")} <span className="text-[#F6D7A7]">{tr("متفصّل على مقاسك بالظبط", "made exactly to your size")}</span></h2>
+            <p className="mt-3 max-w-lg leading-8 text-white/85">{tr("لو عايزة حاجة مختلفة ليكي إنتي بس: اختاري من خامات الجلد الطبيعي عندنا، وإحنا نفصّلك الحزام بالمقاس والعرض والشكل اللي تحبيه. حتة واحدة معمولة عشانك.", "Want something that's yours alone? Pick from our natural leathers and we'll make your belt to the size, width and shape you love — one piece, made for you.")}</p>
             <ol className="mt-6 space-y-3">
               {steps.map(([t, d], i) => (
                 <li key={t} className="flex gap-3">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-berry text-[14px] font-extrabold text-white num">{i + 1}</span>
-                  <span><b className="block text-[15px] text-white">{t}</b><span className="text-[13.5px] leading-6 text-white/65">{d}</span></span>
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#F6D7A7] text-[14px] font-extrabold text-[#5A2A12] num">{i + 1}</span>
+                  <span><b className="block text-[15px] text-white">{t}</b><span className="text-[13.5px] leading-6 text-white/80">{d}</span></span>
                 </li>
               ))}
             </ol>
@@ -433,7 +433,7 @@ export const Bespoke = () => {
               <a className="btn btn-berry btn-shine" target="_blank" rel="noopener" href={waLink(tr("السلام عليكم، عايزة أفصّل حزام جلد طبيعي على مقاسي ✂️", "Hello, I'd like a natural leather belt made to my size ✂️"))}>
                 <Icon name="wa" className="size-4" /> {tr("اطلبي تفصيلك", "Request yours")}
               </a>
-              <span className="text-[12.5px] text-white/55">{tr("السعر حسب الجلد والمقاس، وبنقولك عليه قبل أي حاجة", "Priced by leather and size — we confirm it with you first")}</span>
+              <span className="text-[12.5px] text-white/70">{tr("السعر حسب الجلد والمقاس، وبنقولك عليه قبل أي حاجة", "Priced by leather and size — we confirm it with you first")}</span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3" data-reveal>
