@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { site } from "../data/site";
+import { site, waLink } from "../data/site";
 import { colors, products, styles, priceOf, productUrl, pName, sName, sText, cName, type Product, type Style } from "../data/products";
 import { useLang, useTr, useHref } from "../i18n";
 import { productSeo } from "../data/seo-copy";
@@ -369,21 +369,80 @@ export const TieSteps = () => {
   );
 };
 
-/* ---------- made by hand: the laser-cutting clip (home) ---------- */
+/* ---------- made by hand: the founder, the laser clip (home) ---------- */
 export const MadeByHand = () => {
   const tr = useTr();
-  const poster = img("laser-poster");
+  const poster = img("laser-poster"), f = img("founder"), w = img("founder-work");
   return (
     <section className="mx-auto max-w-[1400px] px-4 pt-20 sm:px-6">
-      <div className="grid items-center gap-8 overflow-hidden rounded-[32px] bg-cream p-3 sm:p-4 lg:grid-cols-[1.25fr_1fr]" data-reveal>
-        <div className="relative aspect-video overflow-hidden rounded-[24px] bg-plum">
-          <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
-            muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
-        </div>
-        <div className="px-3 pb-6 lg:px-6 lg:pb-0">
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-center">
+        <div className="order-2 px-1 lg:order-1 lg:pe-8" data-reveal>
           <span className="eyebrow text-berry">{tr("مصنوع بإيدينا", "Made by hand")}</span>
           <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3rem)] font-bold leading-tight">{tr("كل حزام بيتقص بالليزر، وبيتخيّط بإيد", "Every belt is laser-cut, then sewn by hand")}</h2>
-          <p className="mt-3 max-w-md leading-8 text-mauve">{tr("من التصميم للقص للخياطة، كل حزام بيعدّي على إيدينا قبل ما يوصلك، عشان يوصلك مظبوط ومتشطّب كويس.", "From design to cutting to sewing, every belt passes through our hands before it reaches you, so it arrives just right.")}</p>
+          <p className="mt-3 max-w-md leading-8 text-mauve">{tr("من التصميم للقص للخياطة، كل حزام بيعدّي على إيدينا قبل ما يوصلك. وقبل الشحن، بيتجرب على المانيكان ونتأكد من كل غرزة وكل عقدة.", "From design to cutting to sewing, every belt passes through our hands. Before it ships, it's tried on the mannequin and every stitch and knot is checked.")}</p>
+          <figure className="founder-note mt-6">
+            <img src={f.src} srcSet={f.srcset} sizes="72px" width={f.width} height={f.height} loading="lazy" decoding="async" alt={tr("خالد العربي مؤسس فيكونا", "Khaled Elaraby, founder of Vicuna")} />
+            <figcaption>
+              <span className="block text-[15px] font-extrabold">{tr("خالد العربي", "Khaled Elaraby")}</span>
+              <span className="block text-[13px] text-mauve">{tr("مؤسس فيكونا، وبيراجع كل حزام بنفسه قبل ما يتشحن", "Founder of Vicuna — checks every belt himself before it ships")}</span>
+            </figcaption>
+          </figure>
+        </div>
+        <div className="order-1 grid grid-cols-[1.35fr_1fr] gap-3 lg:order-2" data-reveal>
+          <div className="relative row-span-2 overflow-hidden rounded-[26px] bg-plum">
+            <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
+              muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
+            <span className="tag absolute bottom-3 start-3">✂️ {tr("قص بالليزر", "Laser cut")}</span>
+          </div>
+          <img src={f.src} srcSet={f.srcset} sizes="(max-width:1024px) 38vw, 300px" width={f.width} height={f.height} loading="lazy" decoding="async"
+            alt={tr("خالد العربي بيظبط حزام على المانيكان", "Khaled Elaraby fitting a belt on the mannequin")} className="aspect-[4/5] w-full rounded-[26px] object-cover object-top" />
+          <img src={w.src} srcSet={w.srcset} sizes="(max-width:1024px) 38vw, 300px" width={w.width} height={w.height} loading="lazy" decoding="async"
+            alt={tr("ضبط فيونكة الحزام بالإيد", "Shaping the bow by hand")} className="aspect-[4/5] w-full rounded-[26px] object-cover" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ---------- made to measure in natural leather (home) ---------- */
+export const Bespoke = () => {
+  const tr = useTr();
+  const shots = [img("leather-1"), img("leather-3"), img("leather-2")];
+  const steps = [
+    [tr("اختاري الجلد واللون", "Choose the leather and colour"), tr("ابعتيلنا وهنوريكي الألوان والنقشات المتاحة بالصور والفيديو.", "Message us and we'll show you the available colours and textures in photos and video.")],
+    [tr("ابعتي مقاسك", "Send your measurement"), tr("مقاس وسطك والعرض اللي يريحك، وإحنا نقولك بالظبط تقيسي إزاي.", "Your waist and the width you like — we'll tell you exactly how to measure.")],
+    [tr("بنفصّله ونأكد معاكي", "We make it and check with you"), tr("بنبعتلك صورته قبل الشحن، ويوصلك لحد البيت.", "We send you a photo before shipping, then deliver it to your door.")],
+  ];
+  return (
+    <section id="bespoke" className="px-3 pt-20 sm:px-5">
+      <div className="bespoke mx-auto max-w-[1400px] overflow-hidden rounded-[36px]">
+        <div className="grid gap-8 p-5 sm:p-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+          <div data-reveal>
+            <span className="eyebrow text-rose">{tr("خدمة التفصيل", "Made to measure")}</span>
+            <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,3.2rem)] font-bold leading-tight text-white">{tr("حزام جلد طبيعي،", "A natural leather belt,")} <span className="text-rose">{tr("متفصّل على مقاسك بالظبط", "made exactly to your size")}</span></h2>
+            <p className="mt-3 max-w-lg leading-8 text-white/75">{tr("لو عايزة حاجة مختلفة ليكي إنتي بس: اختاري من خامات الجلد الطبيعي عندنا، وإحنا نفصّلك الحزام بالمقاس والعرض والشكل اللي تحبيه. حتة واحدة معمولة عشانك.", "Want something that's yours alone? Pick from our natural leathers and we'll make your belt to the size, width and shape you love — one piece, made for you.")}</p>
+            <ol className="mt-6 space-y-3">
+              {steps.map(([t, d], i) => (
+                <li key={t} className="flex gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-berry text-[14px] font-extrabold text-white num">{i + 1}</span>
+                  <span><b className="block text-[15px] text-white">{t}</b><span className="text-[13.5px] leading-6 text-white/65">{d}</span></span>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a className="btn btn-berry btn-shine" target="_blank" rel="noopener" href={waLink(tr("السلام عليكم، عايزة أفصّل حزام جلد طبيعي على مقاسي ✂️", "Hello, I'd like a natural leather belt made to my size ✂️"))}>
+                <Icon name="wa" className="size-4" /> {tr("اطلبي تفصيلك", "Request yours")}
+              </a>
+              <span className="text-[12.5px] text-white/55">{tr("السعر حسب الجلد والمقاس، وبنقولك عليه قبل أي حاجة", "Priced by leather and size — we confirm it with you first")}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3" data-reveal>
+            {shots.map((im, i) => (
+              <img key={i} src={im.src} srcSet={im.srcset} sizes="(max-width:1024px) 46vw, 340px" width={im.width} height={im.height} loading="lazy" decoding="async"
+                alt={tr("خامات جلد طبيعي بألوان ونقشات مختلفة", "Natural leathers in different colours and textures")}
+                className={`w-full rounded-[22px] object-cover ${i === 0 ? "col-span-2 aspect-[16/9]" : "aspect-square"}`} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

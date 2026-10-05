@@ -38,6 +38,10 @@ async function buildImages() {
     // "On the body" strip: real customers' photos (4:5)
     ...[1, 2, 3, 4, 5, 6, 7].map((n) => ({ key: `onbody-${n}`, file: path.join(SRC, `assets/site/onbody-${n}.jpg`), widths: [360, 720] })),
     { key: "laser-poster", file: path.join(SRC, "assets/site/laser-poster.jpg"), widths: [640, 1280] },
+    // Founder at work + the natural-leather hides offered for made-to-measure belts
+    { key: "founder", file: path.join(SRC, "assets/site/founder.jpg"), widths: [480, 900] },
+    { key: "founder-work", file: path.join(SRC, "assets/site/founder-work.jpg"), widths: [480, 900] },
+    ...[1, 2, 3].map((n) => ({ key: `leather-${n}`, file: path.join(SRC, `assets/site/leather-${n}.jpg`), widths: [480, 960] })),
   ];
 
   await Promise.all(

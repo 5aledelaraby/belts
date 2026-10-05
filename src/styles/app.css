@@ -412,3 +412,9 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .perk:hover .illus { transform: rotate(-8deg) scale(1.08); }
 [data-sound-toggle] .snd-off, [data-sound-toggle][aria-pressed="false"] .snd-on { display: none; }
 [data-sound-toggle][aria-pressed="false"] .snd-off { display: block; }
+
+/* founder + made to measure */
+.founder-note { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--color-cream); width: fit-content; max-width: 100%; }
+[dir="rtl"] .founder-note { padding: 10px 10px 10px 16px; }
+.founder-note img { width: 56px; height: 56px; flex: none; border-radius: 999px; object-fit: cover; object-position: 50% 8%; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--color-berry); }
+.bespoke { background: radial-gradient(90% 70% at 100% 0%, rgb(200 16 46 / .35), transparent 60%), #121212; }
