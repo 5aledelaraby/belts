@@ -359,18 +359,6 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
           <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
         </button>
 
-        {/* help bubble: once, after 30 seconds without any tap or scroll */}
-        <a className="wa-help" data-wa-help data-show="false" target="_blank" rel="noopener" href={waLink(tr("السلام عليكم، محتاجة مساعدة أختار حزام", "Hello, I'd like some help choosing a belt"))}>
-          {tr("محتاجة مساعدة تختاري؟ كلمينا 💬", "Need help choosing? Chat with us 💬")}
-        </a>
-        {/* floating WhatsApp button: fades in after 300px of scrolling */}
-        <a className="wa-fab" data-wa-fab data-show="false" data-tip="false" target="_blank" rel="noopener"
-          href={waLink(tr("مرحبا، عايزة أستفسر عن أحزمة Vicuna", "Hello, I have a question about Vicuna belts"))}
-          aria-label={tr("كلمينا على واتساب", "Chat with us on WhatsApp")}>
-          <Icon name="wa" className="size-[30px]" />
-          <span className="wa-tip" aria-hidden="true">{tr("كلمينا على واتساب", "Chat with us on WhatsApp")}</span>
-        </a>
-
         <script id="catalog" type="application/json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ config, catalog, strings: clientStrings[lang] }) }} />
         {assets.vendor.filter((v) => /\/(gsap|ScrollTrigger)\./.test(v)).map((v) => <script key={v} src={hrefFor("ar", v)} defer></script>)}
         <script src={hrefFor("ar", assets.js)} defer></script>
