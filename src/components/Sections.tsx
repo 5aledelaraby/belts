@@ -181,13 +181,13 @@ const OrderStepsMini = () => {
 
 /* ---------- multi-belt offer: 2nd belt −25%, 3rd −35% (applied to the cheaper belts in the bag) ---------- */
 export const OfferStrip = () => {
-  const tr = useTr();
+  const tr = useTr(); const url = useHref();
   return (
     <div className="offer-strip" data-reveal>
       <Illus name="tag" className="size-12 shrink-0 text-white [--il-fill:rgb(255_255_255/.22)]" />
       <div className="min-w-0">
         <div className="text-[16px] font-extrabold leading-snug sm:text-[18px]">{tr("الحزام التاني بخصم 25%، والتالت بخصم 35% 🎁", "2nd belt 25% off, 3rd belt 35% off 🎁")}</div>
-        <div className="mt-0.5 text-[12.5px] text-white/85">{tr("الخصم بيتحسب لوحده في الشنطة · كل ما تزوّدي، توفّري أكتر", "Applied automatically in your bag · the more you add, the more you save")}</div>
+        <div className="mt-0.5 text-[12.5px] text-white/85">{tr("الخصم بيتحسب لوحده في الشنطة · كل ما تزوّدي، توفّري أكتر", "Applied automatically in your bag · the more you add, the more you save")} · <a href={url("terms/#offers")} className="underline underline-offset-2">{tr("الشروط", "Terms")}</a></div>
       </div>
     </div>
   );

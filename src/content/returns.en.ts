@@ -34,6 +34,7 @@ export const html = `
 <ul>
 <li>You can return any item within <b>${site.returnDays} days</b> of delivery, no reason needed.</li>
 <li>We refund the <b>full price of the item</b> — whether bought at full price, on offer or with a discount code.</li>
+<li>If your order had the <a href="/en/terms/#offers">multi-belt offer</a> and you return part of it, the discount is recalculated on what you keep and we refund the difference.</li>
 <li>The item must come back unused and undamaged.</li>
 <li>We refund within <b>${site.refundDays} days</b> of receiving the item, by InstaPay or another method that suits you.</li>
 <li>Prefer an exchange? Pick any other belt — you only pay the price difference, if any.</li>

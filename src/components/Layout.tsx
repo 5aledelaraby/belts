@@ -339,7 +339,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
           <Illus name="gift" className="size-14 shrink-0 text-berry [--il-fill:#fff]" />
           <div className="min-w-0 flex-1">
             <div className="text-[15px] font-extrabold leading-snug">{tr("عيد ميلادك عندنا ليه هدية 🎂", "Your birthday comes with a gift 🎂")}</div>
-            <div className="mt-0.5 text-[13px] leading-6 text-mauve">{tr("في يوم عيد ميلادك ابعتيلنا وخدي حزام هدية 🎁", "On your birthday, message us and get a belt as a gift 🎁")}</div>
+            <div className="mt-0.5 text-[13px] leading-6 text-mauve">{tr("في يوم عيد ميلادك ابعتيلنا وخدي حزام هدية 🎁", "On your birthday, message us and get a belt as a gift 🎁")} <a href={url("terms/#offers")} className="underline underline-offset-2">{tr("الشروط", "Terms")}</a></div>
             <a className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-berry px-4 py-2 text-[13px] font-extrabold text-white" data-bday-go target="_blank" rel="noopener"
               href={waLink(tr("السلام عليكم، النهارده عيد ميلادي 🎂 وعايزة هدية الحزام 🎁", "Hello, it's my birthday today 🎂 and I'd love the gift belt 🎁"))}>
               <Icon name="wa" className="size-4" /> {tr("ابعتيلنا", "Message us")}
