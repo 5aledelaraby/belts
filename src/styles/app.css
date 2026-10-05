@@ -480,3 +480,15 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .wa-help::after { content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; background: #fff; transform: translateX(-50%) rotate(45deg); }
 .wa-help[data-show="true"] { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 @media (min-width: 768px) { .wa-help { left: auto; right: 96px; bottom: 36px; transform: translateX(10px); } .wa-help[data-show="true"] { transform: none; } .wa-help::after { left: auto; right: -5px; bottom: 50%; transform: translateY(50%) rotate(45deg); } }
+
+/* reviews strip */
+.reviews { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: max(16px, calc((100vw - 1400px) / 2 + 24px)); scroll-padding-inline: max(16px, calc((100vw - 1400px) / 2 + 24px)); padding-bottom: 8px; align-items: center; }
+.rev-card, .rev-photo { flex: none; width: min(78vw, 300px); scroll-snap-align: start; margin: 0; border-radius: 22px; }
+.rev-card { display: flex; flex-direction: column; gap: 10px; padding: 18px; background: #fff; box-shadow: var(--shadow-card); }
+.rev-rec { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #EEF3FF; color: #1D4ED8; font-size: 12px; font-weight: 800; }
+.rev-card blockquote { margin: 0; font-size: 15px; line-height: 1.85; color: var(--color-plum); }
+.rev-card figcaption { font-size: 12.5px; color: var(--color-mauve); }
+.rev-card figcaption b { color: var(--color-plum); }
+.rev-photo { position: relative; width: min(52vw, 210px); aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-cream); }
+.rev-photo img { width: 100%; height: 100%; object-fit: cover; }
+.rev-photo figcaption { position: absolute; bottom: 10px; inset-inline-start: 10px; padding: 4px 10px; border-radius: 999px; background: rgb(255 255 255 / .92); font-size: 11.5px; font-weight: 800; }

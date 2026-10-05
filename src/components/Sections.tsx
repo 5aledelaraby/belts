@@ -4,6 +4,7 @@ import { colors, products, styles, priceOf, productUrl, pName, sName, sText, cNa
 import { useLang, useTr, useHref } from "../i18n";
 import { productSeo } from "../data/seo-copy";
 import { faqItems } from "../data/faq";
+import { reviews } from "../data/reviews";
 import { img, videos } from "../lib/images";
 import { Icon } from "./Icons";
 import { Illus } from "./Illus";
@@ -484,6 +485,37 @@ export const OnBody = () => {
             alt={tr("بنت لابسة حزام خصر من Vicuna", "A woman wearing a Vicuna waist belt")} />;
         })}
       </div>
+    </section>
+  );
+};
+
+/* ---------- real reviews from our Facebook pages (home) ---------- */
+export const Reviews = () => {
+  const lang = useLang(); const tr = useTr();
+  const month = (d: string) => new Date(d + "-01").toLocaleDateString(lang === "en" ? "en-GB" : "ar-EG-u-nu-latn", { month: "long", year: "numeric" });
+  const photos = [img("review-1"), img("review-2")];
+  const cards = reviews.map((r, i) => (
+    <figure key={r.name + i} className="rev-card">
+      <div className="rev-rec">👍 {tr("بترشّح فيكونا", "Recommends Vicuna")}</div>
+      <blockquote lang="ar" dir="rtl">«{r.text}»</blockquote>
+      <figcaption><b>{lang === "en" ? r.nameEn : r.name}</b> · <span>{month(r.date)}</span></figcaption>
+    </figure>
+  ));
+  // a customer's own photo after every few reviews
+  const items = cards.flatMap((c, i) => (i === 2 || i === 7) ? [c, (
+    <figure key={"p" + i} className="rev-photo">
+      <img src={photos[i === 2 ? 0 : 1].src} srcSet={photos[i === 2 ? 0 : 1].srcset} sizes="240px" width={photos[0].width} height={photos[0].height} loading="lazy" decoding="async"
+        alt={tr("صورة من زبونة للحزام بعد ما استلمته", "A customer's own photo of her belt")} />
+      <figcaption>{tr("📷 صورة من زبونة", "📷 Customer photo")}</figcaption>
+    </figure>
+  )] : [c]);
+  return (
+    <section className="pt-20">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("قالوا عننا", "What they said")} <span className="text-berry">💬</span></h2>
+        <p className="mt-2 text-mauve">{tr("آراء حقيقية من زبايتنا على صفحاتنا في فيسبوك، زي ما كتبوها.", "Real reviews from our customers on our Facebook pages, as they wrote them.")}</p>
+      </div>
+      <div className="reviews no-scrollbar mt-6" data-lenis-prevent data-reveal>{items}</div>
     </section>
   );
 };
