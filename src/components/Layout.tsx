@@ -389,6 +389,10 @@ const footerPostLabel: Record<string, string> = {
   "belt-for-body-shape": "الحزام المناسب لشكل جسمك",
   "lace-belts-90s-trend": "أحزمة الدانتيل وموضة التسعينات",
   "waist-belt-size-material-guide": "دليل مقاسات وخامات الأحزمة",
+  "belt-with-abaya": "حزام مع العباية للمحجبات",
+  "belt-trends-2026": "ترند الأحزمة 2026",
+  "belt-for-curvy-women": "الحزام للجسم الممتلئ",
+  "how-to-tie-wrap-belt": "5 طرق لربط الحزام",
 };
 
 const Footer = ({ en }: { en: boolean }) => {

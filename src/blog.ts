@@ -28,7 +28,7 @@ const marked = new Marked({
     image({ href, text }) {
       if (!href.startsWith("img:")) return `<img src="${esc(href)}" alt="${esc(text)}" loading="lazy">`;
       const im = img(href.slice(4));
-      const product = !/^(hero|mood-)/.test(href.slice(4));
+      const product = !/^(hero|mood-|onbody-|founder|navy-belt|leather-|laser-)/.test(href.slice(4));
       return `<figure class="post-figure${product ? " is-product" : ""}"><img src="${im.src}" srcset="${im.srcset}" sizes="(max-width:800px) 92vw, 720px" width="${im.width}" height="${im.height}" alt="${esc(text)}" loading="lazy" decoding="async"><figcaption>${esc(text)}</figcaption></figure>`;
     },
     link({ href, text }) {
@@ -78,6 +78,10 @@ const parse = (file: string): Post => {
 
 /** Display order on the blog page (newest first). Files not listed go at the end. */
 const ORDER = [
+  "belt-with-abaya",
+  "belt-trends-2026",
+  "belt-for-curvy-women",
+  "how-to-tie-wrap-belt",
   "dress-belt-styling-ideas",
   "evening-dress-belt",
   "belt-for-body-shape",
@@ -104,4 +108,4 @@ export const relatedPosts = (p: Post, n = 3) =>
     .map((x) => x.q);
 
 export const formatDate = (iso: string) =>
-  new Intl.DateTimeFormat("ar-EG", { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso + "T12:00:00Z"));
+  new Intl.DateTimeFormat("ar-EG-u-nu-latn", { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso + "T12:00:00Z"));
