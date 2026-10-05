@@ -8,6 +8,7 @@ import { assets } from "../lib/assets";
 import { img } from "../lib/images";
 import { IconSprite, Icon } from "./Icons";
 import { Logo } from "./Logo";
+import { Illus } from "./Illus";
 import { Bow, Sparkle } from "./Art";
 
 interface Props {
@@ -26,12 +27,14 @@ const fonts =
   "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@700&family=Marcellus&family=Great+Vibes&display=swap";
 
 const marqueeFor = (en: boolean) => en ? [
+  "2nd belt 25% off · 3rd belt 35% off",
   `Free shipping over ${site.shipping.freeOver} EGP`,
   `Delivery across Egypt in ${site.deliveryDays} working days`,
   "Cash on delivery or InstaPay",
   `${site.returnDays}-day returns with a full refund`,
   "Custom sizes on request",
 ] : [
+  "الحزام التاني بخصم 25% · والتالت بخصم 35%",
   `شحن مجاني فوق ${site.shipping.freeOver} جنيه`,
   `توصيل خلال ${site.deliveryDays} أيام عمل لكل مصر`,
   "الدفع عند الاستلام أو InstaPay",
@@ -234,7 +237,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
               <ul className="space-y-2.5 rounded-2xl bg-white p-4 text-[14px]">
                 <li className="flex gap-3"><Icon name="ruler" className="size-5 shrink-0 text-berry" /> {tr(`عرض ${site.size.widthCm} سم · طول ${site.size.lengthCm} سم · بيلبس لحد 90 كيلو`, `${site.size.widthCm} cm wide · ${site.size.lengthCm} cm long · fits up to 90 kg`)}</li>
                 <li className="flex gap-3"><Icon name="check" className="size-5 shrink-0 text-berry" /> <span data-q-texture></span></li>
-                <li className="flex gap-3"><Icon name="truck" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مقاسات خاصة بالطلب`, `Delivered in ${site.deliveryDays} working days · custom sizes on request`)}</li>
+                <li className="flex gap-3"><Icon name="plane" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مقاسات خاصة بالطلب`, `Delivered in ${site.deliveryDays} working days · custom sizes on request`)}</li>
               </ul>
               <div className="mt-auto flex flex-col gap-3 sm:flex-row">
                 <button className="btn btn-berry btn-shine flex-1" data-q-add>{tr("أضيفي للشنطة", "Add to bag")}</button>
@@ -249,6 +252,10 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <aside className="drawer" data-cart data-open="false" aria-label={tr("الشنطة", "Bag")} aria-hidden="true" data-lenis-prevent>
           <div className="flex items-center justify-between px-6 py-5">
             <h2 className="font-display text-[28px] font-bold">{tr("الشنطة", "Your bag")} 🛍</h2>
+            <span className="ms-auto" />
+            <button className="icon-btn size-10 text-mauve" data-sound-toggle aria-pressed="true" aria-label={tr("الأصوات", "Sounds")} title={tr("الأصوات", "Sounds")}>
+              <Icon name="sound" className="size-5 snd-on" /><Icon name="mute" className="size-5 snd-off" />
+            </button>
             <button className="icon-btn" data-cart-close aria-label={tr("إغلاق الشنطة", "Close bag")}><Icon name="close" className="size-6" /></button>
           </div>
           <div className="flex-1 overflow-y-auto px-6 pb-6">
@@ -290,6 +297,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
           </div>
           <div className="space-y-2 rounded-t-[24px] bg-white px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-[0_-10px_30px_-20px_rgb(0_0_0/.3)]">
             <div className="flex justify-between text-[14px]"><span>{tr("المنتجات", "Items")} (<span className="num" data-n>0</span>)</span><span><span className="num" data-sub>0</span> {tr("جنيه", "EGP")}</span></div>
+            <div className="flex justify-between text-[14px] font-bold text-berry" data-disc-row hidden><span>🎁 {tr("خصم الأحزمة", "Multi-belt discount")}</span><span dir="ltr">−<span className="num" data-disc>0</span> {tr("جنيه", "EGP")}</span></div>
             <div className="flex justify-between text-[14px]"><span>{tr("الشحن", "Shipping")}</span><span data-ship>—</span></div>
             <div className="flex justify-between text-[20px] font-extrabold"><span>{tr("الإجمالي", "Total")}</span><span className="text-berry"><span className="num" data-total>0</span> {tr("جنيه", "EGP")}</span></div>
             <button type="submit" form="order" className="btn btn-wa w-full"><Icon name="wa" className="size-4" /> {tr("إرسال الطلب على واتساب", "Send order on WhatsApp")}</button>
@@ -326,6 +334,32 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
             <button className="btn btn-white py-2.5 text-[14px]" data-upsell-bag>{tr("الشنطة", "Bag")}</button>
           </div>
         </div>
+        {/* birthday gift: slides in once, until closed */}
+        <div className="bday" data-bday data-show="false" role="dialog" aria-label={tr("هدية عيد الميلاد", "Birthday gift")}>
+          <Illus name="gift" className="size-14 shrink-0 text-berry [--il-fill:#fff]" />
+          <div className="min-w-0 flex-1">
+            <div className="text-[15px] font-extrabold leading-snug">{tr("عيد ميلادك عندنا ليه هدية 🎂", "Your birthday comes with a gift 🎂")}</div>
+            <div className="mt-0.5 text-[13px] leading-6 text-mauve">{tr("في يوم عيد ميلادك ابعتيلنا وخدي حزام هدية 🎁", "On your birthday, message us and get a belt as a gift 🎁")}</div>
+            <a className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-berry px-4 py-2 text-[13px] font-extrabold text-white" data-bday-go target="_blank" rel="noopener"
+              href={waLink(tr("السلام عليكم، النهارده عيد ميلادي 🎂 وعايزة هدية الحزام 🎁", "Hello, it's my birthday today 🎂 and I'd love the gift belt 🎁"))}>
+              <Icon name="wa" className="size-4" /> {tr("ابعتيلنا", "Message us")}
+            </a>
+          </div>
+          <button className="icon-btn -me-1.5 -mt-1.5 size-9 shrink-0 self-start" data-bday-close aria-label={tr("إغلاق", "Close")}><Icon name="close" className="size-5" /></button>
+        </div>
+
+        {/* thank-you after the order is handed to WhatsApp */}
+        <dialog className="thanks" data-thanks aria-label={tr("شكراً لطلبك", "Thank you for your order")}>
+          <div className="thanks-bow"><Bow className="w-24 text-berry" w={2} /></div>
+          <h2 className="font-display text-[30px] font-bold leading-tight">{tr("شكراً", "Thank you")} <span data-thanks-name></span> 💕</h2>
+          <p className="mt-2 text-[15px] leading-7 text-mauve">{tr("طلبك جاهز في واتساب، دوسي «إرسال» هناك، وإحنا هنكلمك نأكد معاكي في أقرب وقت.", "Your order is ready in WhatsApp — just tap send there, and we'll call you to confirm shortly.")}</p>
+          <div className="mt-3 inline-flex gap-1.5 rounded-full bg-petal px-4 py-1.5 text-[13px] font-bold text-berry"><span>{tr("رقم الطلب", "Order no.")}</span><span className="num" data-thanks-no></span></div>
+          <div className="mt-6 flex flex-col gap-2">
+            <button className="btn btn-berry" data-thanks-done>{tr("تمام، بعتّ الطلب ✓", "Done, I sent it ✓")}</button>
+            <button className="text-[13px] font-semibold text-mauve underline underline-offset-4" data-thanks-retry>{tr("واتساب ما اتفتحش؟ افتحيه تاني", "WhatsApp didn't open? Try again")}</button>
+          </div>
+        </dialog>
+
         {/* back to top */}
         <button className="to-top" data-to-top data-show="false" aria-label={tr("لأول الصفحة", "Back to top")}>
           <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>

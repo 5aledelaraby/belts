@@ -13,6 +13,10 @@ export const IconSprite = () => (
     <symbol id="i-grid" viewBox="0 0 24 24"><path {...s} d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" /></symbol>
     <symbol id="i-list" viewBox="0 0 24 24"><path {...s} d="M4 5h16v6H4zM4 15h16v4H4z" /></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path {...s} d="m5 12.5 4.5 4.5L19 7" /></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><path {...s} d="M21 3 3 10.5l6.5 2.5L12 20l3.5-4.5L20 18 21 3ZM9.5 13 21 3" /></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path {...s} d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-1.5-3-5.5-4-5.5-1.5C6.5 7 9.5 7 12 7Zm0 0c1.5-3 5.5-4 5.5-1.5C17.5 7 14.5 7 12 7Z" /></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path {...s} d="M4 10v4h4l5 4V6L8 10H4Zm12.5-1.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path {...s} d="M4 10v4h4l5 4V6L8 10H4Zm12 0 5 5m0-5-5 5" /></symbol>
     <symbol id="i-truck" viewBox="0 0 24 24"><path {...s} d="M2 6h11v10H2zM13 9h4l3 3v4h-7M6.5 18.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" /></symbol>
     <symbol id="i-return" viewBox="0 0 24 24"><path {...s} d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" /></symbol>
     <symbol id="i-cash" viewBox="0 0 24 24"><path {...s} d="M3 7h18v10H3zM12 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM6 10v.01M18 14v.01" /></symbol>

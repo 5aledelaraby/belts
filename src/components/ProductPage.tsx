@@ -60,6 +60,9 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <button className="btn btn-berry btn-shine flex-1" data-add={p.id} data-magnetic>{tr("أضيفي للشنطة", "Add to bag")} 🛍</button>
             <a className="btn btn-white flex-1" href={waLink(tr(`السلام عليكم، عايزة أطلب حزام ${name} (${priceOf(p)} جنيه)`, `Hello, I would like to order the ${name} belt (${priceOf(p)} EGP)`))} target="_blank" rel="noopener"><Icon name="wa" className="size-4" /> {tr("اطلبي على واتساب", "Order on WhatsApp")}</a>
           </div>
+          <div className="mt-3 flex items-center gap-2 rounded-2xl bg-petal px-4 py-2.5 text-[13.5px] font-bold text-berry">
+            <Icon name="gift" className="size-5 shrink-0" /> {tr("الحزام التاني بخصم 25%، والتالت بخصم 35%", "2nd belt 25% off, 3rd belt 35% off")}
+          </div>
           <button className="mt-2 inline-flex items-center gap-2 py-2.5 text-[14px] font-semibold text-mauve hover:text-berry" data-fav={p.id} aria-pressed="false">
             <Icon name="heart" className="size-5" /> {tr("أضيفي للمفضلة", "Add to favourites")}
           </button>
@@ -67,7 +70,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
           <ul className="mt-7 space-y-3 rounded-3xl bg-white p-5 text-[14px] shadow-[var(--shadow-card)]">
             <li className="flex gap-3"><Icon name="check" className="size-5 shrink-0 text-berry" /> {tName(p, lang)}</li>
             <li className="flex gap-3"><Icon name="ruler" className="size-5 shrink-0 text-berry" /> {tr(`عرض ${site.size.widthCm} سم · طول ${site.size.lengthCm} سم · بيلبس لحد وزن 90 كيلو · مقاسات خاصة بالطلب`, `${site.size.widthCm} cm wide · ${site.size.lengthCm} cm long · fits up to 90 kg · custom sizes on request`)}</li>
-            <li className="flex gap-3"><Icon name="truck" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مجاني فوق ${site.shipping.freeOver} جنيه`, `Delivered in ${site.deliveryDays} working days · free over ${site.shipping.freeOver} EGP`)}</li>
+            <li className="flex gap-3"><Icon name="plane" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مجاني فوق ${site.shipping.freeOver} جنيه`, `Delivered in ${site.deliveryDays} working days · free over ${site.shipping.freeOver} EGP`)}</li>
             <li className="flex gap-3"><Icon name="cash" className="size-5 shrink-0 text-berry" /> {tr("الدفع عند الاستلام أو InstaPay", "Cash on delivery or InstaPay")}</li>
             <li className="flex gap-3"><Icon name="return" className="size-5 shrink-0 text-berry" /> {tr(`استرجاع خلال ${site.returnDays} يوم بفلوسك كاملة`, `${site.returnDays}-day returns, full refund`)} · <a href={url("returns/")} className="underline">{tr("التفاصيل", "Details")}</a></li>
           </ul>

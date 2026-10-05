@@ -6,6 +6,7 @@ import { productSeo } from "../data/seo-copy";
 import { faqItems } from "../data/faq";
 import { img, videos } from "../lib/images";
 import { Icon } from "./Icons";
+import { Illus } from "./Illus";
 import { Bow, Ribbon, Sparkle, Blobs, Heart } from "./Art";
 
 const PAGE_SIZE = 12;
@@ -32,7 +33,7 @@ export const Hero = () => {
             <Sparkle className="ship-spark -start-5 top-0 size-3.5" />
             <Sparkle className="ship-spark -end-4 -bottom-1 size-3 [--d:-1.1s]" />
             <Sparkle className="ship-spark -top-3 end-6 size-2.5 [--d:-2s]" />
-            <Icon name="truck" className="size-[18px]" />
+            <Illus name="plane" className="size-[22px] [--il-fill:rgb(255_255_255/.25)]" />
             {tr(`توصيل لكل مصر خلال ${site.deliveryDays} أيام`, `Delivery across Egypt in ${site.deliveryDays} days`)}
           </span>
         </div>
@@ -97,13 +98,13 @@ export const Perks = () => {
   <section className="mx-auto max-w-[1400px] px-4 pt-8 sm:px-6">
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {[
-        ["truck", tr(`توصيل خلال ${site.deliveryDays} أيام`, `Delivery in ${site.deliveryDays} days`), tr("لكل محافظات مصر", "To every governorate")],
+        ["plane", tr(`توصيل خلال ${site.deliveryDays} أيام`, `Delivery in ${site.deliveryDays} days`), tr("لكل محافظات مصر", "To every governorate")],
         ["cash", tr("الدفع عند الاستلام", "Cash on delivery"), tr("أو InstaPay", "or InstaPay")],
         ["return", tr(`استرجاع ${site.returnDays} يوم`, `${site.returnDays}-day returns`), tr("فلوسك ترجعلك كاملة", "Full refund")],
-        ["ruler", tr("بيلبس لحد 90 كيلو", "Fits up to 90 kg"), tr("ومقاسات خاصة بالطلب", "Custom sizes on request")],
-      ].map(([icon, t, d]) => (
-        <div key={t} className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
-          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-petal text-berry"><Icon name={icon} className="size-6" /></span>
+        ["tape", tr("بيلبس لحد 90 كيلو", "Fits up to 90 kg"), tr("ومقاسات خاصة بالطلب", "Custom sizes on request")],
+      ].map(([icon, t, d], i) => (
+        <div key={t} className="perk flex items-center gap-3 rounded-3xl bg-white p-4 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1" data-reveal style={{ ["--i" as string]: i }}>
+          <Illus name={icon} className="size-12 shrink-0 text-berry" />
           <div className="min-w-0"><div className="text-[14px] font-bold">{t}</div><div className="text-[12px] text-mauve">{d}</div></div>
         </div>
       ))}
@@ -178,6 +179,20 @@ const OrderStepsMini = () => {
   );
 };
 
+/* ---------- multi-belt offer: 2nd belt −25%, 3rd −35% (applied to the cheaper belts in the bag) ---------- */
+export const OfferStrip = () => {
+  const tr = useTr();
+  return (
+    <div className="offer-strip" data-reveal>
+      <Illus name="tag" className="size-12 shrink-0 text-white [--il-fill:rgb(255_255_255/.22)]" />
+      <div className="min-w-0">
+        <div className="text-[16px] font-extrabold leading-snug sm:text-[18px]">{tr("الحزام التاني بخصم 25%، والتالت بخصم 35% 🎁", "2nd belt 25% off, 3rd belt 35% off 🎁")}</div>
+        <div className="mt-0.5 text-[12.5px] text-white/85">{tr("الخصم بيتحسب لوحده في الشنطة · كل ما تزوّدي، توفّري أكتر", "Applied automatically in your bag · the more you add, the more you save")}</div>
+      </div>
+    </div>
+  );
+};
+
 /* ---------- filter bar + grid ---------- */
 export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
   const lang = useLang(); const tr = useTr();
@@ -187,7 +202,8 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
   const prices = [...new Set(list.map(priceOf))].sort((a, b) => a - b);
   return (
     <section id="shop" className="scroll-mt-20" data-shop data-view="grid">
-      <div className="mx-auto max-w-[1400px] px-4 pt-14 sm:px-6" data-steps>
+      <div className="mx-auto max-w-[1400px] px-4 pt-10 sm:px-6"><OfferStrip /></div>
+      <div className="mx-auto max-w-[1400px] px-4 pt-10 sm:px-6" data-steps>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold leading-tight">
             {title} <Sparkle className="inline size-6 text-berry" />
@@ -304,7 +320,7 @@ export const ShopByStyle = () => {
           const count = products.filter((p) => p.style === s.id).length;
           const im = img(cover[s.id] ?? first(s.id).id);
           return (
-            <a key={s.id} href={url(`${s.id}/`)} className="group relative flex flex-col overflow-hidden rounded-[30px] bg-white p-3 shadow-[var(--shadow-card)] transition-transform duration-500 ease-soft hover:-translate-y-1.5">
+            <a key={s.id} href={url(`${s.id}/`)} data-reveal style={{ ["--i" as string]: styles.indexOf(s) % 3 }} className="group relative flex flex-col overflow-hidden rounded-[30px] bg-white p-3 shadow-[var(--shadow-card)] transition-transform duration-500 ease-soft hover:-translate-y-1.5">
               <span className="relative block aspect-[4/3] overflow-hidden rounded-[22px] bg-gradient-to-br from-petal/70 to-cream">
                 <img src={im.src} srcSet={im.srcset} sizes="(max-width:1024px) 46vw, 30vw" width={im.width} height={im.height} loading="lazy"
                   alt={tr(`أحزمة ${st.name} من Vicuna`, `${st.name} belts by Vicuna`)}
@@ -341,7 +357,7 @@ export const TieSteps = () => {
         [tr("لفّي الشريطين", "Wrap the straps"), tr("عدّيهم حوالين الوسط ورجّعيهم لقدّام فوق الحزام.", "Cross them around your waist and bring them back to the front over the belt.")],
         [tr("اربطي بطريقتك", "Tie it your way"), tr("فيونكة في النص أو على جنب، أو عقدة بسيطة وسيبي الأطراف نازلة.", "A bow at the centre or to the side, or a simple knot with the ends falling.")],
       ].map(([t, d], i) => (
-        <li key={t} className="relative overflow-hidden rounded-[28px] bg-white p-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
+        <li key={t} data-reveal style={{ ["--i" as string]: i }} className="relative overflow-hidden rounded-[28px] bg-white p-6 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
           <span className="grid size-12 place-items-center rounded-2xl bg-berry text-[22px] font-extrabold text-white num">{i + 1}</span>
           <h3 className="mt-4 text-[19px] font-bold">{t}</h3>
           <p className="mt-1.5 text-mauve">{d}</p>
@@ -359,7 +375,7 @@ export const MadeByHand = () => {
   const poster = img("laser-poster");
   return (
     <section className="mx-auto max-w-[1400px] px-4 pt-20 sm:px-6">
-      <div className="grid items-center gap-8 overflow-hidden rounded-[32px] bg-cream p-3 sm:p-4 lg:grid-cols-[1.25fr_1fr]">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[32px] bg-cream p-3 sm:p-4 lg:grid-cols-[1.25fr_1fr]" data-reveal>
         <div className="relative aspect-video overflow-hidden rounded-[24px] bg-plum">
           <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
             muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
@@ -382,7 +398,7 @@ export const OnBody = () => {
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("على الطبيعة", "On the body")} <span className="text-berry">♡</span></h2>
       </div>
-      <div className="onbody no-scrollbar mt-6" data-lenis-prevent>
+      <div className="onbody no-scrollbar mt-6" data-lenis-prevent data-reveal>
         {[1, 2, 3, 4, 5, 6, 7].map((n) => {
           const im = img(`onbody-${n}`);
           return <img key={n} src={im.src} srcSet={im.srcset} sizes="(max-width:640px) 62vw, 300px" width={im.width} height={im.height} loading="lazy" decoding="async"
@@ -402,7 +418,7 @@ export const Faq = () => {
     <h2 className="text-center font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{lang === "en" ? "Questions you ask a lot" : "أسئلة بتتسأل كتير"} 💬</h2>
     <div className="faq mt-8 flex flex-col gap-3">
       {items.map(([q, a]) => (
-        <details key={q}>
+        <details key={q} data-reveal>
           <summary>{q}</summary>
           <p className="whitespace-pre-line pb-5 leading-8 text-mauve">{a}</p>
         </details>

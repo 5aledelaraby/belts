@@ -245,6 +245,91 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   }
 }
 
+/* ---------- soft UI sounds, synthesised with Web Audio (no files to download); a toggle in the bag mutes them ---------- */
+let audio: AudioContext | null = null;
+let soundOn = store.get<boolean>("vicuna-sound", true);
+function sound(kind: "add" | "fav" | "open" | "thanks") {
+  if (!soundOn) return;
+  try {
+    audio ??= new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    if (audio.state === "suspended") audio.resume();
+    const notes: Record<typeof kind, Array<[number, number]>> = {   // [frequency Hz, start s]
+      add: [[880, 0], [1318.5, 0.07]],
+      fav: [[1046.5, 0], [1568, 0.06]],
+      open: [[659.3, 0]],
+      thanks: [[784, 0], [987.8, 0.09], [1174.7, 0.18], [1568, 0.29]],
+    };
+    const t0 = audio.currentTime;
+    for (const [f, at] of notes[kind]) {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + at);
+      g.gain.exponentialRampToValueAtTime(kind === "open" ? 0.025 : 0.045, t0 + at + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + (kind === "thanks" ? 0.6 : 0.32));
+      o.connect(g).connect(audio.destination);
+      o.start(t0 + at); o.stop(t0 + at + 0.7);
+    }
+  } catch { /* no audio: stay silent */ }
+}
+{
+  const t = $("[data-sound-toggle]");
+  const paint = () => t?.setAttribute("aria-pressed", String(soundOn));
+  paint();
+  t?.addEventListener("click", () => { soundOn = !soundOn; store.set("vicuna-sound", soundOn); paint(); if (soundOn) sound("fav"); });
+}
+
+/* ---------- confetti (thank-you): small ribbons and hearts in the brand colours ---------- */
+function confetti() {
+  if (reduced) return;
+  const colors = ["#C8102E", "#EDA0A8", "#FBE8EA", "#161616", "#E2354F"];
+  for (let i = 0; i < 46; i++) {
+    const c = document.createElement("i");
+    c.className = "confetti";
+    c.style.left = `${Math.random() * 100}vw`;
+    c.style.background = colors[i % colors.length];
+    c.style.setProperty("--dx", `${(Math.random() - 0.5) * 160}px`);
+    c.style.setProperty("--rot", `${Math.random() * 720 - 360}deg`);
+    c.style.animationDelay = `${Math.random() * 0.35}s`;
+    c.style.animationDuration = `${1.6 + Math.random() * 1.2}s`;
+    if (i % 4 === 0) { c.style.width = "8px"; c.style.height = "8px"; c.style.borderRadius = "50%"; }
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3400);
+  }
+}
+
+/* ---------- birthday gift card: slides in shortly after the first visit, never again once closed ---------- */
+{
+  const card = $("[data-bday]");
+  if (card && !store.get<boolean>("vicuna-bday-closed", false)) {
+    const close = () => { card.dataset.show = "false"; store.set("vicuna-bday-closed", true); };
+    setTimeout(() => { if (!document.body.style.overflow) card.dataset.show = "true"; }, 2200);
+    $("[data-bday-close]", card)!.addEventListener("click", close);
+    $("[data-bday-go]", card)!.addEventListener("click", () => setTimeout(close, 300));
+  }
+}
+
+/* ---------- scroll reveal: blocks below the fold rise in gently as they arrive ---------- */
+if (!reduced && "IntersectionObserver" in window) {
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { (e.target as HTMLElement).classList.add("in"); io.unobserve(e.target); }
+  }, { rootMargin: "0px 0px -8% 0px" });
+  for (const el of $$("[data-reveal]")) if (el.getBoundingClientRect().top > innerHeight) { el.classList.add("reveal"); io.observe(el); }
+}
+
+/* ---------- press ripple on buttons ---------- */
+document.addEventListener("pointerdown", (e) => {
+  if (reduced) return;
+  const b = (e.target as Element).closest<HTMLElement>(".btn, .quick-add, .up-add");
+  if (!b) return;
+  const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+  const w = document.createElement("span");
+  w.className = "ripple";
+  w.style.width = w.style.height = `${d}px`;
+  w.style.left = `${e.clientX - r.left - d / 2}px`; w.style.top = `${e.clientY - r.top - d / 2}px`;
+  b.appendChild(w);
+  setTimeout(() => w.remove(), 650);
+}, { passive: true });
+
 /* ---------- back-to-top arrow (after one screen of scrolling) ---------- */
 {
   const btn = document.querySelector<HTMLElement>("[data-to-top]");
@@ -421,7 +506,7 @@ function renderFavs() {
 }
 function toggleFav(id: string, btn?: HTMLElement) {
   if (favs.has(id)) favs.delete(id);
-  else { favs.add(id); track("AddToWishlist", [[id, 1]]); toast(`${S.favAdded} ${catalog[id].name}`); if (btn) burst(btn); }
+  else { favs.add(id); track("AddToWishlist", [[id, 1]]); toast(`${S.favAdded} ${catalog[id].name}`); sound("fav"); if (btn) burst(btn); }
   store.set("vicuna-favs", [...favs]);
   renderFavs();
   if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
@@ -436,17 +521,26 @@ const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
 const subtotal = () => Object.entries(cart).reduce((s, [id, n]) => s + catalog[id].price * n, 0);
 const shipMethod = () => ($<HTMLSelectElement>("#f-ship")!.value as "standard" | "express");
 const payMethod = () => ($<HTMLInputElement>('input[name="pay"]:checked')?.value ?? "cod");
+/** Multi-belt offer: in every group of three belts, the 2nd is 25% off and the 3rd 35% off.
+ *  Units are sorted from dearest to cheapest, so the discounts always land on the cheaper belts. */
+const RATES = [0, 0.25, 0.35];
+const discount = () => {
+  const units = Object.entries(cart).flatMap(([id, n]) => Array<number>(n).fill(catalog[id].price)).sort((a, b) => b - a);
+  return units.reduce((d, price, i) => d + Math.round(price * RATES[i % 3]), 0);
+};
 const shippingCost = (sub: number) => (shipMethod() === "express" ? config.shipping.express : sub >= config.shipping.freeOver ? 0 : config.shipping.standard);
 
 function renderCart() {
-  const n = count(), sub = subtotal(), ship = shippingCost(sub);
+  const n = count(), disc = discount(), sub = subtotal(), net = sub - disc, ship = shippingCost(net);
   const badge = $("[data-cart-count]")!;
   badge.textContent = String(n);
   badge.hidden = n === 0;
   $("[data-n]")!.textContent = String(n);
   $("[data-sub]")!.textContent = String(sub);
   $("[data-ship]")!.innerHTML = !n ? "—" : ship === 0 ? `<b>${S.free}</b>` : `<span class="num">${ship}</span> ${S.currency}`;
-  $("[data-total]")!.textContent = String(n ? sub + ship : 0);
+  $("[data-total]")!.textContent = String(n ? net + ship : 0);
+  $("[data-disc]")!.textContent = String(disc);
+  $("[data-disc-row]")!.hidden = disc === 0;
 
   const lines = $("[data-lines]")!;
   const ids = Object.keys(cart);
@@ -454,8 +548,8 @@ function renderCart() {
     lines.innerHTML = `<div class="py-10 text-center"><p class="font-display text-[24px] font-bold">${S.emptyTitle}</p><p class="mx-auto mt-2 max-w-[30ch] text-[14px] leading-7 text-mauve">${S.emptyHint}</p><button type="button" class="btn btn-berry mt-5" data-empty-cta>${S.emptyCta}</button></div>`;
     return;
   }
-  const left = config.shipping.freeOver - sub;
-  lines.innerHTML = `<p class="mb-4 rounded-full bg-petal px-4 py-2 text-center text-[13px] font-bold text-berry">${
+  const left = config.shipping.freeOver - net;
+  lines.innerHTML = `<p class="offer-nudge">${[S.offer3, S.offer1, S.offer2][n % 3]}</p><p class="mb-4 mt-2 text-center text-[12.5px] font-semibold text-mauve">${
     left > 0 ? fill(S.leftForFree, { n: `<b class="num">${left}</b>` }) : S.gotFree
   }</p>`;
   const list = document.createElement("ul");
@@ -494,7 +588,10 @@ function add(id: string, from?: Element | null) {
 }
 function addNow(id: string) {
   setQty(id, (cart[id] || 0) + 1);
-  if (!showUpsell(id)) toast(S.bagAdded, { label: S.openBag, run: () => $<HTMLElement>("[data-cart-open]")!.click() }, 4000);
+  sound("add");
+  const n = count();
+  const msg = n === 1 ? S.addedNext1 : [S.addedNext3, S.addedNext1, S.addedNext2][n % 3];
+  if (!showUpsell(id)) toast(n > 1 || store.get<boolean>("vicuna-upsold", false) ? msg : S.bagAdded, { label: S.openBag, run: () => $<HTMLElement>("[data-cart-open]")!.click() }, 4000);
   nudgeBag();
   track("AddToCart", [[id, 1]]);
   ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
@@ -548,6 +645,8 @@ if (upsell) {
     if (plus) {
       const id = plus.dataset.upAdd!;
       setQty(id, (cart[id] || 0) + 1);
+      sound("add");
+      burst(plus);
       nudgeBag();
       track("AddToCart", [[id, 1]]);
       ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
@@ -574,7 +673,7 @@ function openCart() {
     ga("begin_checkout", { currency: "EGP", value: subtotal(), items: ids.map((id) => gaItem(id, cart[id])) });
     track("InitiateCheckout", ids.map((id) => [id, cart[id]] as [string, number]));
   }
-  drawer.dataset.open = "true"; drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false; lockScroll(true); $<HTMLElement>("[data-cart-close]")!.focus(); }
+  drawer.dataset.open = "true"; drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false; lockScroll(true); sound("open"); $<HTMLElement>("[data-cart-close]")!.focus(); }
 function closeOverlays() {
   drawer.dataset.open = "false"; drawer.setAttribute("aria-hidden", "true");
   sheet.dataset.open = "false";
@@ -604,7 +703,7 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
     .filter(([id]) => !v(id)).map(([, label]) => label);
   if (missing.length) { err.textContent = S.missing + missing.join(S.sep); return; }
   err.textContent = "";
-  const sub = subtotal(), ship = shippingCost(sub), pay = payMethod();
+  const sub = subtotal(), disc = discount(), net = sub - disc, ship = shippingCost(net), pay = payMethod();
   // Short order number (e.g. V-1004-7K3P) so a WhatsApp order can be matched to its GA4 purchase.
   const d = new Date();
   const orderNo = `V-${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
@@ -612,25 +711,52 @@ $<HTMLFormElement>("#order")!.addEventListener("submit", (e) => {
     S.orderTitle, `${S.orderNo}: ${orderNo}`, "",
     ...ids.map((id) => `• ${catalog[id].name} × ${cart[id]} = ${catalog[id].price * cart[id]} ${S.currency}`), "",
     `${S.products}: ${sub} ${S.currency}`,
+    ...(disc ? [`${S.disc}: -${disc} ${S.currency}`] : []),
     `${S.shipping} (${shipMethod() === "express" ? S.express : S.standard}): ${ship === 0 ? S.free : `${ship} ${S.currency}`}`,
-    `${S.total}: ${sub + ship} ${S.currency}`,
+    `${S.total}: ${net + ship} ${S.currency}`,
     `${S.payment}: ${pay === "instapay" ? fill(S.payInsta, { n: config.instapay }) : S.payCod}`, "",
     `${S.name}: ${v("#f-name")}`, `${S.phone}: ${v("#f-phone")}`, `${S.gov}: ${v("#f-gov")}`, `${S.addr}: ${v("#f-addr")}`,
     ...(v("#f-note") ? [`${S.notes}: ${v("#f-note")}`] : []),
   ].join("\n");
   who = { phone: v("#f-phone"), name: v("#f-name"), gov: v("#f-gov") };
-  track("Purchase", ids.map((id) => [id, cart[id]] as [string, number]), { value: sub, orderNo });
+  track("Purchase", ids.map((id) => [id, cart[id]] as [string, number]), { value: net, orderNo });
   // The order is "placed" when it is sent on WhatsApp; payment happens later (cash on delivery / InstaPay).
   ga("purchase", {
-    transaction_id: orderNo, currency: "EGP", value: sub, shipping: ship,
+    transaction_id: orderNo, currency: "EGP", value: net, shipping: ship, ...(disc ? { coupon: "MULTI-BELT" } : {}),
     payment_type: pay === "instapay" ? "InstaPay" : "Cash on delivery",
     items: ids.map((id) => gaItem(id, cart[id])),
   });
-  const a = document.createElement("a");
-  a.href = wa(msg); a.target = "_blank"; a.rel = "noopener"; a.dataset.noTrack = "";
-  document.body.appendChild(a); a.click(); a.remove();
-  toast(S.openingWa);
+  const openWa = () => {
+    const a = document.createElement("a");
+    a.href = wa(msg); a.target = "_blank"; a.rel = "noopener"; a.dataset.noTrack = "";
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  openWa();
+  showThanks(v("#f-name").split(/\s+/)[0], orderNo, openWa);
 });
+
+/* ---------- thank-you card after the order goes to WhatsApp ---------- */
+const thanks = $<HTMLDialogElement>("[data-thanks]");
+let retryWa = () => {};
+function showThanks(name: string, orderNo: string, again: () => void) {
+  if (!thanks) return toast(S.openingWa);
+  retryWa = again;
+  $("[data-thanks-name]", thanks)!.textContent = !name ? "" : document.documentElement.lang === "en" ? name : `يا ${name}`;
+  $("[data-thanks-no]", thanks)!.textContent = orderNo;
+  closeOverlays();
+  // WhatsApp opens in a new tab; the card is waiting when she comes back.
+  setTimeout(() => { thanks.showModal(); lockScroll(true); sound("thanks"); confetti(); }, 350);
+}
+if (thanks) {
+  thanks.addEventListener("close", () => lockScroll(false));
+  $("[data-thanks-retry]", thanks)!.addEventListener("click", () => retryWa());
+  $("[data-thanks-done]", thanks)!.addEventListener("click", () => {
+    for (const id of Object.keys(cart)) delete cart[id];
+    store.set("vicuna-cart", cart);
+    renderCart();
+    thanks.close();
+  });
+}
 
 /* ---------- quick view ---------- */
 const quick = $<HTMLDialogElement>("[data-quick]")!;

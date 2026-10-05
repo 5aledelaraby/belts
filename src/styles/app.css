@@ -380,3 +380,35 @@ body:has(.drawer[data-open="true"]) .to-top, body:has(.menu-overlay[data-open="t
 .signature { padding: 2px 16px 30px; text-align: center; color: #fff; font-family: "Great Vibes", "Marcellus", cursive; font-size: 26px; line-height: 1.4; }
 .signature .beat { display: inline-block; width: 18px; height: 18px; vertical-align: -1px; margin-inline-start: 4px; color: #E0102F; animation: beat 1.5s ease-in-out infinite; }
 @keyframes beat { 0%, 100% { transform: scale(1) } 12% { transform: scale(1.22) } 24% { transform: scale(1) } 36% { transform: scale(1.14) } 48% { transform: scale(1) } }
+
+/* ---------- offer, birthday, thank-you, polish ---------- */
+.offer-strip { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 24px; color: #fff;
+  background: linear-gradient(110deg, #B00B26 0%, #C8102E 45%, #E2354F 100%); box-shadow: 0 16px 34px -18px rgb(200 16 46 / .8); position: relative; overflow: hidden; }
+.offer-strip::after { content: ""; position: absolute; inset-block: 0; left: 0; width: 30%; background: linear-gradient(90deg, transparent, rgb(255 255 255 / .22), transparent); animation: shimmer 4.5s ease-in-out infinite; animation-delay: 1.5s; pointer-events: none; }
+.offer-nudge { border-radius: 16px; padding: 10px 14px; text-align: center; font-size: 13.5px; font-weight: 800; color: #fff; background: linear-gradient(110deg, #C8102E, #E2354F); }
+
+.bday { position: fixed; z-index: 65; top: 84px; left: 50%; width: min(94vw, 420px); display: flex; gap: 12px; padding: 14px; border-radius: 24px;
+  background: linear-gradient(135deg, #FFF 0%, #FDF0F2 100%); box-shadow: 0 0 0 1px rgb(200 16 46 / .12), 0 24px 50px -20px rgb(0 0 0 / .35);
+  transform: translate(-50%, -24px) scale(.96); opacity: 0; pointer-events: none; transition: transform .6s var(--ease-bounce), opacity .4s; }
+.bday[data-show="true"] { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
+.bday .illus { animation: var(--animate-float); --r: -6deg; }
+body:has(.drawer[data-open="true"]) .bday, body:has(.menu-overlay[data-open="true"]) .bday, body:has(dialog[open]) .bday { opacity: 0; pointer-events: none; }
+
+dialog.thanks { margin: auto; width: min(92vw, 420px); padding: 34px 26px 24px; border-radius: 30px; background: #fff; color: var(--color-plum); text-align: center; box-shadow: 0 30px 70px -20px rgb(0 0 0 / .45); }
+dialog.thanks::backdrop { background: rgb(0 0 0 / .35); backdrop-filter: blur(3px); }
+dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
+.thanks-bow { display: grid; place-items: center; margin-bottom: 6px; }
+.thanks-bow svg { animation: var(--animate-float); }
+.confetti { position: fixed; z-index: 90; top: -12px; width: 7px; height: 13px; border-radius: 2px; pointer-events: none; animation: confetti-fall 2s cubic-bezier(.2,.6,.4,1) forwards; }
+@keyframes confetti-fall { to { transform: translate(var(--dx), 105vh) rotate(var(--rot)); opacity: .9; } }
+
+.reveal { opacity: 0; transform: translateY(26px); }
+.reveal.in { opacity: 1; transform: none; transition: opacity .8s var(--ease-soft), transform .9s var(--ease-soft); transition-delay: calc(var(--i, 0) * 90ms); }
+.ripple { position: absolute; border-radius: 50%; background: rgb(255 255 255 / .35); transform: scale(0); pointer-events: none; animation: ripple .65s ease-out forwards; }
+.btn-white .ripple { background: rgb(200 16 46 / .12); }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+.quick-add, .up-add { overflow: hidden; }
+.perk .illus { transition: transform .5s var(--ease-bounce); }
+.perk:hover .illus { transform: rotate(-8deg) scale(1.08); }
+[data-sound-toggle] .snd-off, [data-sound-toggle][aria-pressed="false"] .snd-on { display: none; }
+[data-sound-toggle][aria-pressed="false"] .snd-off { display: block; }
