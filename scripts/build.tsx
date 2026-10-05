@@ -42,6 +42,8 @@ async function buildImages() {
     { key: "founder", file: path.join(SRC, "assets/site/founder.jpg"), widths: [480, 900] },
     { key: "founder-work", file: path.join(SRC, "assets/site/founder-work.jpg"), widths: [480, 900] },
     { key: "navy-belt", file: path.join(SRC, "assets/site/navy-belt.jpg"), widths: [600, 1100] },
+    // Khaled's own handwritten signature (white ink on transparent), for the footer
+    { key: "signature", file: path.join(SRC, "assets/site/signature.png"), widths: [600, 1200] },
     { key: "founder-collage", file: path.join(SRC, "assets/site/founder-collage.jpg"), widths: [800, 1400, 2000] },
     ...[1, 2, 3].map((n) => ({ key: `leather-${n}`, file: path.join(SRC, `assets/site/leather-${n}.jpg`), widths: [480, 960] })),
     // Facebook review screenshots, cropped one per review (src/assets/reviews/rNN.jpg)

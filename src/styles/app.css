@@ -500,3 +500,10 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 
 body:has(.bday[data-show="true"]) .to-top { opacity: 0; pointer-events: none; }
 @media (min-width: 768px) { .bday { left: auto; right: 24px; bottom: 100px; transform: translateY(24px) scale(.96); } .bday[data-show="true"] { transform: none; } }
+
+/* handwritten signature */
+.signature { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap; }
+.sig-by { font-family: "Great Vibes", cursive; font-size: 17px; line-height: 1; color: rgb(255 255 255 / .75); }
+.sig-img { height: 24px; width: auto; }
+.signature .beat { width: 13px; height: 13px; flex: none; }
+@media (min-width: 768px) { .sig-img { height: 28px; } .sig-by { font-size: 19px; } }
