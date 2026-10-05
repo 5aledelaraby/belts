@@ -387,9 +387,9 @@ body:has(.drawer[data-open="true"]) .to-top, body:has(.menu-overlay[data-open="t
 .offer-strip::after { content: ""; position: absolute; inset-block: 0; left: 0; width: 30%; background: linear-gradient(90deg, transparent, rgb(255 255 255 / .22), transparent); animation: shimmer 4.5s ease-in-out infinite; animation-delay: 1.5s; pointer-events: none; }
 .offer-nudge { border-radius: 16px; padding: 10px 14px; text-align: center; font-size: 13.5px; font-weight: 800; color: #fff; background: linear-gradient(110deg, #C8102E, #E2354F); }
 
-.bday { position: fixed; z-index: 65; top: 84px; left: 50%; width: min(94vw, 420px); display: flex; gap: 12px; padding: 14px; border-radius: 24px;
+.bday { position: fixed; z-index: 65; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 74px); left: 50%; width: min(94vw, 420px); display: flex; gap: 12px; padding: 14px; border-radius: 24px;
   background: linear-gradient(135deg, #FFF 0%, #FDF0F2 100%); box-shadow: 0 0 0 1px rgb(200 16 46 / .12), 0 24px 50px -20px rgb(0 0 0 / .35);
-  transform: translate(-50%, -24px) scale(.96); opacity: 0; pointer-events: none; transition: transform .6s var(--ease-bounce), opacity .4s; }
+  transform: translate(-50%, 24px) scale(.96); opacity: 0; pointer-events: none; transition: transform .6s var(--ease-bounce), opacity .4s; }
 .bday[data-show="true"] { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
 .bday .illus { animation: var(--animate-float); --r: -6deg; }
 body:has(.drawer[data-open="true"]) .bday, body:has(.menu-overlay[data-open="true"]) .bday, body:has(dialog[open]) .bday { opacity: 0; pointer-events: none; }
@@ -497,3 +497,6 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .rev-shot { margin: 0; overflow: hidden; border-radius: 20px; background: #fff; box-shadow: var(--shadow-card); padding: 6px 2px; }
 .rev-shot img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: cover; object-position: top; }
 .reviews { align-items: flex-start; }
+
+body:has(.bday[data-show="true"]) .to-top { opacity: 0; pointer-events: none; }
+@media (min-width: 768px) { .bday { left: auto; right: 24px; bottom: 100px; transform: translateY(24px) scale(.96); } .bday[data-show="true"] { transform: none; } }

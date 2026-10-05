@@ -302,7 +302,17 @@ function confetti() {
   const card = $("[data-bday]");
   if (card && !store.get<boolean>("vicuna-bday-closed", false)) {
     const close = () => { card.dataset.show = "false"; store.set("vicuna-bday-closed", true); };
-    setTimeout(() => { if (!document.body.style.overflow) card.dataset.show = "true"; }, 2200);
+    // Only once she is actually browsing (scrolled past the first screen), never on page load, so it never covers
+    // the headline (search engines treat an on-load overlay as intrusive). Not on blog posts or policy pages.
+    const page = document.body.dataset.page || "";
+    if (!/^(blog\/|about|returns|privacy|terms)/.test(page)) {
+      const onScroll = () => {
+        if (scrollY < innerHeight * 1.2) return;
+        removeEventListener("scroll", onScroll);
+        setTimeout(() => { if (!document.body.style.overflow) card.dataset.show = "true"; }, 600);
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+    }
     $("[data-bday-close]", card)!.addEventListener("click", close);
     $("[data-bday-go]", card)!.addEventListener("click", () => setTimeout(close, 300));
   }
