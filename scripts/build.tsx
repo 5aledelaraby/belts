@@ -44,7 +44,8 @@ async function buildImages() {
     { key: "navy-belt", file: path.join(SRC, "assets/site/navy-belt.jpg"), widths: [600, 1100] },
     { key: "founder-collage", file: path.join(SRC, "assets/site/founder-collage.jpg"), widths: [800, 1400, 2000] },
     ...[1, 2, 3].map((n) => ({ key: `leather-${n}`, file: path.join(SRC, `assets/site/leather-${n}.jpg`), widths: [480, 960] })),
-    ...[1, 2].map((n) => ({ key: `review-${n}`, file: path.join(SRC, `assets/site/review-${n}.jpg`), widths: [360, 720] })),
+    // Facebook review screenshots, cropped one per review (src/assets/reviews/rNN.jpg)
+    ...Array.from({ length: 28 }, (_, i) => `r${String(i + 1).padStart(2, "0")}`).map((n) => ({ key: `review-${n}`, file: path.join(SRC, `assets/reviews/${n}.jpg`), widths: [420, 840] })),
     { key: "leather-detail-poster", file: path.join(SRC, "assets/site/leather-detail-poster.jpg"), widths: [720] },
   ];
 

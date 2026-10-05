@@ -492,3 +492,8 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .rev-photo { position: relative; width: min(52vw, 210px); aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-cream); }
 .rev-photo img { width: 100%; height: 100%; object-fit: cover; }
 .rev-photo figcaption { position: absolute; bottom: 10px; inset-inline-start: 10px; padding: 4px 10px; border-radius: 999px; background: rgb(255 255 255 / .92); font-size: 11.5px; font-weight: 800; }
+
+.rev-col { flex: none; width: min(82vw, 340px); display: flex; flex-direction: column; gap: 12px; scroll-snap-align: start; }
+.rev-shot { margin: 0; overflow: hidden; border-radius: 20px; background: #fff; box-shadow: var(--shadow-card); padding: 6px 2px; }
+.rev-shot img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: cover; object-position: top; }
+.reviews { align-items: flex-start; }

@@ -4,7 +4,6 @@ import { colors, products, styles, priceOf, productUrl, pName, sName, sText, cNa
 import { useLang, useTr, useHref } from "../i18n";
 import { productSeo } from "../data/seo-copy";
 import { faqItems } from "../data/faq";
-import { reviews } from "../data/reviews";
 import { img, videos } from "../lib/images";
 import { Icon } from "./Icons";
 import { Illus } from "./Illus";
@@ -489,33 +488,42 @@ export const OnBody = () => {
   );
 };
 
-/* ---------- real reviews from our Facebook pages (home) ---------- */
+/* ---------- real reviews: cropped screenshots from our Facebook pages, shared with the customers' permission (home) ---------- */
+const reviewOrder = [1, 2, 26, 3, 4, 5, 6, 27, 7, 8, 9, 10, 11, 12, 28, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
 export const Reviews = () => {
-  const lang = useLang(); const tr = useTr();
-  const month = (d: string) => new Date(d + "-01").toLocaleDateString(lang === "en" ? "en-GB" : "ar-EG-u-nu-latn", { month: "long", year: "numeric" });
-  const photos = [img("review-1"), img("review-2")];
-  const cards = reviews.map((r, i) => (
-    <figure key={r.name + i} className="rev-card">
-      <div className="rev-rec">👍 {tr("بترشّح فيكونا", "Recommends Vicuna")}</div>
-      <blockquote lang="ar" dir="rtl">«{r.text}»</blockquote>
-      <figcaption><b>{lang === "en" ? r.nameEn : r.name}</b> · <span>{month(r.date)}</span></figcaption>
-    </figure>
-  ));
-  // a customer's own photo after every few reviews
-  const items = cards.flatMap((c, i) => (i === 2 || i === 7) ? [c, (
-    <figure key={"p" + i} className="rev-photo">
-      <img src={photos[i === 2 ? 0 : 1].src} srcSet={photos[i === 2 ? 0 : 1].srcset} sizes="240px" width={photos[0].width} height={photos[0].height} loading="lazy" decoding="async"
-        alt={tr("صورة من زبونة للحزام بعد ما استلمته", "A customer's own photo of her belt")} />
-      <figcaption>{tr("📷 صورة من زبونة", "📷 Customer photo")}</figcaption>
-    </figure>
-  )] : [c]);
+  const tr = useTr();
   return (
     <section className="pt-20">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("قالوا عننا", "What they said")} <span className="text-berry">💬</span></h2>
-        <p className="mt-2 text-mauve">{tr("آراء حقيقية من زبايتنا على صفحاتنا في فيسبوك، زي ما كتبوها.", "Real reviews from our customers on our Facebook pages, as they wrote them.")}</p>
+        <p className="mt-2 text-mauve">{tr(`${reviewOrder.length} رأي حقيقي من زبايتنا على صفحاتنا في فيسبوك، زي ما كتبوه بالظبط.`, `${reviewOrder.length} real reviews from our customers on our Facebook pages, exactly as they wrote them.`)}</p>
       </div>
-      <div className="reviews no-scrollbar mt-6" data-lenis-prevent data-reveal>{items}</div>
+      <div className="reviews no-scrollbar mt-6" data-lenis-prevent data-reveal>
+        {(() => {
+          // Stack the short text reviews into columns about as tall as one photo review, so the strip has no gaps.
+          const cols: number[][] = [];
+          let h = 0;
+          for (const n of reviewOrder) {
+            const im = img(`review-r${String(n).padStart(2, "0")}`);
+            const ch = (im.height / im.width) * 340 + 12;
+            if (ch > 300) { cols.push([n]); h = 999; continue; }
+            if (!cols.length || h + ch > 480) { cols.push([n]); h = ch; } else { cols[cols.length - 1].push(n); h += ch; }
+          }
+          return cols.map((col) => (
+            <div key={col[0]} className="rev-col">
+              {col.map((n) => {
+                const im = img(`review-r${String(n).padStart(2, "0")}`);
+                return (
+                  <figure key={n} className="rev-shot">
+                    <img src={im.src} srcSet={im.srcset} sizes="(max-width:640px) 82vw, 340px" width={im.width} height={im.height} loading="lazy" decoding="async"
+                      alt={tr("رأي زبونة عن أحزمة فيكونا على فيسبوك", "A customer's review of Vicuna belts on Facebook")} />
+                  </figure>
+                );
+              })}
+            </div>
+          ));
+        })()}
+      </div>
     </section>
   );
 };
