@@ -6,6 +6,24 @@ import { img } from "../lib/images";
 import { Icon } from "./Icons";
 import { ProductCard } from "./Sections";
 
+/** How each design ties, and what it suits — shown as a small spec table and chips on the product page. */
+const tieWay: Record<string, [string, string]> = {
+  lace: ["شريط جلد رفيع بيتربط فيونكة صغيرة", "A slim leather strap tied in a small bow"],
+  "wide-bow": ["فيونكة كبيرة قدّام، أو عقدة بطرف طويل", "A big front bow, or a knot with a long tail"],
+  "thin-tie": ["لفّة حوالين الوسط وفيونكة صغيرة", "Wrapped round the waist, tied in a small bow"],
+  croc: ["شريط رفيع بيتربط فيونكة أو عقدة", "A slim strap tied in a bow or knot"],
+  snake: ["شريط رفيع بيتربط فيونكة أو عقدة", "A slim strap tied in a bow or knot"],
+  ruffle: ["شريط بيتربط في النص", "A strap that ties at the centre"],
+};
+const suits: Record<string, Array<[string, string, string]>> = {
+  lace: [["✨", "سواريه وسهرات", "Evening wear"], ["💍", "خطوبة وفرح", "Engagements & weddings"], ["👗", "فستان سادة", "Plain dresses"], ["🌙", "خروجات بالليل", "Nights out"]],
+  "wide-bow": [["👗", "فستان سادة", "Plain dresses"], ["🍽️", "عزومات", "Dinners"], ["💼", "لبس الشغل", "Workwear"], ["👚", "بلوزة وجيبة", "Blouse & skirt"]],
+  "thin-tie": [["💼", "لبس الشغل", "Workwear"], ["👖", "جينز وكاجوال", "Jeans & casual"], ["🧥", "جاكيت وبالطو", "Jackets & coats"], ["🎓", "الجامعة", "Uni days"]],
+  croc: [["💼", "لبس الشغل", "Workwear"], ["👗", "لبس سادة", "Plain outfits"], ["🌙", "سهرات", "Evenings"], ["👖", "جينز", "Jeans"]],
+  snake: [["💼", "لبس الشغل", "Workwear"], ["👗", "لبس سادة", "Plain outfits"], ["🌙", "سهرات", "Evenings"], ["👖", "جينز", "Jeans"]],
+  ruffle: [["👗", "فساتين سادة", "Plain dresses"], ["🍽️", "عزومات", "Dinners"], ["👚", "بلوزات واسعة", "Loose blouses"], ["🌸", "خروجات", "Day outings"]],
+};
+
 export const ProductPage = ({ p }: { p: Product }) => {
   const lang = useLang(); const tr = useTr(); const url = useHref();
   const en = lang === "en";
@@ -35,7 +53,8 @@ export const ProductPage = ({ p }: { p: Product }) => {
           <nav className="crumbs mb-4 text-[13px] font-semibold text-mauve" aria-label={tr("مسار الصفحة", "Breadcrumb")}>
             <a href={url()} className="hover:text-berry">{tr("الرئيسية", "Home")}</a> {sep} <a href={url(`${style.id}/`)} className="hover:text-berry">{style.name}</a> {sep} <span className="text-plum">{name}</span>
           </nav>
-          <button className="relative block aspect-[3/4] w-full overflow-hidden rounded-[30px] bg-white shadow-[var(--shadow-card)]" data-lightbox="product" data-full={main.large} data-caption={name} aria-label={tr("تكبير الصورة", "Enlarge image")} data-zoom-main>
+          <button className="pdp-photo relative block aspect-[3/4] w-full overflow-hidden rounded-[30px] shadow-[var(--shadow-card)]" style={{ ["--tint" as string]: p.hex }} data-lightbox="product" data-full={main.large} data-caption={name} aria-label={tr("تكبير الصورة", "Enlarge image")} data-zoom-main>
+            <span className="pdp-zoom">🔍 {tr("كبّري الصورة وشوفي الخياطة", "Zoom in on the stitching")}</span>
             <img src={main.src} srcSet={main.srcset} sizes="(max-width:1024px) 92vw, 45vw" width={main.width} height={main.height}
               alt={tr(seo.alt, `${name} women's waist belt by Vicuna`)} className="absolute inset-0 size-full object-contain p-[8%] mix-blend-multiply transition-transform duration-700 ease-soft hover:scale-105" fetchPriority="high" data-img />
           </button>
@@ -51,7 +70,7 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <div className="mb-3 text-[13px] font-semibold text-mauve">{tr("اللون:", "Colour:")} <span className="text-plum">{name}</span></div>
             <div className="flex flex-wrap gap-2.5">
               {siblings.map((q) => (
-                <a key={q.id} href={url(productUrl(q.id))} className="swatch size-8" style={{ background: q.hex }} aria-current={q.id === p.id ? "true" : undefined} aria-label={pName(q, lang)} title={pName(q, lang)} />
+                <a key={q.id} href={url(productUrl(q.id))} className="swatch size-8 pdp-swatch" style={{ background: q.hex }} aria-current={q.id === p.id ? "true" : undefined} aria-label={pName(q, lang)} title={pName(q, lang)} />
               ))}
             </div>
           </div>
@@ -60,6 +79,10 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <button className="btn btn-berry btn-shine flex-1" data-add={p.id} data-magnetic>{tr("أضيفي للشنطة", "Add to bag")} 🛍</button>
             <a className="btn btn-white flex-1" href={waLink(tr(`السلام عليكم، عايزة أطلب حزام ${name} (${priceOf(p)} جنيه)`, `Hello, I would like to order the ${name} belt (${priceOf(p)} EGP)`))} target="_blank" rel="noopener"><Icon name="wa" className="size-4" /> {tr("اطلبي على واتساب", "Order on WhatsApp")}</a>
           </div>
+          <ul className="mt-3 space-y-1 text-[13.5px] font-semibold">
+            <li>✅ {tr(`متوفر · يوصلك خلال ${site.deliveryDays} أيام عمل`, `In stock · with you in ${site.deliveryDays} working days`)}</li>
+            <li>💵 {tr("الدفع عند الاستلام أو InstaPay", "Cash on delivery or InstaPay")}</li>
+          </ul>
           <div className="mt-3 flex items-center gap-2 rounded-2xl bg-petal px-4 py-2.5 text-[13.5px] font-bold text-berry">
             <Icon name="gift" className="size-5 shrink-0" /> {tr("الحزام التاني بخصم 25%، والتالت بخصم 35%", "2nd belt 25% off, 3rd belt 35% off")}
           </div>
@@ -67,13 +90,25 @@ export const ProductPage = ({ p }: { p: Product }) => {
             <Icon name="heart" className="size-5" /> {tr("أضيفي للمفضلة", "Add to favourites")}
           </button>
 
-          <ul className="mt-7 space-y-3 rounded-3xl bg-white p-5 text-[14px] shadow-[var(--shadow-card)]">
-            <li className="flex gap-3"><Icon name="check" className="size-5 shrink-0 text-berry" /> {tName(p, lang)}</li>
-            <li className="flex gap-3"><Icon name="ruler" className="size-5 shrink-0 text-berry" /> {tr(`عرض ${site.size.widthCm} سم · طول ${site.size.lengthCm} سم · بيلبس لحد وزن 90 كيلو · مقاسات خاصة بالطلب`, `${site.size.widthCm} cm wide · ${site.size.lengthCm} cm long · fits up to 90 kg · custom sizes on request`)}</li>
-            <li className="flex gap-3"><Icon name="plane" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مجاني فوق ${site.shipping.freeOver} جنيه`, `Delivered in ${site.deliveryDays} working days · free over ${site.shipping.freeOver} EGP`)}</li>
-            <li className="flex gap-3"><Icon name="cash" className="size-5 shrink-0 text-berry" /> {tr("الدفع عند الاستلام أو InstaPay", "Cash on delivery or InstaPay")}</li>
-            <li className="flex gap-3"><Icon name="return" className="size-5 shrink-0 text-berry" /> {tr(`استرجاع خلال ${site.returnDays} يوم بفلوسك كاملة`, `${site.returnDays}-day returns, full refund`)} · <a href={url("returns/")} className="underline">{tr("التفاصيل", "Details")}</a></li>
-          </ul>
+          <div className="mt-6">
+            <div className="text-[13px] font-bold text-mauve">{tr("يناسب إيه؟", "Wear it with")}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {(suits[p.style] ?? []).map(([icon, ar, e]) => <span key={ar} className="suit-chip"><span aria-hidden="true">{icon}</span> {tr(ar, e)}</span>)}
+            </div>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-card)]">
+            <div className="px-5 pt-4 text-[15px] font-extrabold">{tr("المواصفات", "Details")}</div>
+            <dl className="spec-table">
+              <div><dt>{tr("الخامة", "Material")}</dt><dd>{tName(p, lang)}</dd></div>
+              <div><dt>{tr("العرض", "Width")}</dt><dd><span className="num">{site.size.widthCm}</span> {tr("سم", "cm")}</dd></div>
+              <div><dt>{tr("الطول", "Length")}</dt><dd><span className="num">{site.size.lengthCm}</span> {tr("سم", "cm")}</dd></div>
+              <div><dt>{tr("المقاس", "Size")}</dt><dd>{tr("مقاس واحد، بيلبس لحد وزن 90 كيلو · ومقاسات خاصة بالطلب", "One size, fits up to 90 kg · custom sizes on request")}</dd></div>
+              <div><dt>{tr("الربط", "Tie")}</dt><dd>{tr(...(tieWay[p.style] ?? tieWay["thin-tie"]))}</dd></div>
+              <div><dt>{tr("العناية", "Care")}</dt><dd>{tr("امسحيه بقماشة مبلولة، وخزّنيه مفرود أو ملفوف لفّة واسعة", "Wipe with a damp cloth; store flat or loosely rolled")}</dd></div>
+              <div><dt>{tr("الاسترجاع", "Returns")}</dt><dd>{tr(`خلال ${site.returnDays} يوم بفلوسك كاملة`, `${site.returnDays} days, full refund`)} · <a href={url("returns/")} className="underline">{tr("التفاصيل", "Details")}</a></dd></div>
+            </dl>
+          </div>
         </div>
       </section>
 

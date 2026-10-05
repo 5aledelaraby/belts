@@ -457,3 +457,13 @@ dialog.thanks[open] { animation: pop-in .55s var(--ease-bounce); }
 .tie-steps li { display: flex; align-items: center; gap: 10px; }
 .tie-num { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 999px; background: var(--color-petal); color: var(--color-berry); font-size: 13px; font-weight: 800; }
 @media (min-width: 640px) { .tie-steps { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+
+/* product page polish */
+.pdp-photo { background: radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--tint) 22%, #fff) 0%, color-mix(in srgb, var(--tint) 8%, #fff) 45%, #fff 75%); }
+.pdp-zoom { position: absolute; z-index: 2; bottom: 12px; inset-inline-start: 12px; padding: 6px 12px; border-radius: 999px; background: rgb(255 255 255 / .92); font-size: 12.5px; font-weight: 800; color: var(--color-plum); box-shadow: 0 4px 14px -6px rgb(0 0 0 / .3); }
+.swatch.pdp-swatch { width: 40px; height: 40px; padding: 5px; }
+.suit-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: var(--color-cream); font-size: 13px; font-weight: 700; }
+.spec-table { margin: 8px 0 6px; }
+.spec-table > div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 9px 20px; font-size: 13.5px; border-top: 1px solid rgb(0 0 0 / .05); }
+.spec-table dt { color: var(--color-mauve); font-weight: 700; }
+.spec-table dd { margin: 0; }

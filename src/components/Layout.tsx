@@ -239,6 +239,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
                 <button className="btn btn-berry btn-shine flex-1" data-q-add>{tr("أضيفي للشنطة", "Add to bag")}</button>
                 <a className="btn btn-white flex-1" data-q-wa target="_blank" rel="noopener"><Icon name="wa" className="size-4" /> {tr("اطلبي على واتساب", "Order on WhatsApp")}</a>
               </div>
+              <div className="-mt-2 text-[13px] font-semibold text-mauve">✅ {tr(`متوفر · يوصلك خلال ${site.deliveryDays} أيام`, `In stock · with you in ${site.deliveryDays} days`)} · 💵 {tr("الدفع عند الاستلام", "Cash on delivery")}</div>
             </div>
           </div>
         </dialog>
