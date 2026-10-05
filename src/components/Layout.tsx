@@ -29,17 +29,13 @@ const fonts =
 const marqueeFor = (en: boolean) => en ? [
   "2nd belt 25% off · 3rd belt 35% off",
   `Free shipping over ${site.shipping.freeOver} EGP`,
-  `Delivery across Egypt in ${site.deliveryDays} working days`,
-  "Cash on delivery or InstaPay",
-  `${site.returnDays}-day returns with a full refund`,
-  "Custom sizes on request",
+  "Natural leather made to measure in Cairo & Giza",
+  "A gift belt on your birthday 🎁",
 ] : [
   "الحزام التاني بخصم 25% · والتالت بخصم 35%",
   `شحن مجاني فوق ${site.shipping.freeOver} جنيه`,
-  `توصيل خلال ${site.deliveryDays} أيام عمل لكل مصر`,
-  "الدفع عند الاستلام أو InstaPay",
-  `استرجاع خلال ${site.returnDays} يوم بفلوسك كاملة`,
-  "مقاسات خاصة حسب الطلب",
+  "تفصيل جلد طبيعي على مقاسك في القاهرة والجيزة",
+  "حزام هدية في يوم عيد ميلادك 🎁",
 ];
 
 export const Layout = ({ title, description, path, children, hasTwin = true, schema }: Props) => {

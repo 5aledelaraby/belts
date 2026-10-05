@@ -46,7 +46,7 @@ export const Hero = () => {
             </span>
           </h1>
           <p className="mt-6 max-w-md text-[17px] leading-8 text-mauve">
-            {tr("أحزمة خصر بالربط من جلد PU مستورد. من", "Tie waist belts in imported PU leather. From")} <b className="text-plum">{tr("120 جنيه", "120 EGP")}</b>{tr(`، والدفع عند الاستلام، واسترجاع خلال ${site.returnDays} يوم.`, `, cash on delivery, and ${site.returnDays}-day returns.`)}
+            {tr("حزام بيتلف ويتربط على وسطك، يحدد شكلك ويدّي أي فستان أو بلوزة روح جديدة. من", "A belt that wraps and ties at your waist, shaping your silhouette and giving any dress or blouse a new spirit. From")} <b className="text-plum">{tr("120 جنيه", "120 EGP")}</b>{tr(".", ".")}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a href="#shop" className="btn btn-berry btn-shine" data-magnetic>{tr("تسوّقي دلوقتي", "Shop now")} <Icon name="arrow" className="size-4" /></a>
@@ -493,7 +493,7 @@ export const Faq = () => {
   const items = faqItems(lang);
   return (
   <section id="faq" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 pt-20 sm:px-6">
-    <h2 className="text-center font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{lang === "en" ? "Questions you ask a lot" : "أسئلة بتتسأل كتير"} 💬</h2>
+    <h2 className="text-center font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{lang === "en" ? "Questions we hear a lot" : "أسئلة بنسمعها كتير"} 💬</h2>
     <div className="faq mt-8 flex flex-col gap-3">
       {items.map(([q, a]) => (
         <details key={q} data-reveal>

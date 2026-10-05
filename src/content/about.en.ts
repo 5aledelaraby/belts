@@ -17,7 +17,7 @@ export const html = `
 </ul>
 
 <h2>Material and size</h2>
-<p>Our belts are made of top-grade imported PU leather, and the plain belts have soft stretch that shapes to your waist. There are lace, croc and snake designs too. The standard size is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long and fits up to 90 kg, and we make custom sizes to order.</p>
+<p>Our belts are made of high-quality imported PU leather, and the plain belts have soft stretch that shapes to your waist. There are lace, croc and snake designs too. The standard size is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long and fits up to 90 kg, and we make custom sizes to order.</p>
 
 <h2>How we work</h2>
 <ul>

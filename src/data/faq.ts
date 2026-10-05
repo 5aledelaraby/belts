@@ -8,7 +8,7 @@ export const faqItems = (lang: "ar" | "en"): Array<[string, string]> =>
     ["How do I pay?", `Either cash on delivery to the courier, or an InstaPay transfer to ${site.instapay} — then send the screenshot on WhatsApp.`],
     ["How long does delivery take, and how much?", `We deliver to every governorate in Egypt within ${site.deliveryDays} working days. Standard shipping is ${site.shipping.standard} EGP, express is ${site.shipping.express} EGP, and standard shipping is free on orders from ${site.shipping.freeOver} EGP.`],
     ["Will it fit me?", `The belt is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long, and it wraps and ties, so it fits comfortably up to 90 kg. Need a custom size? Write it in the notes and we will make it.`],
-    ["What is it made of?", "Top-grade imported PU leather — soft and light, and the plain belts have soft stretch that shapes to your waist. There are also lace, croc and snake designs."],
+    ["What is it made of?", "High-quality imported PU leather — soft and light, and the plain belts have soft stretch that shapes to your waist. There are also lace, croc and snake designs."],
     ["Can I get a belt made to my size in natural leather?", "Yes. Alongside our PU belts, we make belts to measure in natural leather: message us that you're interested, and if you're in Cairo or Giza we'll send one of our team to take your measurements, show you the leathers in person and agree the details and price with you. Then we make it to your exact size and deliver it to you. The service is available in Cairo and Giza only for now."],
     ["What if I don’t like it?", `You have ${site.returnDays} days from delivery to return it for a full refund or exchange it. If it is faulty or we sent the wrong item, all shipping is on us.`],
   ] : [
@@ -16,7 +16,7 @@ export const faqItems = (lang: "ar" | "en"): Array<[string, string]> =>
     ["الدفع إزاي؟", `يا إما الدفع عند الاستلام للمندوب، يا إما تحويل InstaPay على رقم ${site.instapay} وتبعتي صورة التحويل على واتساب.`],
     ["التوصيل بياخد قد إيه وبكام؟", `بنوصّل لكل محافظات مصر خلال ${site.deliveryDays} أيام عمل. الشحن العادي ${site.shipping.standard} جنيه، والسريع ${site.shipping.express} جنيه، والشحن العادي مجاني للطلبات من ${site.shipping.freeOver} جنيه.`],
     ["المقاس هيبقى مظبوط؟", `الحزام عرضه ${site.size.widthCm} سم وطوله ${site.size.lengthCm} سم، وبيتلف ويتربط فبيلبس مريح لحد وزن 90 كيلو. ولو محتاجة مقاس خاص اكتبيه في الملاحظات وإحنا نعمله.`],
-    ["الخامة إيه؟", "جلد PU مستورد من أنضف الأنواع، ناعم وخفيف، والأحزمة السادة فيها ليكرا طرية بتتشكّل على وسطك. وفيه موديلات دانتيل وكروكو وثعبان."],
+    ["الخامة إيه؟", "جلد PU مستورد عالي الجودة، ناعم وخفيف، والأحزمة السادة فيها ليكرا طرية بتتشكّل على وسطك. وفيه موديلات دانتيل وكروكو وثعبان."],
     ["ينفع أفصّل حزام جلد طبيعي على مقاسي؟", "أيوه. جنب أحزمة الـ PU، بنفصّل أحزمة جلد طبيعي على المقاس: ابعتيلنا على واتساب إنك مهتمة، ولو إنتي في القاهرة أو الجيزة، بنبعتلك موظفة من عندنا تاخد مقاساتك وتوريكي خامات الجلد على الطبيعة وتتفق معاكي على التفاصيل والسعر. وبعدين بنفصّله على مقاسك بالظبط ونبعتهولك. الخدمة دي متاحة في القاهرة والجيزة بس حالياً."],
     ["لو الحزام ما عجبنيش؟", `معاكي ${site.returnDays} يوم من الاستلام ترجّعيه وتاخدي فلوسك كاملة، أو تبدّليه. ولو فيه عيب أو وصلك غلط، الشحن كله علينا.`],
   ];
