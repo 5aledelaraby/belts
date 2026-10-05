@@ -354,8 +354,8 @@ document.addEventListener("pointerdown", (e) => {
       setTimeout(() => (bub.dataset.show = "false"), 8000);
       for (const ev of ["pointerdown", "scroll", "keydown"]) removeEventListener(ev, arm);
     };
+    // Armed only after a real tap or scroll, so crawlers that fast-forward timers never see it.
     for (const ev of ["pointerdown", "scroll", "keydown"]) addEventListener(ev, arm, { passive: true });
-    arm();
   }
 }
 
