@@ -18,3 +18,6 @@ export const img = (key: string): ImageSet => {
   if (!set) throw new Error(`Missing image: ${key}`);
   return set;
 };
+
+/** Filled by scripts/build.tsx: source file name → hashed public URL. */
+export const videos: Record<string, string> = {};

@@ -9,15 +9,15 @@ export const html = `
 <p>Six designs, each in several colours:</p>
 <ul>
 <li><a href="/en/lace/">Lace belts</a> — lace worked over a leather lining, for evenings and occasions.</li>
-<li><a href="/en/wide-bow/">Wide bow</a> — a big front bow that draws the eye to the waist.</li>
-<li><a href="/en/sash/">Long sash</a> — one knot and a falling tail, calm and elegant.</li>
+<li><a href="/en/wide-bow/">Wide bow</a> — a big front bow or a knot with a long tail that draws the eye to the waist.</li>
 <li><a href="/en/thin-tie/">Thin tie</a> — the classic that goes with everything.</li>
-<li><a href="/en/croc-snake/">Croc & snake</a> — bold textures that give an outfit character.</li>
+<li><a href="/en/croc/">Croc</a> — a bold, luxe texture that gives an outfit character.</li>
+<li><a href="/en/snake/">Snake</a> — a modern print that turns heads.</li>
 <li><a href="/en/ruffle/">Ruffle</a> — movement and softness for any plain dress.</li>
 </ul>
 
 <h2>Material and size</h2>
-<p>Our belts are made of top-grade imported PU leather, with suede, lace, croc and snake designs too. The standard size is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long, and we make custom sizes to order.</p>
+<p>Our belts are made of top-grade imported PU leather, and the plain belts have soft stretch that shapes to your waist. There are lace, croc and snake designs too. The standard size is ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long and fits up to 90 kg, and we make custom sizes to order.</p>
 
 <h2>How we work</h2>
 <ul>

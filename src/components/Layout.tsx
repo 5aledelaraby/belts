@@ -23,7 +23,7 @@ interface Props {
 }
 
 const fonts =
-  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@700&family=Marcellus&display=swap";
+  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@700&family=Marcellus&family=Great+Vibes&display=swap";
 
 const marqueeFor = (en: boolean) => en ? [
   `Free shipping over ${site.shipping.freeOver} EGP`,
@@ -75,7 +75,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords[lang]} />
         <meta name="robots" content={path.endsWith(".html") ? "noindex, follow" : "index, follow, max-image-preview:large"} />
-        <meta name="theme-color" content="#FFF5F3" />
+        <meta name="theme-color" content="#FFFFFF" />
         <link rel="canonical" href={canonical} />
         {isPage && <link rel="alternate" hrefLang="ar" href={site.url + hrefFor("ar", path)} />}
         {isPage && <link rel="alternate" hrefLang="en" href={site.url + hrefFor("en", path)} />}
@@ -92,7 +92,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
         <meta property="og:image" content={ogImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={tr("أحزمة خصر Vicuna بالربط: دانتيل وفيونكة وطرف طويل على مانيكان", "Vicuna tie waist belts — lace, bow and long sash on mannequins")} />
+        <meta property="og:image:alt" content={tr("أحزمة خصر Vicuna بالربط: دانتيل وفيونكة وكشكشة على مانيكان", "Vicuna tie waist belts — lace, bow and ruffle on mannequins")} />
         <meta property="og:locale" content={en ? "en_US" : "ar_EG"} />
         <meta property="og:locale:alternate" content={en ? "ar_EG" : "en_US"} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -175,8 +175,8 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
                 <Icon name="heart" className="size-[22px]" />
                 <span className="count-badge" data-fav-count hidden>0</span>
               </a>
-              <button className="icon-btn" data-cart-open aria-label={tr("الشنطة", "Bag")}>
-                <Icon name="bag" className="size-[22px]" />
+              <button className="icon-btn bag-btn" data-cart-open aria-label={tr("الشنطة", "Bag")}>
+                <span className="bag-shine"><Icon name="bag" className="size-[20px]" /></span>
                 <span className="count-badge" data-cart-count hidden>0</span>
               </button>
             </div>
@@ -232,7 +232,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
                 <div className="flex flex-wrap gap-2.5" data-q-swatches></div>
               </div>
               <ul className="space-y-2.5 rounded-2xl bg-white p-4 text-[14px]">
-                <li className="flex gap-3"><Icon name="ruler" className="size-5 shrink-0 text-berry" /> {tr(`عرض ${site.size.widthCm} سم · طول ${site.size.lengthCm} سم · مناسب لكل الأوزان`, `${site.size.widthCm} cm wide · ${site.size.lengthCm} cm long · fits every size`)}</li>
+                <li className="flex gap-3"><Icon name="ruler" className="size-5 shrink-0 text-berry" /> {tr(`عرض ${site.size.widthCm} سم · طول ${site.size.lengthCm} سم · بيلبس لحد 90 كيلو`, `${site.size.widthCm} cm wide · ${site.size.lengthCm} cm long · fits up to 90 kg`)}</li>
                 <li className="flex gap-3"><Icon name="check" className="size-5 shrink-0 text-berry" /> <span data-q-texture></span></li>
                 <li className="flex gap-3"><Icon name="truck" className="size-5 shrink-0 text-berry" /> {tr(`توصيل خلال ${site.deliveryDays} أيام عمل · مقاسات خاصة بالطلب`, `Delivered in ${site.deliveryDays} working days · custom sizes on request`)}</li>
               </ul>
@@ -288,7 +288,7 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
               <div className="min-h-5 text-[13px] font-semibold text-red-700" data-err role="alert"></div>
             </form>
           </div>
-          <div className="space-y-2 rounded-t-[24px] bg-white px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-[0_-10px_30px_-20px_rgb(58_31_38/.3)]">
+          <div className="space-y-2 rounded-t-[24px] bg-white px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-[0_-10px_30px_-20px_rgb(0_0_0/.3)]">
             <div className="flex justify-between text-[14px]"><span>{tr("المنتجات", "Items")} (<span className="num" data-n>0</span>)</span><span><span className="num" data-sub>0</span> {tr("جنيه", "EGP")}</span></div>
             <div className="flex justify-between text-[14px]"><span>{tr("الشحن", "Shipping")}</span><span data-ship>—</span></div>
             <div className="flex justify-between text-[20px] font-extrabold"><span>{tr("الإجمالي", "Total")}</span><span className="text-berry"><span className="num" data-total>0</span> {tr("جنيه", "EGP")}</span></div>
@@ -311,6 +311,25 @@ export const Layout = ({ title, description, path, children, hasTwin = true, sch
 
         <div className="sheet" data-sheet data-open="false" role="dialog" aria-modal="true" aria-label={tr("فلترة", "Filter")} data-lenis-prevent></div>
         <div className="toast" data-toast role="status"></div>
+        {/* after the first add to bag: a light card with three belts that go with it */}
+        <div className="upsell" data-upsell data-show="false" role="dialog" aria-label={tr("اختيارات بتليق معاه", "Belts that go with it")}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-[15px] font-extrabold">💕 {tr("اتضاف للشنطة!", "Added to your bag!")}</div>
+              <div className="text-[13px] text-mauve">{tr("حزام لكل فستان؟ دي اختيارات بتليق معاه 👇", "A belt for every dress? These go with it 👇")}</div>
+            </div>
+            <button className="icon-btn -me-2 -mt-2 size-9" data-upsell-close aria-label={tr("إغلاق", "Close")}><Icon name="close" className="size-5" /></button>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2" data-upsell-items></div>
+          <div className="mt-3 flex items-center gap-2">
+            <button className="btn btn-berry flex-1 py-2.5 text-[14px]" data-upsell-close>{tr("كمّلي تسوّق", "Keep shopping")}</button>
+            <button className="btn btn-white py-2.5 text-[14px]" data-upsell-bag>{tr("الشنطة", "Bag")}</button>
+          </div>
+        </div>
+        {/* back to top */}
+        <button className="to-top" data-to-top data-show="false" aria-label={tr("لأول الصفحة", "Back to top")}>
+          <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+        </button>
 
         {/* floating WhatsApp button: fades in after 300px of scrolling */}
         <a className="wa-fab" data-wa-fab data-show="false" data-tip="false" target="_blank" rel="noopener"
@@ -341,67 +360,52 @@ const Footer = ({ en }: { en: boolean }) => {
   const tr = (a: string, e: string) => (en ? e : a);
   const url = (p = "") => hrefFor(en ? "en" : "ar", p);
   return (
-  <footer className="relative mt-10 overflow-hidden rounded-t-[40px] bg-plum text-white">
-    <Bow className="pointer-events-none absolute -top-4 end-6 w-48 text-white/10 sm:w-72" w={1.2} />
-    <div className="relative mx-auto grid max-w-[1400px] gap-10 px-5 py-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr_1fr]">
-      <div>
-        <div className="[--ink:white] [--accent:var(--color-rose)] [--accent-deep:var(--color-petal)]"><Logo /></div>
-        <p className="mt-5 max-w-sm text-[14px] leading-7 text-white/70">{tr("أحزمة خصر بالربط من جلد PU مستورد، بتتصمم في القاهرة وبتوصل لكل محافظات مصر.", "Tie waist belts in imported PU leather — designed in Cairo, delivered to every governorate in Egypt.")}</p>
-        <div className="mt-5 flex flex-wrap gap-2 text-[12px] font-semibold">
-          <span className="rounded-full bg-white/10 px-3 py-1.5">💵 {tr("الدفع عند الاستلام", "Cash on delivery")}</span>
-          <span className="rounded-full bg-white/10 px-3 py-1.5" style={{ direction: "ltr" }}>InstaPay</span>
-        </div>
-        <div className="mt-6 flex gap-2" aria-label={tr("تابعينا", "Follow us")}>
+  <footer className="site-footer">
+    <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-x-6 gap-y-9 px-5 pb-10 pt-14 sm:px-8 lg:grid-cols-[1.5fr_1fr_1.2fr_1fr]">
+      <div className="col-span-2 lg:col-span-1">
+        <div className="[--ink:white] [--accent:#ffffff] [--accent-deep:#ffffff]"><Logo /></div>
+        <p className="mt-4 max-w-xs">{tr("أحزمة خصر بالربط من جلد PU مستورد، بتتصمم في القاهرة وبتوصل لكل محافظات مصر.", "Tie waist belts in imported PU leather — designed in Cairo, delivered to every governorate in Egypt.")}</p>
+        <div className="mt-5 flex gap-2" aria-label={tr("تابعينا", "Follow us")}>
           {site.social.map((s) => (
-            <a key={s.id} className="grid size-10 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/20" href={s.href} target="_blank" rel="noopener" aria-label={en ? s.labelEn : s.label}><Icon name={s.id} className="size-[18px]" /></a>
+            <a key={s.id} className="grid size-9 place-items-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-berry hover:bg-berry hover:text-white" href={s.href} target="_blank" rel="noopener" aria-label={en ? s.labelEn : s.label}><Icon name={s.id} className="size-4" /></a>
           ))}
         </div>
       </div>
       <nav aria-label={tr("التصميمات", "Designs")}>
-        <div className="font-display text-[18px] font-bold text-rose">{tr("تسوّقي", "Shop")}</div>
-        <ul className="mt-3 space-y-0.5 text-[14px]">
-          <li><a className="hover:text-rose" href={url("#shop")}>{tr("كل الموديلات", "All belts")}</a></li>
-          {styles.map((s) => <li key={s.id}><a className="hover:text-rose" href={url(`${s.id}/`)}>{tr(`أحزمة ${sText(s, "ar").name}`, `${sText(s, "en").name} belts`)}</a></li>)}
+        <div className="footer-h">{tr("تسوّقي", "Shop")}</div>
+        <ul>
+          <li><a href={url("#shop")}>{tr("كل الموديلات", "All belts")}</a></li>
+          {styles.map((s) => <li key={s.id}><a href={url(`${s.id}/`)}>{tr(`أحزمة ${sText(s, "ar").name}`, `${sText(s, "en").name} belts`)}</a></li>)}
         </ul>
       </nav>
-      <nav aria-label={tr("وصل حديثاً", "New in")}>
-        <div className="font-display text-[18px] font-bold text-rose">{tr("وصل حديثاً", "New in")}</div>
-        <ul className="mt-3 space-y-0.5 text-[14px]">
-          {products.filter((p) => p.isNew).slice(0, 7).map((p) => (
-            <li key={p.id}><a className="hover:text-rose" href={url(`p/${p.id}/`)}>{tr(`حزام ${p.name}`, `${pName(p, "en")} belt`)}</a></li>
-          ))}
-        </ul>
-      </nav>
-      <nav aria-label={tr("المدونة", "Blog")}>
-        <div className="font-display text-[18px] font-bold text-rose">{tr("المدونة", "Blog (Arabic)")}</div>
-        <ul className="mt-3 space-y-0.5 text-[14px]" lang="ar">
-          <li><a className="font-semibold hover:text-rose" href={hrefFor("ar", "blog/")}>{en ? "All articles" : "كل المقالات"}</a></li>
-          {posts().map((p) => <li key={p.slug}><a className="hover:text-rose" href={hrefFor("ar", `blog/${p.slug}/`)}>{footerPostLabel[p.slug] ?? p.title}</a></li>)}
+      <nav className="order-last col-span-2 lg:order-none lg:col-span-1" aria-label={tr("المدونة", "Blog")}>
+        <div className="footer-h">{tr("المدونة", "Blog (Arabic)")}</div>
+        <ul lang="ar">
+          <li><a href={hrefFor("ar", "blog/")}>{en ? "All articles" : "كل المقالات"}</a></li>
+          {posts().map((p) => <li key={p.slug}><a href={hrefFor("ar", `blog/${p.slug}/`)}>{footerPostLabel[p.slug] ?? p.title}</a></li>)}
         </ul>
       </nav>
       <nav aria-label={tr("مساعدة", "Help")}>
-        <div className="font-display text-[18px] font-bold text-rose">{tr("مساعدة", "Help")}</div>
-        <ul className="mt-3 space-y-0.5 text-[14px]">
-          <li><a className="hover:text-rose" href={url("about/")}>{tr("من نحن", "About us")}</a></li>
-          <li><a className="hover:text-rose" href={url("returns/")}>{tr("الشحن والاسترجاع", "Shipping & returns")}</a></li>
-          <li><a className="hover:text-rose" href={url("#tie")}>{tr("طريقة الربط", "How to tie")}</a></li>
-          <li><a className="hover:text-rose" href={url("#faq")}>{tr("أسئلة شائعة", "FAQ")}</a></li>
-          <li><a className="hover:text-rose" href={url("privacy/")}>{tr("سياسة الخصوصية", "Privacy policy")}</a></li>
-          <li><a className="hover:text-rose" href={url("terms/")}>{tr("الشروط والأحكام", "Terms & conditions")}</a></li>
-          <li><a className="hover:text-rose" href={waLink(tr("السلام عليكم، عندي استفسار", "Hello, I have a question"))} target="_blank" rel="noopener">{tr("واتساب", "WhatsApp")} <span className="num">{site.whatsapp.display}</span></a></li>
-          <li><a className="hover:text-rose" href={`mailto:${site.email}`} dir="ltr">{site.email}</a></li>
+        <div className="footer-h">{tr("مساعدة", "Help")}</div>
+        <ul>
+          <li><a href={url("about/")}>{tr("من نحن", "About us")}</a></li>
+          <li><a href={url("returns/")}>{tr("الشحن والاسترجاع", "Shipping & returns")}</a></li>
+          <li><a href={url("#tie")}>{tr("طريقة الربط", "How to tie")}</a></li>
+          <li><a href={url("#faq")}>{tr("أسئلة شائعة", "FAQ")}</a></li>
+          <li><a href={url("privacy/")}>{tr("سياسة الخصوصية", "Privacy policy")}</a></li>
+          <li><a href={url("terms/")}>{tr("الشروط والأحكام", "Terms & conditions")}</a></li>
+          <li><a href={waLink(tr("السلام عليكم، عندي استفسار", "Hello, I have a question"))} target="_blank" rel="noopener">{tr("واتساب", "WhatsApp")} <span className="num">{site.whatsapp.display}</span></a></li>
+          <li><a href={`mailto:${site.email}`} dir="ltr">{site.email}</a></li>
         </ul>
       </nav>
     </div>
-    <div className="relative border-t border-white/10">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-5 py-6 text-[12px] leading-6 text-white/70 sm:px-8 lg:flex-row lg:justify-between">
-        <div>
-          {en ? <>{site.legalNameEn} · <span lang="ar" style={{ unicodeBidi: "isolate" }}>{site.legalNameAr}</span> · {site.legalFormEn} · Commercial Register No. <span className="num">{site.commercialRegister}</span>
-          <br />{site.headOfficeEn}</> : <>{site.legalNameAr} · <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>{site.legalNameEn}</span> · {site.legalForm} · سجل تجاري رقم <span className="num">{site.commercialRegister}</span>
-          <br />{site.headOffice}</>}
-        </div>
-        <div><span dir="ltr" style={{ unicodeBidi: "isolate" }}>© 2026 {site.legalNameEn}. All rights reserved.</span> · {tr("اتعمل بحب في القاهرة ♡", "Made with love in Cairo ♡")}</div>
+    <div className="border-t border-white/10">
+      <div className="footer-legal mx-auto max-w-[1400px] px-5 py-5 sm:px-8">
+        {en ? <>{site.legalNameEn} · <span lang="ar" style={{ unicodeBidi: "isolate" }}>{site.legalNameAr}</span> · {site.legalFormEn} · Commercial Register No. <span className="num">{site.commercialRegister}</span> · {site.headOfficeEn}</>
+          : <>{site.legalNameAr} · <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>{site.legalNameEn}</span> · {site.legalForm} · سجل تجاري رقم <span className="num">{site.commercialRegister}</span> · {site.headOffice}</>}
+        <br /><span dir="ltr" style={{ unicodeBidi: "isolate" }}>© 2026 {site.legalNameEn}. All rights reserved.</span> · <span className="text-white/70">💵 {tr("الدفع عند الاستلام", "Cash on delivery")} · InstaPay</span>
       </div>
+      <div className="signature" lang="en" dir="ltr">Designed by Khaled Elaraby <svg className="beat" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
     </div>
   </footer>
   );

@@ -4,7 +4,7 @@ import { styles, products, priceOf, productUrl, pName, sText, tName } from "./da
 import { ProductPage } from "./components/ProductPage";
 import { Layout } from "./components/Layout";
 import {
-  Hero, Stories, Perks, Shop, ShopByStyle, Lookbook, TieSteps, Faq, InnerCircle, StyleHero,
+  Hero, Stories, Perks, Shop, ShopByStyle, MadeByHand, OnBody, TieSteps, Faq, StyleHero,
 } from "./components/Sections";
 import { productSeo } from "./data/seo-copy";
 import { BlogIndex, BlogPost } from "./components/Blog";
@@ -47,7 +47,7 @@ const pagesFor = (lang: Lang): Page[] => {
     <Layout
       path=""
      
-      title={tr(`${site.brand} | أحزمة خصر بالربط — توصيل لكل مصر`, `${site.brand} | Tie waist belts — delivered across Egypt`)}
+      title={tr(`${site.brand} | أحزمة خصر بالربط — توصيل لكل مصر`, `${site.brand} | The wrap belt that accentuates your waist`)}
       description={tr(
         `أحزمة خصر بالربط من جلد PU مستورد: دانتيل، فيونكة عريضة، شريط رفيع، كروكو، ثعبان وكشكشة. من 120 جنيه، توصيل خلال ${site.deliveryDays} أيام عمل، والدفع عند الاستلام.`,
         `Tie waist belts in imported PU leather: lace, wide bow, thin tie, croc, snake and ruffle. From 120 EGP, delivered in ${site.deliveryDays} working days, cash on delivery.`,
@@ -57,11 +57,11 @@ const pagesFor = (lang: Lang): Page[] => {
       <Stories />
       <Perks />
       <Shop />
+      <MadeByHand />
       <ShopByStyle />
-      <Lookbook />
       <TieSteps />
+      <OnBody />
       <Faq />
-      <InnerCircle />
     </Layout>
   ));
 
@@ -87,9 +87,7 @@ const pagesFor = (lang: Lang): Page[] => {
         <Stories current={s.id} />
         <Shop only={s} title={tr(`كل ألوان ${st.name}`, `All ${st.name} colours`)} />
         <Perks />
-        <Lookbook />
         <Faq />
-        <InnerCircle />
       </Layout>
     ));
   });
@@ -106,7 +104,6 @@ const pagesFor = (lang: Lang): Page[] => {
         )}>
         <ProductPage p={p} />
         <Faq />
-        <InnerCircle />
       </Layout>
     ));
   });
@@ -151,7 +148,6 @@ const pagesFor = (lang: Lang): Page[] => {
         description="مدونة Vicuna: نصايح وإلهام لتنسيق حزام الفستان، اختيار الحزام المناسب لجسمك، والمقاسات والخامات. اقرئي واختاري حزامك وتوصيل لكل مصر."
         schema={[breadcrumbSchema("ar", [["الرئيسية", ""], ["المدونة", "blog/"]])]}>
         <BlogIndex />
-        <InnerCircle />
       </Layout>
     )), single: true });
     for (const post of posts()) {
@@ -159,8 +155,7 @@ const pagesFor = (lang: Lang): Page[] => {
         <Layout path={`blog/${post.slug}/`} hasTwin={false} title={`${post.title} | ${site.brand}`} description={post.description}
           schema={[articleSchema(post), breadcrumbSchema("ar", [["الرئيسية", ""], ["المدونة", "blog/"], [post.title, `blog/${post.slug}/`]])]}>
           <BlogPost p={post} />
-          <InnerCircle />
-        </Layout>
+          </Layout>
       )), single: true });
     }
 

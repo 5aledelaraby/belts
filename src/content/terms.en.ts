@@ -35,7 +35,7 @@ export const html = `
 
 <h2>4. Products</h2>
 <ul>
-<li>Our belts are made of imported PU leather, lace or suede depending on the design; the material is listed on each product.</li>
+<li>Our belts are made of imported PU leather or lace depending on the design; the material is listed on each product.</li>
 <li>Standard size: ${site.size.widthCm} cm wide and ${site.size.lengthCm} cm long, fitting every size. Custom sizes are made to order.</li>
 <li>We show colours and details as accurately as we can, but colours can vary slightly between screens.</li>
 <li>If a product isn't what you expected for any reason, you can return or exchange it under our <a href="${url("returns/")}">returns policy</a>.</li>

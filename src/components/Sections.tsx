@@ -1,10 +1,10 @@
 import { Fragment } from "react";
-import { site, waLink } from "../data/site";
-import { colors, products, styles, looks, priceOf, productUrl, pName, sName, sText, cName, lookText, type Product, type Style } from "../data/products";
+import { site } from "../data/site";
+import { colors, products, styles, priceOf, productUrl, pName, sName, sText, cName, type Product, type Style } from "../data/products";
 import { useLang, useTr, useHref } from "../i18n";
 import { productSeo } from "../data/seo-copy";
 import { faqItems } from "../data/faq";
-import { img } from "../lib/images";
+import { img, videos } from "../lib/images";
 import { Icon } from "./Icons";
 import { Bow, Ribbon, Sparkle, Blobs, Heart } from "./Art";
 
@@ -15,24 +15,33 @@ const first = (styleId: string) => products.find((p) => p.style === styleId)!;
 export const Hero = () => {
   const tr = useTr();
   const h = img("hero");
+  // Six belts float around the photo; positions are relative to the photo column.
   const floaters = [
-    { id: "lace-red", cls: "top-[4%] -start-[6%] w-[34%]", r: "-12deg", d: "0s" },
-    { id: "bow-mustard", cls: "bottom-[2%] -start-[10%] w-[38%]", r: "8deg", d: "-2s" },
-    { id: "classic-sky-blue", cls: "-top-[2%] end-[2%] w-[30%]", r: "10deg", d: "-4s" },
+    { id: "lace-gold", cls: "top-[2%] -start-[7%] w-[30%]", r: "-10deg", d: "0s" },
+    { id: "bow-gold", cls: "top-[0%] -end-[5%] w-[30%]", r: "9deg", d: "-1.5s" },
+    { id: "snake-grey", cls: "top-[36%] -start-[10%] w-[28%]", r: "6deg", d: "-3s" },
+    { id: "classic-camel-suede", cls: "top-[40%] -end-[9%] w-[28%]", r: "-7deg", d: "-4.5s" },
+    { id: "lace-red", cls: "bottom-[4%] -start-[6%] w-[30%]", r: "-5deg", d: "-2.2s" },
+    { id: "classic-sky-blue", cls: "bottom-[1%] -end-[6%] w-[30%]", r: "8deg", d: "-3.7s" },
   ];
   return (
     <section className="px-3 pt-3 sm:px-5">
-      <div className="relative mx-auto grid max-w-[1400px] items-center overflow-hidden rounded-[36px] bg-gradient-to-bl from-petal via-peach to-cream lg:grid-cols-[1.05fr_1fr]">
-        <Blobs />
-        <Sparkle className="twinkle absolute top-10 start-[46%] size-5 text-berry" />
-        <Sparkle className="twinkle absolute bottom-16 start-[8%] size-4 text-white [--d:-1.2s]" />
-        <Sparkle className="twinkle absolute top-1/2 start-[52%] size-3 text-berry/60 [--d:-2s]" />
+      <div className="hero-box relative mx-auto grid max-w-[1400px] items-center overflow-hidden rounded-[36px] lg:grid-cols-[1.05fr_1fr]">
+        <div className="relative z-10 col-span-full flex justify-center px-4 pt-7 sm:pt-9">
+          <span className="ship-pill">
+            <Sparkle className="ship-spark -start-5 top-0 size-3.5" />
+            <Sparkle className="ship-spark -end-4 -bottom-1 size-3 [--d:-1.1s]" />
+            <Sparkle className="ship-spark -top-3 end-6 size-2.5 [--d:-2s]" />
+            <Icon name="truck" className="size-[18px]" />
+            {tr(`توصيل لكل مصر خلال ${site.deliveryDays} أيام`, `Delivery across Egypt in ${site.deliveryDays} days`)}
+          </span>
+        </div>
 
-        <div className="relative z-10 px-6 py-12 sm:px-12 sm:py-16">
-          <span className="tag">✨ {tr(`توصيل لكل مصر خلال ${site.deliveryDays} أيام`, `Delivery across Egypt in ${site.deliveryDays} days`)}</span>
-          <h1 className="mt-5 font-display text-[clamp(2.6rem,6.4vw,5.2rem)] font-bold leading-[1.15]">
+        <div className="relative z-10 px-6 pb-10 pt-6 sm:px-12 sm:pb-16 sm:pt-8">
+          <p className="hero-tagline" lang="en" dir="ltr">The wrap belt that accentuates your waist</p>
+          <h1 className="mt-4 font-display text-[clamp(2.6rem,6.4vw,5.2rem)] font-bold leading-[1.15]">
             {tr("حزام واحد", "One belt")}<br />{tr("يغيّر", "changes")} <span className="relative inline-block text-berry">{tr("اللوك كله", "the whole look")}
-              <Ribbon className="absolute -bottom-3 start-0 h-4 w-full text-berry/50" w={3} />
+              <Ribbon className="absolute -bottom-3 start-0 h-4 w-full text-berry/40" w={3} />
             </span>
           </h1>
           <p className="mt-6 max-w-md text-[17px] leading-8 text-mauve">
@@ -42,29 +51,18 @@ export const Hero = () => {
             <a href="#shop" className="btn btn-berry btn-shine" data-magnetic>{tr("تسوّقي دلوقتي", "Shop now")} <Icon name="arrow" className="size-4" /></a>
             <a href="#styles" className="btn btn-white">{tr("التصميمات", "Styles")}</a>
           </div>
-          <div className="mt-8 flex items-center gap-3 text-[13px] font-semibold text-mauve">
-            <div className="flex -space-x-3 space-x-reverse">
-              {["lace-black", "croc-pink", "sash-green", "ruffle-red"].map((id) => (
-                <span key={id} className="grid size-10 place-items-center overflow-hidden rounded-full border-2 border-white bg-white">
-                  <img src={img(id).src} width={img(id).width} height={img(id).height} alt="" decoding="async" fetchPriority="low" className="size-full object-contain p-1 mix-blend-multiply" />
-                </span>
-              ))}
-            </div>
-            <span><b className="text-plum">{products.length}</b> {tr("موديل · 6 تصميمات", "belts · 6 styles")}</span>
-          </div>
         </div>
 
-        <div className="relative z-10 mx-auto w-[88%] max-w-[520px] pb-10 lg:w-full lg:py-12 lg:pe-10">
+        <div className="relative z-10 mx-auto w-[78%] max-w-[480px] pb-12 pt-4 lg:w-full lg:py-12">
           <figure className="arch relative aspect-[4/5] overflow-hidden border-[6px] border-white bg-white shadow-[var(--shadow-lift)]" data-tilt>
-            <img data-parallax src={h.src} srcSet={h.srcset} sizes="(max-width:1024px) 85vw, 520px" width={h.width} height={h.height}
+            <img data-parallax src={h.src} srcSet={h.srcset} sizes="(max-width:1024px) 78vw, 480px" width={h.width} height={h.height}
               alt={tr("تلات مانيكان لابسين أحزمة خصر: كونياك وأبيض وكشكشة سودا", "Three mannequins wearing waist belts: cognac, white and a black ruffle")} className="size-full scale-[1.18] object-cover object-[50%_60%]" fetchPriority="high" />
           </figure>
           {floaters.map((f) => (
             <img key={f.id} src={img(f.id).src} width={img(f.id).width} height={img(f.id).height} alt="" aria-hidden="true" decoding="async" fetchPriority="low"
-              className={`floaty pointer-events-none absolute rounded-[28px] bg-white p-2 shadow-[var(--shadow-lift)] ${f.cls}`}
+              className={`floaty pointer-events-none absolute rounded-[22px] bg-white p-1.5 shadow-[var(--shadow-lift)] ${f.cls}`}
               style={{ ["--r" as string]: f.r, ["--d" as string]: f.d }} />
           ))}
-          <Bow className="absolute -bottom-2 end-[6%] w-28 text-berry" w={2} />
         </div>
       </div>
     </section>
@@ -102,7 +100,7 @@ export const Perks = () => {
         ["truck", tr(`توصيل خلال ${site.deliveryDays} أيام`, `Delivery in ${site.deliveryDays} days`), tr("لكل محافظات مصر", "To every governorate")],
         ["cash", tr("الدفع عند الاستلام", "Cash on delivery"), tr("أو InstaPay", "or InstaPay")],
         ["return", tr(`استرجاع ${site.returnDays} يوم`, `${site.returnDays}-day returns`), tr("فلوسك ترجعلك كاملة", "Full refund")],
-        ["ruler", tr("مقاسات خاصة", "Custom sizes"), tr(`${site.size.widthCm}×${site.size.lengthCm} سم أو بالطلب`, `${site.size.widthCm}×${site.size.lengthCm} cm or made to order`)],
+        ["ruler", tr("بيلبس لحد 90 كيلو", "Fits up to 90 kg"), tr("ومقاسات خاصة بالطلب", "Custom sizes on request")],
       ].map(([icon, t, d]) => (
         <div key={t} className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
           <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-petal text-berry"><Icon name={icon} className="size-6" /></span>
@@ -134,7 +132,6 @@ export const ProductCard = ({ p, index, paged = true }: { p: Product; index: num
         </a>
         <button className="quick-add" data-add={p.id} aria-label={tr(`أضيفي ${name} للشنطة`, `Add ${name} to bag`)}>{tr("أضيفي للشنطة 🛍", "Add to bag 🛍")}</button>
       </div>
-      {p.isNew && <span className="badge">{tr("جديد ✨", "New ✨")}</span>}
       <button className="heart" data-fav={p.id} aria-pressed="false" aria-label={tr(`أضيفي ${name} للمفضلة`, `Add ${name} to favourites`)}>
         <Icon name="heart" className="size-[18px]" />
       </button>
@@ -154,77 +151,14 @@ export const ProductCard = ({ p, index, paged = true }: { p: Product; index: num
   );
 };
 
-/* ---------- editorial block that sits inside the product grid ---------- */
-export const EditorialInGrid = () => {
-  const lang = useLang(); const tr = useTr(); const url = useHref();
-  const look = looks[1];
-  const lt = lookText(look, lang);
-  const im = img(look.image);
-  return (
-    <aside className="editorial col-span-full" data-editorial>
-      <div className="grid items-center gap-6 overflow-hidden rounded-[30px] bg-white p-3 shadow-[var(--shadow-card)] md:grid-cols-[1.1fr_1fr] md:p-4">
-        <button className="relative aspect-[4/5] overflow-hidden rounded-[24px] md:aspect-[5/4]" data-lightbox="editorial" data-full={im.large} data-caption={lt.title} aria-label={tr("تكبير الصورة", "Enlarge image")}>
-          <img src={im.src} srcSet={im.srcset} sizes="(max-width:768px) 92vw, 50vw" width={im.width} height={im.height} loading="lazy"
-            alt={tr("مانيكان لابس حزام أخضر بطرف طويل", "Mannequin wearing a green long-sash belt")} className="size-full object-cover transition-transform duration-[1.2s] ease-soft hover:scale-105" />
-          <span className="tag absolute bottom-4 start-4">Editorial · {tr("نصيحة تنسيق", "Styling tip")}</span>
-        </button>
-        <div className="px-3 pb-5 md:px-6">
-          <h3 className="font-display text-[clamp(1.8rem,3.4vw,2.6rem)] font-bold leading-tight">{lt.title}</h3>
-          <p className="mt-3 max-w-md leading-8 text-mauve">{lt.tip}</p>
-          <ul className="mt-5 space-y-2 text-[14px]">
-            <li>🤍 {tr("فستان أو بلوزة بلون سادة فاتح أو غامق", "A plain dress or blouse, light or dark")}</li>
-            <li>🎀 {tr("الحزام على أضيق نقطة في الوسط", "Wear the belt at the narrowest point of your waist")}</li>
-            <li>👠 {tr("شنطة أو جزمة بلون قريب من الحزام بتقفل اللوك", "A bag or shoes close to the belt colour finishes the look")}</li>
-          </ul>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {look.products.map((id) => (
-              <a key={id} href={url(productUrl(id))} className="btn btn-berry btn-shine">{tr("تسوّقي اللوك", "Shop the look")}</a>
-            ))}
-            <a href={url("sash/")} className="btn btn-white">{tr("كل ألوان الطرف الطويل", "All long-sash colours")}</a>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
-};
-
-/* ---------- how to order: 3 steps above the grid ---------- */
+/* ---------- how to order: the slim hint in the sticky filter bar ---------- */
 const orderSteps = (tr: (a: string, e: string) => string) => [
   { icon: "🛍", title: tr("اختاري الحزام اللي يعجبك", "Pick the belt you love"), hint: tr("اضغطي على الصورة أو الاسم", "Tap its photo or name"), short: tr("اختاري الحزام", "Pick a belt") },
   { icon: "➕", title: tr("أضيفيه للشنطة", "Add it to your bag"), hint: tr("دوسي على «أضيفي للشنطة»", "Tap “Add to bag”"), short: tr("أضيفيه للشنطة", "Add to bag") },
   { icon: "📱", title: tr("ابعتي الطلب", "Send your order"), hint: tr("افتحي الشنطة وابعتي على واتساب", "Open your bag and send it on WhatsApp"), short: tr("ابعتي على واتساب", "Send on WhatsApp") },
 ];
 
-export const OrderSteps = () => {
-  const tr = useTr();
-  const steps = orderSteps(tr);
-  return (
-    <div className="mx-auto mt-5 max-w-[1400px] px-4 sm:px-6" data-steps>
-      <div className="rounded-[26px] border border-rose/40 bg-white/70 p-4 sm:p-5">
-        <div className="text-[14px] font-bold text-berry">{tr("إزاي تطلبي في 3 خطوات؟", "How to order in 3 steps")}</div>
-        <ol className="mt-3 grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-center lg:gap-3">
-          {steps.map((st, i) => (
-            <Fragment key={st.title}>
-              <li className="flex items-center gap-3 rounded-2xl bg-blush px-3 py-2 lg:px-3.5 lg:py-3.5">
-                <span className="relative grid size-10 shrink-0 place-items-center rounded-full bg-white text-[18px] shadow-[var(--shadow-card)] lg:size-12 lg:text-[22px]" aria-hidden="true">
-                  {st.icon}
-                  <span className="absolute -top-1 -end-1 grid size-5 place-items-center rounded-full bg-berry text-[12px] font-extrabold text-white num">{i + 1}</span>
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[15px] font-bold leading-snug">{st.title}</span>
-                  <span className="block text-[13px] leading-snug text-mauve">{st.hint}</span>
-                </span>
-              </li>
-              {i < steps.length - 1 && <span className="steps-arrow hidden text-[22px] font-bold text-rose lg:block" aria-hidden="true">→</span>}
-            </Fragment>
-          ))}
-        </ol>
-      </div>
-    </div>
-  );
-};
-
-/** One-line version inside the sticky filter bar; it appears once the full steps have scrolled away. */
+/** Appears once the shop heading has scrolled away, and never again after the first add to bag. */
 const OrderStepsMini = () => {
   const tr = useTr();
   const steps = orderSteps(tr);
@@ -283,9 +217,8 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
           </button>
           <div className="ms-auto flex items-center gap-2">
             <label className="sr-only" htmlFor="sort">{tr("ترتيب", "Sort")}</label>
-            <select id="sort" className="rounded-full bg-white py-2 pe-8 ps-4 text-[13px] font-semibold shadow-[0_2px_0_rgb(181_71_106/.1)] outline-none" data-sort defaultValue="featured">
+            <select id="sort" className="rounded-full bg-white py-2 pe-8 ps-4 text-[13px] font-semibold shadow-[0_2px_0_rgb(0_0_0/.1)] outline-none" data-sort defaultValue="featured">
               <option value="featured">{tr("المميز", "Featured")}</option>
-              <option value="new">{tr("الجديد", "Newest")}</option>
               <option value="price-asc">{tr("السعر: من الأقل", "Price: low to high")}</option>
               <option value="price-desc">{tr("السعر: من الأعلى", "Price: high to low")}</option>
             </select>
@@ -316,7 +249,7 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
         <div className="mt-3 grid grid-cols-2 gap-2">
           {usedColors.map((c) => (
             <button key={c.id} className="pill flex items-center gap-2" data-filter-color={c.id} aria-pressed="false">
-              <span className="size-5 rounded-full border-2 border-white shadow-[0_0_0_1px_rgb(58_31_38/.15)]" style={{ background: c.hex }} /> {cName(c, lang)}
+              <span className="size-5 rounded-full border-2 border-white shadow-[0_0_0_1px_rgb(0_0_0/.15)]" style={{ background: c.hex }} /> {cName(c, lang)}
             </button>
           ))}
         </div>
@@ -358,7 +291,7 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
 /* ---------- shop by design (home) ---------- */
 export const ShopByStyle = () => {
   const lang = useLang(); const tr = useTr(); const url = useHref();
-  const cover: Record<string, string> = { lace: "lace-black", "wide-bow": "bow-white", sash: "sash-green", "thin-tie": "classic-royal-blue", "croc-snake": "croc-cognac", ruffle: "ruffle-red" };
+  const cover: Record<string, string> = { lace: "lace-black", "wide-bow": "bow-white", "thin-tie": "classic-royal-blue", croc: "croc-cognac", snake: "snake-grey", ruffle: "ruffle-red" };
   return (
     <section id="designs" className="mx-auto max-w-[1400px] scroll-mt-24 px-4 pt-16 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -393,39 +326,6 @@ export const ShopByStyle = () => {
   );
 };
 
-/* ---------- lookbook band ---------- */
-export const Lookbook = () => {
-  const tr = useTr();
-  const a = img("mood-green"), b = img("mood-bow"), c = img("mood-lace");
-  return (
-    <section className="px-3 pt-14 sm:px-5">
-      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 overflow-hidden rounded-[36px] bg-plum px-6 py-14 text-white sm:px-12 lg:grid-cols-[1fr_1.3fr]">
-        <Bow className="pointer-events-none absolute -top-6 start-[40%] w-56 text-white/10" w={1.2} />
-        <div className="relative">
-          <span className="tag bg-white/10 text-rose">Lookbook</span>
-          <blockquote className="mt-5 font-display text-[clamp(2rem,4.6vw,3.6rem)] font-bold leading-[1.3]">
-            {tr("«حزام واحد، وكل فستان بيبقى", "“One belt, and every dress becomes")} <span className="text-rose">{tr("إطلالة جديدة", "a new look")}</span>{tr(".»", ".”")}
-          </blockquote>
-          <p className="mt-5 max-w-sm text-white/70">{tr("لفّيه فيونكة، أو عقدة بطرف طويل، أو على جنب. نفس الحزام بيدّيكي كذا شكل.", "Tie it in a bow, a knot with a long tail, or to the side. One belt, many looks.")}</p>
-          <a href="#tie" className="btn btn-berry mt-8">{tr("اتعلمي تربطيه", "Learn to tie it")}</a>
-        </div>
-        <div className="relative grid grid-cols-3 items-end gap-3 sm:gap-5">
-          {[[b, "mt-10", "-4deg"], [a, "", "0deg"], [c, "mt-16", "5deg"]].map(([im, cls, r], i) => {
-            const m = im as ReturnType<typeof img>;
-            return (
-              <figure key={i} className={`arch overflow-hidden border-4 border-white/90 bg-white/10 transition-transform duration-500 ease-soft hover:-translate-y-2 hover:rotate-0 ${cls}`} style={{ transform: `rotate(${r})` }}>
-                <img src={m.src} srcSet={m.srcset} sizes="30vw" width={m.width} height={m.height} loading="lazy" alt={tr("حزام على مانيكان برونزي", "Belt on a bronze mannequin")} className="aspect-[3/4] w-full object-cover transition-transform duration-700 ease-soft hover:scale-110" />
-              </figure>
-            );
-          })}
-          <Sparkle className="twinkle absolute -top-4 start-1/3 size-6 text-rose" />
-          <Sparkle className="twinkle absolute bottom-6 -start-3 size-4 text-white [--d:-1.5s]" />
-        </div>
-      </div>
-    </section>
-  );
-};
-
 /* ---------- tie steps ---------- */
 export const TieSteps = () => {
   const tr = useTr();
@@ -453,35 +353,42 @@ export const TieSteps = () => {
   );
 };
 
-/* ---------- how to order, with real screenshots (home) ---------- */
-export const HowToOrder = () => {
-  const lang = useLang(); const tr = useTr();
-  const steps = [
-    tr("اختاري الحزام اللي يعجبك واضغطي عليه", "Pick the belt you love and tap it"),
-    tr("دوسي «أضيفي للشنطة» على طول من الشبكة", "Tap “Add to bag” right from the grid"),
-    tr("افتحي الشنطة وابعتي طلبك على واتساب في ثانية", "Open your bag and send your order on WhatsApp in a second"),
-  ];
+/* ---------- made by hand: the laser-cutting clip (home) ---------- */
+export const MadeByHand = () => {
+  const tr = useTr();
+  const poster = img("laser-poster");
   return (
-    <section id="how-to-order" className="mx-auto max-w-[1400px] scroll-mt-24 px-4 pt-20 sm:px-6">
-      <div className="flex items-center gap-3">
-        <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("إزاي تطلبي من Vicuna", "How to order from Vicuna")}</h2>
-        <Sparkle className="size-7 text-berry" />
+    <section className="mx-auto max-w-[1400px] px-4 pt-20 sm:px-6">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[32px] bg-cream p-3 sm:p-4 lg:grid-cols-[1.25fr_1fr]">
+        <div className="relative aspect-video overflow-hidden rounded-[24px] bg-plum">
+          <video className="absolute inset-0 size-full object-cover" data-lazy-video={videos["laser.mp4"]} poster={poster.large}
+            muted loop playsInline preload="none" aria-label={tr("فيديو قص حزام بالليزر", "A belt being laser-cut")} />
+        </div>
+        <div className="px-3 pb-6 lg:px-6 lg:pb-0">
+          <span className="eyebrow text-berry">{tr("مصنوع بإيدينا", "Made by hand")}</span>
+          <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3rem)] font-bold leading-tight">{tr("كل حزام بيتقص بالليزر، وبيتخيّط بإيد", "Every belt is laser-cut, then sewn by hand")}</h2>
+          <p className="mt-3 max-w-md leading-8 text-mauve">{tr("من التصميم للقص للخياطة، كل حزام بيعدّي على إيدينا قبل ما يوصلك، عشان يوصلك مظبوط ومتشطّب كويس.", "From design to cutting to sewing, every belt passes through our hands before it reaches you, so it arrives just right.")}</p>
+        </div>
       </div>
-      <ol className="mt-8 grid gap-4 md:grid-cols-3">
-        {steps.map((text, i) => {
-          const im = img(`how-${lang}-${i + 1}`);
-          return (
-            <li key={text} className="relative overflow-hidden rounded-[28px] bg-white p-3 shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
-              <img src={im.src} srcSet={im.srcset} sizes="(max-width:768px) 92vw, 30vw" width={im.width} height={im.height} loading="lazy" decoding="async"
-                alt={tr(`الخطوة ${i + 1}: ${text}`, `Step ${i + 1}: ${text}`)} className="aspect-[4/5] w-full rounded-[20px] border border-petal object-cover" />
-              <div className="flex items-start gap-3 px-2 pb-2 pt-4">
-                <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-berry text-[20px] font-extrabold text-white num">{i + 1}</span>
-                <p className="pt-1.5 text-[17px] font-bold leading-snug">{text}</p>
-              </div>
-            </li>
-          );
+    </section>
+  );
+};
+
+/* ---------- on the body: real photos, home only ---------- */
+export const OnBody = () => {
+  const tr = useTr();
+  return (
+    <section className="pt-20">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{tr("على الطبيعة", "On the body")} <span className="text-berry">♡</span></h2>
+      </div>
+      <div className="onbody no-scrollbar mt-6" data-lenis-prevent>
+        {[1, 2, 3, 4, 5, 6, 7].map((n) => {
+          const im = img(`onbody-${n}`);
+          return <img key={n} src={im.src} srcSet={im.srcset} sizes="(max-width:640px) 62vw, 300px" width={im.width} height={im.height} loading="lazy" decoding="async"
+            alt={tr("بنت لابسة حزام خصر من Vicuna", "A woman wearing a Vicuna waist belt")} />;
         })}
-      </ol>
+      </div>
     </section>
   );
 };
@@ -494,38 +401,12 @@ export const Faq = () => {
   <section id="faq" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 pt-20 sm:px-6">
     <h2 className="text-center font-display text-[clamp(2rem,5vw,3.4rem)] font-bold">{lang === "en" ? "Questions you ask a lot" : "أسئلة بتتسأل كتير"} 💬</h2>
     <div className="faq mt-8 flex flex-col gap-3">
-      {items.map(([q, a], i) => (
-        <details key={q} open={i === 0}>
+      {items.map(([q, a]) => (
+        <details key={q}>
           <summary>{q}</summary>
           <p className="whitespace-pre-line pb-5 leading-8 text-mauve">{a}</p>
         </details>
       ))}
-    </div>
-  </section>
-  );
-};
-
-/* ---------- inner circle (WhatsApp) ---------- */
-export const InnerCircle = () => {
-  const lang = useLang(); const tr = useTr();
-  return (
-  <section className="inner-circle px-3 pt-20 sm:px-5">
-    <div className="relative mx-auto max-w-[1100px] overflow-hidden rounded-[36px] bg-gradient-to-br from-petal via-peach to-cream px-6 py-14 text-center sm:py-20">
-      <Blobs />
-      <Bow className="absolute -top-2 start-6 w-24 text-berry/40 sm:w-32" w={2} />
-      <Bow className="absolute -bottom-4 end-6 w-28 rotate-12 text-berry/30 sm:w-36" w={2} />
-      <div className="relative">
-        <h2 className="font-display text-[clamp(2.2rem,6vw,4rem)] font-bold leading-tight">{tr("انضمي لدايرة", "Join the")} <span className="text-berry">{tr("فيكونا", "Vicuna")}</span>{tr("", " circle")} 💌</h2>
-        <p className="mx-auto mt-4 max-w-md text-mauve">{tr("أول ما ينزل موديل جديد أو عرض، هتعرفي قبل أي حد.", "Be the first to hear about new belts and offers.")}</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a className="btn btn-berry btn-shine" data-magnetic href={waLink(tr("السلام عليكم، عايزة أعرف الموديلات والعروض الجديدة أول بأول", "Hello, I would like to hear about new belts and offers"))} target="_blank" rel="noopener">
-            <Icon name="wa" className="size-4" /> {tr("اشتركي على واتساب", "Join on WhatsApp")}
-          </a>
-          {site.social.map((s) => (
-            <a key={s.id} className="icon-btn size-12 bg-white shadow-[var(--shadow-card)]" href={s.href} target="_blank" rel="noopener" aria-label={lang === "en" ? s.labelEn : s.label}><Icon name={s.id} /></a>
-          ))}
-        </div>
-      </div>
     </div>
   </section>
   );

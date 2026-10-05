@@ -12,7 +12,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { site, url } from "../src/data/site";
 import { products } from "../src/data/products";
-import { images } from "../src/lib/images";
+import { images, videos } from "../src/lib/images";
 import { assets } from "../src/lib/assets";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -35,8 +35,9 @@ async function buildImages() {
     { key: "mood-lace", file: path.join(SRC, "assets/site/mood-lace.jpg"), widths: [500, 900, 1400] },
     { key: "mood-bow", file: path.join(SRC, "assets/site/mood-bow.jpg"), widths: [500, 900, 1400] },
     { key: "mood-green", file: path.join(SRC, "assets/site/mood-green.jpg"), widths: [640, 1100, 1600] },
-    // "How to order" screenshots (regenerate with scripts/how-to-shots.cjs)
-    ...["ar", "en"].flatMap((l) => [1, 2, 3].map((n) => ({ key: `how-${l}-${n}`, file: path.join(SRC, `assets/site/how-${l}-${n}.jpg`), widths: [400, 780] }))),
+    // "On the body" strip: real customers' photos (4:5)
+    ...[1, 2, 3, 4, 5, 6, 7].map((n) => ({ key: `onbody-${n}`, file: path.join(SRC, `assets/site/onbody-${n}.jpg`), widths: [360, 720] })),
+    { key: "laser-poster", file: path.join(SRC, "assets/site/laser-poster.jpg"), widths: [640, 1280] },
   ];
 
   await Promise.all(
@@ -65,6 +66,15 @@ async function buildImages() {
       };
     }),
   );
+
+  // Videos are copied as-is with a content hash in the name.
+  await mkdir(path.join(out, "..", "video"), { recursive: true });
+  for (const f of await readdir(path.join(SRC, "assets/video"))) {
+    const buf = await readFile(path.join(SRC, "assets/video", f));
+    const name = f.replace(/(\.\w+)$/, `.${hash(buf)}$1`);
+    await writeFile(path.join(out, "..", "video", name), buf);
+    videos[f] = url(`assets/video/${name}`);
+  }
 
   // Social share image (1200×630).
   await sharp(path.join(SRC, "assets/site/hero.jpg"))
@@ -193,6 +203,17 @@ async function buildPages() {
     const target = path.join(OUT, file);
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, "<!doctype html>" + renderToStaticMarkup(page.element));
+  }
+
+  // Old collection URLs (merged or split styles) forward to their new home, so old links and search results still land somewhere useful.
+  const moved: Record<string, string> = { "sash/": "wide-bow/", "croc-snake/": "croc/" };
+  for (const [from, to] of Object.entries(moved)) {
+    for (const pre of ["", "en/"]) {
+      const dest = `${site.url}${url(pre + to)}`;
+      const target = path.join(OUT, pre + from, "index.html");
+      await mkdir(path.dirname(target), { recursive: true });
+      await writeFile(target, `<!doctype html><html><head><meta charset="utf-8"><title>Vicuna</title><link rel="canonical" href="${dest}"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=${dest}"><script>location.replace(${JSON.stringify(dest)}+location.hash)</script></head><body><a href="${dest}">${dest}</a></body></html>`);
+    }
   }
 
   const today = new Date().toISOString().slice(0, 10);

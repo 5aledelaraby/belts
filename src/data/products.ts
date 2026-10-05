@@ -1,7 +1,7 @@
 // The catalogue. To add a belt: drop a square photo in src/assets/products/<id>.jpg and add one line below.
 // Price comes from the style, so changing a style's price updates every belt in it.
 
-export type StyleId = "lace" | "wide-bow" | "sash" | "thin-tie" | "croc-snake" | "ruffle";
+export type StyleId = "lace" | "wide-bow" | "thin-tie" | "croc" | "snake" | "ruffle";
 export type ColorId = "black" | "white" | "red" | "pink" | "brown" | "gold" | "yellow" | "green" | "blue" | "grey";
 
 export interface Style {
@@ -20,7 +20,7 @@ export interface Product {
   color: ColorId;
   /** Swatch colour. */
   hex: string;
-  texture: "smooth" | "suede" | "lace" | "croc" | "snake" | "ruffle";
+  texture: "smooth" | "lace" | "croc" | "snake" | "ruffle";
   /** Shows a "جديد" badge. */
   isNew?: boolean;
 }
@@ -38,28 +38,28 @@ export const styles: Style[] = [
     name: "فيونكة عريضة",
     price: 200,
     headline: "فيونكة عريضة تلفت النظر لوسطك",
-    intro: "جلد PU ناعم بيتلف حوالين الخصر ويتربط فيونكة كبيرة من قدّام. الحزام هنا هو نجم اللبس.",
-  },
-  {
-    id: "sash",
-    name: "طرف طويل",
-    price: 200,
-    headline: "عقدة بسيطة وطرف طويل نازل",
-    intro: "حزام عريض بيتربط عقدة واحدة وطرفه نازل على الفستان. شكل هادي وأنيق، يمشي مع اللبس الكاجوال والرسمي.",
+    intro: "جلد PU بليكرا طري بيتلف حوالين الخصر ويتشكّل عليه، ويتربط فيونكة كبيرة من قدّام أو عقدة بطرف طويل نازل. الحزام هنا هو نجم اللبس.",
   },
   {
     id: "thin-tie",
     name: "شريط رفيع",
     price: 120,
     headline: "الحزام الكلاسيك اللي بيمشي مع كل حاجة",
-    intro: "حزام عريض بشريط رفيع بيتلف حوالين الوسط ويتربط فيونكة صغيرة. جلد ناعم وشمواه بألوان كتير، يلبس مع الفستان والبلوزة والجاكيت.",
+    intro: "حزام عريض بشريط رفيع بيتلف حوالين الوسط ويتربط فيونكة صغيرة. جلد PU بليكرا طري بيتشكّل على وسطك، بألوان كتير، يلبس مع الفستان والبلوزة والجاكيت.",
   },
   {
-    id: "croc-snake",
-    name: "كروكو وثعبان",
+    id: "croc",
+    name: "كروكو",
     price: 200,
-    headline: "ملمس كروكو وثعبان يدّي اللبس شخصية",
-    intro: "نقشة كروكو أو ثعبان على جلد PU مستورد، بشريط رفيع للربط. لمسة جريئة لأي لبس سادة.",
+    headline: "ملمس كروكو يدّي اللبس شخصية",
+    intro: "نقشة كروكو بارزة على جلد PU مستورد، بشريط رفيع للربط. لمسة جريئة وفخمة لأي لبس سادة.",
+  },
+  {
+    id: "snake",
+    name: "ثعبان",
+    price: 200,
+    headline: "نقشة ثعبان عصرية تلفت النظر",
+    intro: "نقشة ثعبان على جلد PU مستورد، بشريط رفيع للربط. لمسة مختلفة وعصرية لأي لبس سادة.",
   },
   {
     id: "ruffle",
@@ -86,7 +86,7 @@ export const colors: Array<{ id: ColorId; name: string; hex: string }> = [
 export const products: Product[] = [
   { id: "lace-black", name: "دانتيل أسود", style: "lace", color: "black", hex: "#1E1E22", texture: "lace" },
   { id: "lace-red", name: "دانتيل أحمر", style: "lace", color: "red", hex: "#C8232B", texture: "lace" },
-  { id: "lace-white", name: "دانتيل أبيض", style: "lace", color: "white", hex: "#F4F2EF", texture: "lace", isNew: true },
+  { id: "lace-white", name: "دانتيل أبيض", style: "lace", color: "white", hex: "#F4F2EF", texture: "lace" },
   { id: "lace-gold", name: "دانتيل دهبي", style: "lace", color: "gold", hex: "#CDB98A", texture: "lace" },
   { id: "lace-caramel", name: "دانتيل كراميل", style: "lace", color: "brown", hex: "#A8652F", texture: "lace" },
 
@@ -97,43 +97,42 @@ export const products: Product[] = [
   { id: "bow-burgundy", name: "فيونكة عنابي", style: "wide-bow", color: "red", hex: "#7E2632", texture: "smooth" },
   { id: "bow-taupe", name: "فيونكة بني فاتح", style: "wide-bow", color: "brown", hex: "#9A6B52", texture: "smooth" },
 
-  { id: "sash-red", name: "طرف طويل أحمر", style: "sash", color: "red", hex: "#C33A40", texture: "smooth" },
-  { id: "sash-black", name: "طرف طويل أسود", style: "sash", color: "black", hex: "#1E1E22", texture: "smooth", isNew: true },
-  { id: "sash-blush", name: "طرف طويل بينك فاتح", style: "sash", color: "pink", hex: "#EBC9C2", texture: "smooth" },
-  { id: "sash-green", name: "طرف طويل أخضر", style: "sash", color: "green", hex: "#3E9B3A", texture: "smooth", isNew: true },
-  { id: "sash-cognac", name: "طرف طويل كونياك", style: "sash", color: "brown", hex: "#A8613F", texture: "smooth" },
-  { id: "sash-brown", name: "طرف طويل بني غامق", style: "sash", color: "brown", hex: "#4A2E2B", texture: "smooth" },
-  { id: "twist-grey", name: "مجدول رمادي", style: "sash", color: "grey", hex: "#7D8592", texture: "smooth" },
+  { id: "sash-red", name: "فيونكة أحمر", style: "wide-bow", color: "red", hex: "#C33A40", texture: "smooth" },
+  { id: "sash-black", name: "فيونكة أسود", style: "wide-bow", color: "black", hex: "#1E1E22", texture: "smooth" },
+  { id: "sash-blush", name: "فيونكة بينك فاتح", style: "wide-bow", color: "pink", hex: "#EBC9C2", texture: "smooth" },
+  { id: "sash-green", name: "فيونكة أخضر", style: "wide-bow", color: "green", hex: "#3E9B3A", texture: "smooth" },
+  { id: "sash-cognac", name: "فيونكة كونياك", style: "wide-bow", color: "brown", hex: "#A8613F", texture: "smooth" },
+  { id: "sash-brown", name: "فيونكة بني غامق", style: "wide-bow", color: "brown", hex: "#4A2E2B", texture: "smooth" },
+  { id: "twist-grey", name: "فيونكة رمادي مجدول", style: "wide-bow", color: "grey", hex: "#7D8592", texture: "smooth" },
 
   { id: "classic-white", name: "شريط رفيع أبيض", style: "thin-tie", color: "white", hex: "#F4F2EF", texture: "smooth" },
   { id: "classic-red", name: "شريط رفيع أحمر", style: "thin-tie", color: "red", hex: "#C9252C", texture: "smooth" },
   { id: "classic-rose", name: "شريط رفيع وردي غامق", style: "thin-tie", color: "red", hex: "#9E4A55", texture: "smooth" },
-  { id: "classic-pink-suede", name: "شريط رفيع بينك شمواه", style: "thin-tie", color: "pink", hex: "#E3C3C8", texture: "suede" },
+  { id: "classic-pink-suede", name: "شريط رفيع بينك", style: "thin-tie", color: "pink", hex: "#E3C3C8", texture: "smooth" },
   { id: "classic-mustard", name: "شريط رفيع مسطردة", style: "thin-tie", color: "yellow", hex: "#EBA92E", texture: "smooth" },
-  { id: "classic-orange-suede", name: "شريط رفيع برتقالي شمواه", style: "thin-tie", color: "yellow", hex: "#D97A45", texture: "suede" },
-  { id: "classic-camel-suede", name: "شريط رفيع كامل شمواه", style: "thin-tie", color: "brown", hex: "#A9653F", texture: "suede" },
-  { id: "classic-green", name: "شريط رفيع أخضر زمردي", style: "thin-tie", color: "green", hex: "#1F8A5C", texture: "suede" },
-  { id: "classic-sky-blue", name: "شريط رفيع لبني", style: "thin-tie", color: "blue", hex: "#5BC0DE", texture: "smooth", isNew: true },
+  { id: "classic-orange-suede", name: "شريط رفيع برتقالي", style: "thin-tie", color: "yellow", hex: "#D97A45", texture: "smooth" },
+  { id: "classic-camel-suede", name: "شريط رفيع كامل", style: "thin-tie", color: "brown", hex: "#A9653F", texture: "smooth" },
+  { id: "classic-green", name: "شريط رفيع أخضر زمردي", style: "thin-tie", color: "green", hex: "#1F8A5C", texture: "smooth" },
+  { id: "classic-sky-blue", name: "شريط رفيع لبني", style: "thin-tie", color: "blue", hex: "#5BC0DE", texture: "smooth" },
   { id: "classic-royal-blue", name: "شريط رفيع أزرق ملكي", style: "thin-tie", color: "blue", hex: "#2F55A8", texture: "smooth" },
-  { id: "classic-navy", name: "شريط رفيع كحلي", style: "thin-tie", color: "blue", hex: "#24305E", texture: "smooth", isNew: true },
+  { id: "classic-navy", name: "شريط رفيع كحلي", style: "thin-tie", color: "blue", hex: "#24305E", texture: "smooth" },
 
-  { id: "croc-black", name: "كروكو أسود", style: "croc-snake", color: "black", hex: "#1C1C1F", texture: "croc" },
-  { id: "croc-wine", name: "كروكو عنابي", style: "croc-snake", color: "red", hex: "#5A2730", texture: "croc" },
-  { id: "croc-pink", name: "كروكو بينك", style: "croc-snake", color: "pink", hex: "#D9A79F", texture: "croc" },
-  { id: "croc-cognac", name: "كروكو كونياك", style: "croc-snake", color: "brown", hex: "#A8653C", texture: "croc", isNew: true },
-  { id: "snake-grey", name: "ثعبان رمادي", style: "croc-snake", color: "grey", hex: "#9EA3A8", texture: "snake", isNew: true },
-  { id: "snake-beige", name: "ثعبان بيج", style: "croc-snake", color: "gold", hex: "#C9A57C", texture: "snake", isNew: true },
+  { id: "croc-black", name: "كروكو أسود", style: "croc", color: "black", hex: "#1C1C1F", texture: "croc" },
+  { id: "croc-wine", name: "كروكو عنابي", style: "croc", color: "red", hex: "#5A2730", texture: "croc" },
+  { id: "croc-pink", name: "كروكو بينك", style: "croc", color: "pink", hex: "#D9A79F", texture: "croc" },
+  { id: "croc-cognac", name: "كروكو كونياك", style: "croc", color: "brown", hex: "#A8653C", texture: "croc" },
+  { id: "snake-grey", name: "ثعبان رمادي", style: "snake", color: "grey", hex: "#9EA3A8", texture: "snake" },
+  { id: "snake-beige", name: "ثعبان بيج", style: "snake", color: "gold", hex: "#C9A57C", texture: "snake" },
 
   { id: "ruffle-red", name: "كشكشة أحمر", style: "ruffle", color: "red", hex: "#D3262E", texture: "ruffle" },
-  { id: "ruffle-black", name: "كشكشة أسود", style: "ruffle", color: "black", hex: "#1C1C1F", texture: "ruffle", isNew: true },
+  { id: "ruffle-black", name: "كشكشة أسود", style: "ruffle", color: "black", hex: "#1C1C1F", texture: "ruffle" },
   { id: "ruffle-brown", name: "كشكشة بني", style: "ruffle", color: "brown", hex: "#9A5236", texture: "ruffle" },
 ];
 
 export const styleOf = (id: StyleId) => styles.find((s) => s.id === id)!;
 export const priceOf = (p: Product) => styleOf(p.style).price;
 export const textureName: Record<Product["texture"], string> = {
-  smooth: "جلد PU مستورد ناعم",
-  suede: "شمواه PU مستورد",
+  smooth: "جلد PU مستورد بليكرا طري",
   lace: "دانتيل على بطانة جلد PU",
   croc: "جلد PU مستورد بنقشة كروكو",
   snake: "جلد PU مستورد بنقشة ثعبان",
@@ -183,10 +182,10 @@ type L = "ar" | "en";
 const productEn: Record<string, string> = {
   "lace-black": "Black Lace", "lace-red": "Red Lace", "lace-white": "White Lace", "lace-gold": "Gold Lace", "lace-caramel": "Caramel Lace",
   "bow-white": "White Bow", "bow-silver": "Silver Bow", "bow-gold": "Gold Bow", "bow-mustard": "Mustard Bow", "bow-burgundy": "Burgundy Bow", "bow-taupe": "Taupe Bow",
-  "sash-red": "Red Long Sash", "sash-black": "Black Long Sash", "sash-blush": "Blush Long Sash", "sash-green": "Green Long Sash",
-  "sash-cognac": "Cognac Long Sash", "sash-brown": "Chocolate Long Sash", "twist-grey": "Grey Twist",
-  "classic-white": "White Thin Tie", "classic-red": "Red Thin Tie", "classic-rose": "Rosewood Thin Tie", "classic-pink-suede": "Pink Suede Thin Tie",
-  "classic-mustard": "Mustard Thin Tie", "classic-orange-suede": "Orange Suede Thin Tie", "classic-camel-suede": "Camel Suede Thin Tie",
+  "sash-red": "Red Bow", "sash-black": "Black Bow", "sash-blush": "Blush Bow", "sash-green": "Green Bow",
+  "sash-cognac": "Cognac Bow", "sash-brown": "Chocolate Bow", "twist-grey": "Grey Twist Bow",
+  "classic-white": "White Thin Tie", "classic-red": "Red Thin Tie", "classic-rose": "Rosewood Thin Tie", "classic-pink-suede": "Pink Thin Tie",
+  "classic-mustard": "Mustard Thin Tie", "classic-orange-suede": "Orange Thin Tie", "classic-camel-suede": "Camel Thin Tie",
   "classic-green": "Emerald Thin Tie", "classic-sky-blue": "Sky Blue Thin Tie", "classic-royal-blue": "Royal Blue Thin Tie", "classic-navy": "Navy Thin Tie",
   "croc-black": "Black Croc", "croc-wine": "Wine Croc", "croc-pink": "Pink Croc", "croc-cognac": "Cognac Croc",
   "snake-grey": "Grey Snake", "snake-beige": "Beige Snake",
@@ -195,10 +194,10 @@ const productEn: Record<string, string> = {
 
 const styleEn: Record<StyleId, { name: string; headline: string; intro: string }> = {
   lace: { name: "Lace", headline: "A lace belt turns the simplest dress into an evening look", intro: "Lace worked over an imported PU leather lining, tied with a slim strap. Made for nights out and occasions — it defines the waist without squeezing." },
-  "wide-bow": { name: "Wide Bow", headline: "A wide bow that draws every eye to your waist", intro: "Soft PU leather that wraps the waist and ties into a big bow at the front. Here the belt is the star of the outfit." },
-  sash: { name: "Long Sash", headline: "One simple knot and a long, falling tail", intro: "A wide belt tied in a single knot with the end falling over the dress. Calm and elegant, for casual and formal looks alike." },
-  "thin-tie": { name: "Thin Tie", headline: "The classic belt that goes with everything", intro: "A wide belt with a slim strap that wraps the waist and ties into a small bow. Smooth leather and suede in many colours — wear it with dresses, blouses and jackets." },
-  "croc-snake": { name: "Croc & Snake", headline: "Croc and snake textures that give your outfit character", intro: "Croc or snake embossing on imported PU leather, with a slim tie. A bold touch for any plain outfit." },
+  "wide-bow": { name: "Wide Bow", headline: "A wide bow that draws every eye to your waist", intro: "Soft PU leather with stretch that wraps and shapes to the waist, tied in a big bow at the front or a knot with a long tail. Here the belt is the star of the outfit." },
+  "thin-tie": { name: "Thin Tie", headline: "The classic belt that goes with everything", intro: "A wide belt with a slim strap that wraps the waist and ties into a small bow. Soft PU leather with stretch that shapes to your waist, in many colours — wear it with dresses, blouses and jackets." },
+  croc: { name: "Croc", headline: "Croc texture that gives your outfit character", intro: "Croc embossing on imported PU leather, with a slim tie. A bold, luxe touch for any plain outfit." },
+  snake: { name: "Snake", headline: "A modern snake print that turns heads", intro: "Snake print on imported PU leather, with a slim tie. A different, modern touch for any plain outfit." },
   ruffle: { name: "Ruffle", headline: "Ruffles that add movement and softness", intro: "A belt ruffled top and bottom with a strap that ties in the middle. A soft, different touch for any plain dress." },
 };
 
@@ -207,7 +206,7 @@ const colorEn: Record<ColorId, string> = {
 };
 
 const textureEn: Record<Product["texture"], string> = {
-  smooth: "Smooth imported PU leather", suede: "Imported PU suede", lace: "Lace on a PU leather lining",
+  smooth: "Imported PU leather with soft stretch", lace: "Lace on a PU leather lining",
   croc: "Imported PU leather, croc embossed", snake: "Imported PU leather, snake print", ruffle: "Ruffled imported PU leather",
 };
 

@@ -245,6 +245,29 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   }
 }
 
+/* ---------- back-to-top arrow (after one screen of scrolling) ---------- */
+{
+  const btn = document.querySelector<HTMLElement>("[data-to-top]");
+  if (btn) {
+    const update = () => { btn.dataset.show = String(scrollY > innerHeight * 0.9); };
+    update();
+    addEventListener("scroll", update, { passive: true });
+    btn.addEventListener("click", () => scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }));
+  }
+}
+
+/* ---------- lazy muted loop video: loads only when near the screen, pauses when away ---------- */
+for (const v of $$<HTMLVideoElement>("video[data-lazy-video]")) {
+  if (!("IntersectionObserver" in window)) { v.src = v.dataset.lazyVideo!; continue; }
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+      if (!v.src) { v.src = v.dataset.lazyVideo!; }
+      if (!reduced) v.play().catch(() => {});
+      else v.controls = true;
+    } else if (!v.paused) v.pause();
+  }, { rootMargin: "200px 0px" }).observe(v);
+}
+
 /* ---------- visual effects (images, cards, buttons — never text) ---------- */
 function effects() {
   if (!motion) return;
@@ -471,10 +494,73 @@ function add(id: string, from?: Element | null) {
 }
 function addNow(id: string) {
   setQty(id, (cart[id] || 0) + 1);
-  toast(S.bagAdded, { label: S.openBag, run: () => $<HTMLElement>("[data-cart-open]")!.click() }, 4000);
+  if (!showUpsell(id)) toast(S.bagAdded, { label: S.openBag, run: () => $<HTMLElement>("[data-cart-open]")!.click() }, 4000);
   nudgeBag();
   track("AddToCart", [[id, 1]]);
   ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
+}
+
+/* ---------- after the first add to bag: three belts from other designs, once per visitor ---------- */
+const upsell = $<HTMLElement>("[data-upsell]");
+let upTimer = 0, upY = 0, upShown: string[] = [];
+function hideUpsell() { if (upsell) upsell.dataset.show = "false"; clearTimeout(upTimer); }
+function upsellPick(baseId: string, n: number) {
+  const base = catalog[baseId];
+  const ids = Object.keys(catalog).filter((id) => !cart[id] && !upShown.includes(id) && catalog[id].style !== base.style);
+  const picked: string[] = [];
+  // same colour family first (looks good together), one per design, then any other design
+  for (const id of ids) if (picked.length < n && catalog[id].hex === base.hex && !picked.some((x) => catalog[x].style === catalog[id].style)) picked.push(id);
+  const shuffled = ids.map((id) => [Math.random(), id] as const).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
+  for (const id of shuffled) if (picked.length < n && !picked.includes(id) && !picked.some((x) => catalog[x].style === catalog[id].style)) picked.push(id);
+  for (const id of shuffled) if (picked.length < n && !picked.includes(id)) picked.push(id);
+  upShown.push(...picked);
+  return picked;
+}
+function upsellItem(id: string) {
+  const it = catalog[id];
+  const href = (document.documentElement.lang === "en" ? "/en/p/" : "/p/") + id + "/";
+  const el = document.createElement("div");
+  el.className = "up-item";
+  el.innerHTML = `<a href="${href}" tabindex="-1" aria-hidden="true" style="padding:0"><img alt="" src="${it.src}" loading="lazy" decoding="async"></a>`
+    + `<a href="${href}"></a><span><span class="num">${it.price}</span> <span style="font-size:11px">${S.currency}</span></span>`
+    + `<button type="button" class="up-add" data-up-add="${id}">+</button>`;
+  el.querySelectorAll("a")[1].textContent = it.name;
+  el.querySelector("button")!.setAttribute("aria-label", `${S.openBag === "Open bag" ? "Add" : "أضيفي"} ${it.name}`);
+  return el;
+}
+function showUpsell(id: string) {
+  if (!upsell || store.get<boolean>("vicuna-upsold", false)) return false;
+  store.set("vicuna-upsold", true);
+  upShown = [id];
+  const box = $("[data-upsell-items]", upsell)!;
+  box.replaceChildren(...upsellPick(id, 3).map(upsellItem));
+  upsell.dataset.show = "true";
+  upY = scrollY;
+  clearTimeout(upTimer);
+  upTimer = window.setTimeout(hideUpsell, 12000);
+  return true;
+}
+if (upsell) {
+  addEventListener("scroll", () => { if (upsell.dataset.show === "true" && Math.abs(scrollY - upY) > 160) hideUpsell(); }, { passive: true });
+  upsell.addEventListener("click", (e) => {
+    const t = e.target as Element;
+    const plus = t.closest<HTMLElement>("[data-up-add]");
+    if (plus) {
+      const id = plus.dataset.upAdd!;
+      setQty(id, (cart[id] || 0) + 1);
+      nudgeBag();
+      track("AddToCart", [[id, 1]]);
+      ga("add_to_cart", { currency: "EGP", value: catalog[id].price, items: [gaItem(id)] });
+      const next = upsellPick(id, 1)[0];
+      const card = plus.closest(".up-item")!;
+      if (next) card.replaceWith(upsellItem(next)); else card.remove();
+      clearTimeout(upTimer);
+      upTimer = window.setTimeout(hideUpsell, 12000);
+      return;
+    }
+    if (t.closest("[data-upsell-close]")) hideUpsell();
+    if (t.closest("[data-upsell-bag]")) { hideUpsell(); $<HTMLElement>("[data-cart-open]")!.click(); }
+  });
 }
 
 const drawer = $<HTMLElement>("[data-cart]")!;
@@ -603,7 +689,7 @@ if (moreTpl) {
 const afterPaint = (fn: () => void) => requestAnimationFrame(() => setTimeout(fn, 0));
 const PAGE = 12;
 const filters = { style: "all", color: "", price: "all", fav: false, sort: "featured", limit: PAGE };
-const NEW = new Set(Object.keys(catalog).filter((id) => $(`[data-card][data-id="${id}"] .badge`)));
+const NEW = new Set<string>();
 
 function matches(c: HTMLElement) {
   return (filters.style === "all" || c.dataset.style === filters.style)

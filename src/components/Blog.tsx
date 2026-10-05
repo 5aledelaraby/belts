@@ -75,7 +75,7 @@ export const BlogPost = ({ p }: { p: Post }) => {
       <a className="share-btn bg-wa text-white" href={`https://wa.me/?text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener" aria-label="مشاركة على واتساب"><Icon name="wa" className="size-[18px]" /></a>
       <a className="share-btn bg-[#1877F2] text-white" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener" aria-label="مشاركة على فيسبوك"><Icon name="facebook" className="size-[18px]" /></a>
       <button className="share-btn bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white" data-share-native data-url={pageUrl} data-title={p.title} aria-label="مشاركة على إنستجرام"><Icon name="instagram" className="size-[18px]" /></button>
-      <button className="share-btn bg-white text-plum shadow-[0_0_0_1px_rgb(58_31_38/.12)]" data-copy-link={pageUrl} aria-label="نسخ رابط المقالة"><Icon name="link" className="size-[18px]" /></button>
+      <button className="share-btn bg-white text-plum shadow-[0_0_0_1px_rgb(0_0_0/.12)]" data-copy-link={pageUrl} aria-label="نسخ رابط المقالة"><Icon name="link" className="size-[18px]" /></button>
     </div>
   );
 
