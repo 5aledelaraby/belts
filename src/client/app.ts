@@ -184,12 +184,17 @@ const scrollToEl = (el: Element) => (lenis ? lenis.scrollTo(el, { offset: -(head
   addEventListener("scroll", update, { passive: true });
 }
 
-/* ---------- how-to-order: show the one-line steps once the full ones scroll away ---------- */
+/* ---------- how-to-order: a one-line hint under the filter bar while browsing the belts ----------
+   Shown once the shop heading scrolls away; gone for good once the shopper has something in the bag. */
 {
   const full = $("[data-steps]"), mini = $("[data-steps-mini]");
+  const learned = () => Object.keys(store.get<Record<string, number>>("vicuna-cart", {})).length > 0;
   if (full && mini && "IntersectionObserver" in window) {
-    new IntersectionObserver(([e]) => { mini.dataset.show = String(!e.isIntersecting && e.boundingClientRect.top < 0); }, { rootMargin: "-140px 0px 0px 0px" }).observe(full);
+    new IntersectionObserver(([e]) => { mini.dataset.show = String(!learned() && !e.isIntersecting && e.boundingClientRect.top < 0); }, { rootMargin: "-140px 0px 0px 0px" }).observe(full);
   }
+  document.addEventListener("click", (e) => {
+    if (mini && (e.target as Element).closest("[data-add]")) setTimeout(() => { if (learned()) mini.dataset.show = "false"; }, 600);
+  });
   $("[data-cart-open-mini]")?.addEventListener("click", () => $<HTMLElement>("[data-cart-open]")!.click());
 }
 

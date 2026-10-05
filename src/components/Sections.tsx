@@ -253,7 +253,7 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
   const prices = [...new Set(list.map(priceOf))].sort((a, b) => a - b);
   return (
     <section id="shop" className="scroll-mt-20" data-shop data-view="grid">
-      <div className="mx-auto max-w-[1400px] px-4 pt-14 sm:px-6">
+      <div className="mx-auto max-w-[1400px] px-4 pt-14 sm:px-6" data-steps>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-bold leading-tight">
             {title} <Sparkle className="inline size-6 text-berry" />
@@ -261,7 +261,6 @@ export const Shop = ({ only, title }: { only?: Style; title?: string }) => {
           <span className="tag"><span className="num" data-result-count>{list.length}</span> {tr("موديل", "belts")}</span>
         </div>
       </div>
-      <OrderSteps />
 
       <div className="filter-bar sticky top-[70px] z-30 mt-5 bg-blush/90 backdrop-blur-xl">
         <OrderStepsMini />
