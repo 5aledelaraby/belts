@@ -5,7 +5,7 @@
   "sourceRoot": "src",
   "projectType": "application",
   "tags": [
-    "scope:storefront",
+    "scope:web",
     "type:app"
   ],
   "targets": {
