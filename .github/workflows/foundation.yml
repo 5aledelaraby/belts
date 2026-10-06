@@ -1,0 +1,29 @@
+name: Foundation CI
+
+on:
+  push:
+    branches: [main, "architecture/**"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22.12.0"
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Inspect Nx workspace
+        run: npx nx show projects
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint architecture packages
+        run: npm run lint
