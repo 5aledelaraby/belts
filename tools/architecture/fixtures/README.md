@@ -1,7 +1,15 @@
 # Architecture boundary fixtures
 
-These fixtures are intentionally outside production source.
+These fixtures are intentionally **not production source**.
 
-The fixture matrix represents allowed and forbidden dependency edges. The verification script checks the current package tags, scans package source imports, and validates every fixture edge against the approved matrix.
+`npm run architecture:verify` creates temporary package projects under `packages/__architecture-fixture-*`, runs the real ESLint/Nx module-boundary rule against them, and removes them in a `finally` block.
 
-Do not add fake forbidden imports to production packages merely to prove a boundary rule.
+The verifier checks both directions:
+
+- allowed package-to-package examples must lint successfully;
+- forbidden package-to-package examples must produce a lint failure;
+- the verification command itself succeeds only when the forbidden cases fail as expected.
+
+No forbidden import is committed to `src/`, and no new test framework is required.
+
+The fixture projects are temporary and must never be added to git.
