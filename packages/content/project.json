@@ -6,6 +6,6 @@
   "projectType": "library",
   "tags": [
     "scope:content",
-    "type:library"
+    "type:domain"
   ]
 }
