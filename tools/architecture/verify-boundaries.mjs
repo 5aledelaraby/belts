@@ -9,6 +9,7 @@ const matrix = JSON.parse(
 );
 
 const packageMeta = {
+  web: { scope: "web", type: "app" },
   commerce: { scope: "commerce", type: "domain" },
   content: { scope: "content", type: "domain" },
   services: { scope: "services", type: "domain" },
@@ -21,7 +22,7 @@ const packageMeta = {
 
 const failures = [];
 
-for (const [name, meta] of Object.entries(packageMeta)) {
+for (const [name, meta] of Object.entries(packageMeta).filter(([name]) => name !== "web")) {
   const projectPath = path.join(root, "packages", name, "project.json");
   if (!fs.existsSync(projectPath)) {
     failures.push(`missing project.json: ${name}`);
@@ -41,7 +42,7 @@ for (const [source, target] of matrix.forbidden) {
   }
 }
 
-function packageFixture(name, meta, importTarget) {
+function packageFixture(name, meta, sourceCode) {
   return {
     packageJson: JSON.stringify({
       name: `@vicuna/architecture-fixture-${name}`,
@@ -56,7 +57,7 @@ function packageFixture(name, meta, importTarget) {
       projectType: "library",
       tags: [`scope:${meta.scope}`, `type:${meta.type}`],
     }, null, 2) + "\n",
-    source: `import "@vicuna/${importTarget}";\nexport const boundaryFixture = true;\n`,
+    source: `${sourceCode}\nexport const boundaryFixture = true;\n`,
   };
 }
 
@@ -71,11 +72,11 @@ for (const source of packageTargets) {
 const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "vicuna-boundaries-"));
 const created = [];
 
-function writeFixture(kind, index, source, target, shouldFail) {
-  const name = `${kind}-${index}-${source}-to-${target}`;
+function writeFixture(kind, index, source, sourceCode, shouldFail) {
+  const name = `${kind}-${index}-${source}`;
   const dir = path.join(root, "packages", `__architecture-fixture-${name}`);
   fs.mkdirSync(path.join(dir, "src"), { recursive: true });
-  const fixture = packageFixture(name, packageMeta[source], target);
+  const fixture = packageFixture(name, packageMeta[source], sourceCode);
   fs.writeFileSync(path.join(dir, "package.json"), fixture.packageJson);
   fs.writeFileSync(path.join(dir, "project.json"), fixture.projectJson);
   fs.writeFileSync(path.join(dir, "src", "index.ts"), fixture.source);
@@ -85,13 +86,34 @@ function writeFixture(kind, index, source, target, shouldFail) {
 
 const cases = [
   ...allowedEdges.map(([source, target], index) =>
-    writeFixture("allowed", index, source, target, false),
+    writeFixture(
+      "allowed",
+      index,
+      source,
+      `import "@vicuna/${target}";`,
+      false,
+    ),
   ),
   ...matrix.forbidden
     .filter(([source, target]) => packageMeta[source] && packageMeta[target])
     .map(([source, target], index) =>
-      writeFixture("forbidden", index, source, target, true),
+      writeFixture(
+        "forbidden",
+        index,
+        source,
+        `import "@vicuna/${target}";`,
+        true,
+      ),
     ),
+  ...packageTargets.map((source, index) =>
+    writeFixture(
+      "internal-src",
+      index,
+      source,
+      'import "@vicuna/commerce/src/index";',
+      true,
+    ),
+  ),
 ];
 
 try {
@@ -128,9 +150,9 @@ try {
 
     const forbiddenResult = runLint(forbiddenFiles);
     if (forbiddenResult.status === 0) {
-      failures.push("forbidden fixture lint passed unexpectedly; boundary constraints are not being enforced");
+      failures.push("forbidden fixture lint passed unexpectedly; boundary constraints or public-entry-point restrictions are not being enforced");
     } else {
-      console.log("Forbidden fixture lint failed as expected.");
+      console.log("Forbidden and internal-src fixture lint failed as expected.");
     }
   }
 } finally {
@@ -145,5 +167,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Architecture boundary verification passed: ${allowedEdges.length} allowed package edges passed and forbidden package edges failed as expected.`,
+  `Architecture boundary verification passed: ${allowedEdges.length} allowed package edges passed and ${matrix.forbidden.length} forbidden package edges plus ${packageTargets.length} internal-src cases failed as expected.`,
 );
