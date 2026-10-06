@@ -10,7 +10,8 @@
     "nx": "nx",
     "graph": "nx graph",
     "typecheck:all": "nx run-many -t typecheck",
-    "lint": "eslint apps packages"
+    "lint": "eslint apps packages",
+    "architecture:verify": "node tools/architecture/verify-boundaries.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
