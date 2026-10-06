@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@vicuna/seo",
+  "root": "packages/seo",
+  "sourceRoot": "packages/seo/src",
+  "projectType": "library",
+  "tags": [
+    "scope:seo",
+    "type:library"
+  ]
+}
