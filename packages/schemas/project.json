@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@vicuna/schemas",
+  "root": "packages/schemas",
+  "sourceRoot": "packages/schemas/src",
+  "projectType": "library",
+  "tags": [
+    "scope:schemas",
+    "type:library"
+  ]
+}
