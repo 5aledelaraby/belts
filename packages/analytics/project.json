@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@vicuna/analytics",
+  "root": "packages/analytics",
+  "sourceRoot": "packages/analytics/src",
+  "projectType": "library",
+  "tags": [
+    "scope:analytics",
+    "type:library"
+  ]
+}
