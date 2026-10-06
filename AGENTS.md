@@ -15,23 +15,27 @@
 - Business domains do not depend on other business domains, UI, SEO or analytics.
 - Do not add Kubernetes, Redis clusters, message brokers or multiple databases unless a concrete requirement justifies them.
 - Keep integrations behind adapters so Google, Meta, WhatsApp, payments and future providers can change independently.
+- Domain and platform packages must remain portable to Cloudflare-compatible web runtimes; do not introduce Node-only runtime assumptions into them.
 
 ## Repository rules
 
 - Nx is the workspace orchestrator.
 - The root storefront remains the legacy runtime until migration work is explicitly completed.
-- Do not manually edit `docs/`; it is generated output.
+- Do not manually edit generated site output under `docs/`; source-controlled architecture documentation under `docs/architecture/` is maintained as design documentation.
 - Do not commit secrets, tokens or credentials.
 - Use stable domain IDs/SKUs and keep data models independent from presentation.
 - Preserve backwards-compatible URLs during migrations.
 - Import workspace packages through public entry points such as `@vicuna/commerce`; never import package-internal `src` paths.
 - Existing TypeScript path aliases must remain until workspace package exports are verified.
+- npm is the package manager; do not introduce pnpm workspace files or lockfiles.
 
 ## Boundary rules
 
 - Keep the approved dependency matrix in `docs/architecture/FOUNDATION.md` authoritative.
 - Use Nx module-boundary constraints in both scope and type dimensions.
+- Do not use a blanket rule that allows all domain-to-domain dependencies.
 - Boundary tests/fixtures belong outside production source and must not add fake forbidden imports to real domain code.
+- Internal package `src` imports are forbidden even when the target package itself is otherwise an allowed dependency.
 - Do not create future application projects merely to reserve names; future API/admin/web boundaries are documentation only until needed.
 
 ## Change discipline
