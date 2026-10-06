@@ -5,29 +5,33 @@ This roadmap deliberately separates the **foundation** from the **migration**. T
 ## Phase 1 — Foundation (current)
 
 - Nx workspace and project graph.
-- npm workspaces for future applications/packages.
+- npm workspaces for packages and future applications.
 - Domain/platform package boundaries and tags.
+- Dependency-neutral core and contracts boundaries.
+- Public package entry points without breaking existing TypeScript aliases.
 - TypeScript shared configuration.
-- ESLint module-boundary guardrails for new workspace code.
+- ESLint module-boundary guardrails for workspace code.
+- Boundary verification fixtures outside production source.
 - Agent/developer rules.
-- CI validation.
+- Reproducible CI installation with npm lockfile.
 - Environment template without secrets.
 
 ## Phase 2 — Extract contracts
 
 - Introduce canonical product/category/variant/service/order/content types.
-- Add runtime validation schemas.
+- Add runtime validation schemas where they are actually required.
 - Define stable IDs, SKUs, slugs, money and locale primitives.
 - Define unified analytics event contracts.
 - Define SEO/structured-data contracts.
 
 ## Phase 3 — Migrate the storefront incrementally
 
-- Move commerce data first.
+- Move commerce data first only if commerce is actually the next product priority.
 - Move reusable UI primitives.
 - Move SEO generation.
 - Move analytics/event dispatch.
 - Move content/blog handling.
+- Move professional service offerings.
 - Keep generated `docs/` output unchanged as the deployment artifact until the replacement build is verified.
 
 ## Phase 4 — Dynamic seams
@@ -44,11 +48,12 @@ Only when needed:
 
 ## Phase 5 — Platform expansion
 
-- Admin application.
+- Add an API or admin application only when the product requires it.
 - Travel/content publishing capabilities.
 - Programming and digital-marketing service offerings.
 - Additional products and catalogs.
 - Additional locales/currencies.
+- Additional independent business domains.
 
 ## Phase 6 — Scale only when evidence requires it
 
