@@ -23,7 +23,7 @@ The root `package.json` owns npm workspaces and package metadata. The root `proj
 
 ## Dependency matrix
 
-Allowed means "may depend when a concrete import is needed", not "must depend".
+The matrix defines **allowed dependency edges**, not required dependencies. An allowed edge means the source package **may** import the target when a concrete implementation need exists. It does not mean the source package should import the target, and it must not be used as a reason to add an artificial import.
 
 | Source | Allowed targets |
 |---|---|
@@ -36,6 +36,17 @@ Allowed means "may depend when a concrete import is needed", not "must depend".
 | analytics | contracts, core |
 | contracts | core |
 | core | none |
+
+Interpret the rows as optional sets:
+
+- **core:** depends on nothing.
+- **contracts:** may depend on core only when a concrete shared primitive is required; it may also depend on nothing.
+- **commerce/content/services:** may depend on core and/or contracts only when actually required.
+- **ui:** may depend on core only when actually required.
+- **seo/analytics:** may depend on core and/or contracts only when actually required.
+- **web app:** may compose any of its allowed targets when the storefront actually needs them.
+
+The current source code does not need to import every allowed target. The dependency graph should reflect real imports, not the theoretical maximum permitted by the matrix.
 
 Domain packages do **not** depend on other domains or on UI/SEO/analytics. Contracts do not depend on business domains. Core is dependency-free.
 
@@ -74,7 +85,7 @@ Future scope vocabulary such as API or admin is not a current project.
 
 ### contracts
 
-`@vicuna/contracts` holds shared contracts between applications, domains and integrations. It may depend on core only when a concrete primitive is needed. It is not a dumping ground for generic helpers.
+`@vicuna/contracts` holds shared contracts between applications, domains and integrations. It may depend on core only when a concrete primitive is needed, and it may remain dependency-free when its contracts do not require a core primitive. It is not a dumping ground for generic helpers.
 
 ### services
 
@@ -82,11 +93,11 @@ Future scope vocabulary such as API or admin is not a current project.
 
 ### UI
 
-`@vicuna/ui` contains reusable presentation primitives. It must remain independent of commerce, content, services, SEO and analytics.
+`@vicuna/ui` contains reusable presentation primitives. It must remain independent of commerce, content, services, SEO and analytics, and may depend on core only when a real UI primitive needs it.
 
 ### SEO / analytics
 
-SEO and analytics are `type:platform` capabilities. They are independent from business domains and may use contracts/core when a real dependency exists.
+SEO and analytics are `type:platform` capabilities. They are independent from business domains and may use contracts and/or core only when a real dependency exists.
 
 ## API-first boundary
 
