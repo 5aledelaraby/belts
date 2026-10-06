@@ -1,5 +1,9 @@
 # @vicuna/services
 
-Service domain: programming, digital marketing, consulting and future service offerings.
+Professional services business domain.
 
-This is an architectural boundary. Implementation is intentionally deferred until the corresponding domain is migrated from the legacy storefront.
+This boundary is for offerings such as programming, digital marketing, consulting and future professional services.
+
+It is not a generic name for application services, infrastructure adapters, API clients, utilities or framework helpers.
+
+The domain remains independent from commerce, content, UI, SEO and analytics.
