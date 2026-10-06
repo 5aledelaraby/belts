@@ -23,6 +23,8 @@ jobs:
         run: npm ci
       - name: Inspect Nx workspace
         run: npx nx show projects
+      - name: Verify architecture boundaries
+        run: npm run architecture:verify
       - name: Typecheck
         run: npm run typecheck
       - name: Lint architecture packages
