@@ -19,7 +19,7 @@ The foundation is intentionally stronger than the current feature set. Empty bou
 
 ## Project discovery and configuration authority
 
-The root `package.json` owns npm workspaces and package metadata. The root `project.json` is the explicit Nx configuration for the current `storefront` project. Each package `project.json` is the authoritative Nx project definition for that package's identity, tags and project metadata, while the sibling package `package.json` owns npm metadata and public exports. Nx combines same-root `package.json` and `project.json` configuration; they are not separate duplicate projects. The existing discovery mechanism is preserved. Nx also reads the npm workspace patterns to discover workspace packages. citeturn0search0turn0search3
+The root `package.json` owns npm workspaces and package metadata. The root `project.json` is the explicit Nx configuration for the current `storefront` project. Each package `project.json` is the authoritative Nx project definition for that package's identity, tags and project metadata, while the sibling package `package.json` owns npm metadata and public exports. Nx combines same-root `package.json` and `project.json` configuration; they are not separate duplicate projects. The existing discovery mechanism is preserved. Nx also reads the npm workspace patterns to discover workspace packages.
 
 ## Dependency matrix
 
@@ -100,7 +100,7 @@ API-first is a boundary rule, not a requirement to build a complete API now:
 
 ## Cloudflare compatibility
 
-The current Worker uses the Workers web runtime model and remains outside the domain packages. New domain/platform code should prefer web-standard APIs such as `fetch`, `Request`, `Response`, `URL`, Web Crypto and Web Streams rather than Node-only runtime assumptions. Cloudflare now provides a growing Node compatibility surface, but that is not a reason to make domain code depend on Node APIs; portability remains the safer architectural default. citeturn2search0turn2search7
+The current Worker uses the Workers web runtime model and remains outside the domain packages. New domain/platform code should prefer web-standard APIs such as `fetch`, `Request`, `Response`, `URL`, Web Crypto and Web Streams rather than Node-only runtime assumptions. Cloudflare now provides a growing Node compatibility surface, but that is not a reason to make domain code depend on Node APIs; portability remains the safer architectural default.
 
 No domain package may import Cloudflare bindings, filesystem APIs, sockets, child-process APIs, database drivers, Redis clients or queue implementations.
 
@@ -108,7 +108,7 @@ No domain package may import Cloudflare bindings, filesystem APIs, sockets, chil
 
 Workspace packages expose a public root entry point such as `@vicuna/commerce`. Do not import `@vicuna/commerce/src/...`.
 
-The existing TypeScript path aliases remain during this foundation phase so current imports are not broken. Package exports are added in parallel; aliases should only be removed after workspace package resolution is verified. Nx's workspace guidance likewise recommends installing/linking workspace packages before removing path aliases. citeturn0search2
+The existing TypeScript path aliases remain during this foundation phase so current imports are not broken. Package exports are added in parallel; aliases should only be removed after workspace package resolution is verified. Nx's workspace guidance likewise recommends installing/linking workspace packages before removing path aliases.
 
 ## Boundary enforcement
 
@@ -118,7 +118,7 @@ Boundary verification fixtures belong outside production source. They test allow
 
 ## Nx tasks and caching
 
-Workspace-level target defaults keep build, typecheck, test and lint cacheable. The current foundation does not add a TypeScript inference plugin or a new build system; the root typecheck explicitly includes the foundation packages so package source is checked without changing runtime behavior. A future package-level TypeScript plugin can be introduced when package-level build/typecheck tasks are actually needed. Nx's TypeScript plugin is the intended later path for inferred per-project typecheck/build tasks. citeturn3search0
+Workspace-level target defaults keep build, typecheck, test and lint cacheable. The current foundation does not add a TypeScript inference plugin or a new build system; the root typecheck explicitly includes the foundation packages so package source is checked without changing runtime behavior. A future package-level TypeScript plugin can be introduced when package-level build/typecheck tasks are actually needed. Nx's TypeScript plugin is the intended later path for inferred per-project typecheck/build tasks.
 
 ## Reproducibility
 
