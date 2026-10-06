@@ -5,7 +5,7 @@
   "sourceRoot": "packages/ui/src",
   "projectType": "library",
   "tags": [
-    "scope:ui",
-    "type:platform"
+    "scope:shared",
+    "type:ui"
   ]
 }
