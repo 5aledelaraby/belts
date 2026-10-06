@@ -5,7 +5,7 @@
   "sourceRoot": "packages/seo/src",
   "projectType": "library",
   "tags": [
-    "scope:seo",
+    "scope:platform",
     "type:platform"
   ]
 }
