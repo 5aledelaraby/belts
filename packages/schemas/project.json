@@ -6,6 +6,6 @@
   "projectType": "library",
   "tags": [
     "scope:schemas",
-    "type:library"
+    "type:platform"
   ]
 }
