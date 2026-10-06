@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@vicuna/content",
+  "root": "packages/content",
+  "sourceRoot": "packages/content/src",
+  "projectType": "library",
+  "tags": [
+    "scope:content",
+    "type:library"
+  ]
+}
