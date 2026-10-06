@@ -8,7 +8,7 @@
 - Treat commerce, content, professional services, SEO, analytics, contracts, core and UI as explicit architectural boundaries.
 - Prefer modular design and clear dependency direction before introducing microservices.
 - `@vicuna/core` is dependency-free and domain-neutral.
-- `@vicuna/contracts` is a contracts boundary, not a generic utility bucket; it may use core only when a concrete primitive is required.
+- `@vicuna/contracts` is a contracts boundary, not a generic utility bucket; it may use core only when a concrete primitive is required, and may remain dependency-free.
 - `@vicuna/services` means professional services such as programming, digital marketing and consulting, not generic application services or infrastructure adapters.
 - SEO and analytics use `type:platform`.
 - UI primitives remain independent of business domains and platform capabilities.
@@ -32,6 +32,13 @@
 ## Boundary rules
 
 - Keep the approved dependency matrix in `docs/architecture/FOUNDATION.md` authoritative.
+- The dependency matrix describes **allowed edges, not mandatory imports**. An allowed target may be imported only when a concrete implementation need exists.
+- Do not add imports merely to satisfy the matrix or to make the project graph look complete.
+- `core` has no package dependencies.
+- `contracts` may depend on `core` only when a concrete shared primitive is required; contracts may also remain dependency-free.
+- `commerce`, `content`, and `services` may depend on `core` and/or `contracts` only when actually required.
+- `ui` may depend on `core` only when actually required.
+- `seo` and `analytics` may depend on `core` and/or `contracts` only when actually required.
 - Use Nx module-boundary constraints in both scope and type dimensions.
 - Do not use a blanket rule that allows all domain-to-domain dependencies.
 - Boundary tests/fixtures belong outside production source and must not add fake forbidden imports to real domain code.
