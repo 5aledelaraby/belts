@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsx scripts/build.tsx",
     "dev": "tsx scripts/build.tsx && npx --yes serve docs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "nx": "nx",
+    "graph": "nx graph",
+    "typecheck:all": "nx run-many -t typecheck"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -19,6 +22,15 @@
     "typescript": "^6.0.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "nx": "^23.2.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tools/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
