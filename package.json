@@ -10,7 +10,7 @@
     "nx": "nx",
     "graph": "nx graph",
     "typecheck:all": "nx run-many -t typecheck",
-    "lint": "eslint ."
+    "lint": "eslint apps packages"
   },
   "dependencies": {
     "react": "^19.2.8",
