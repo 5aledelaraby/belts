@@ -1,1 +1,11 @@
 node_modules
+
+# Nx / local build state
+.nx/
+tmp/
+dist/
+
+# Local environment files
+.env
+.env.*
+!.env.example
