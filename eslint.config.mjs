@@ -15,13 +15,81 @@ export default [
         {
           allow: [],
           depConstraints: [
-            { sourceTag: "scope:storefront", onlyDependOnLibsWithTags: ["scope:storefront", "scope:commerce", "scope:content", "scope:services", "scope:seo", "scope:analytics", "scope:schemas", "scope:ui"] },\n            { sourceTag: "scope:commerce", onlyDependOnLibsWithTags: ["scope:commerce", "scope:seo", "scope:analytics", "scope:schemas", "scope:ui"] },\n            { sourceTag: "scope:content", onlyDependOnLibsWithTags: ["scope:content", "scope:seo", "scope:analytics", "scope:schemas", "scope:ui"] },\n            { sourceTag: "scope:services", onlyDependOnLibsWithTags: ["scope:services", "scope:seo", "scope:analytics", "scope:schemas", "scope:ui"] },\n            { sourceTag: "scope:seo", onlyDependOnLibsWithTags: ["scope:seo", "scope:schemas", "scope:ui"] },\n            { sourceTag: "scope:analytics", onlyDependOnLibsWithTags: ["scope:analytics", "scope:schemas"] },\n            { sourceTag: "scope:schemas", onlyDependOnLibsWithTags: ["scope:schemas"] },\n            { sourceTag: "scope:ui", onlyDependOnLibsWithTags: ["scope:ui"] },
-            { sourceTag: "type:app", onlyDependOnLibsWithTags: ["type:domain", "type:platform"] },
-            { sourceTag: "type:domain", onlyDependOnLibsWithTags: ["type:domain", "type:platform"] },
-            { sourceTag: "type:platform", onlyDependOnLibsWithTags: ["type:platform"] },
-          ],
-        },
-      ],
-    },
-  },
+            // Scope dimension: applications compose the platform and business domains.
+            {
+              sourceTag: "scope:web",
+              onlyDependOnLibsWithTags: [
+                "scope:web",
+                "scope:commerce",
+                "scope:content",
+                "scope:services",
+                "scope:platform",
+                "scope:shared",
+                "scope:core"
+              ]
+            },
+            // Scope dimension: business domains are isolated from one another and
+            // from platform capabilities. Shared/core are the only cross-domain seams.
+            {
+              sourceTag: "scope:commerce",
+              onlyDependOnLibsWithTags: ["scope:commerce", "scope:shared", "scope:core"]
+            },
+            {
+              sourceTag: "scope:content",
+              onlyDependOnLibsWithTags: ["scope:content", "scope:shared", "scope:core"]
+            },
+            {
+              sourceTag: "scope:services",
+              onlyDependOnLibsWithTags: ["scope:services", "scope:shared", "scope:core"]
+            },
+            {
+              sourceTag: "scope:platform",
+              onlyDependOnLibsWithTags: ["scope:platform", "scope:core"]
+            },
+            {
+              sourceTag: "scope:shared",
+              onlyDependOnLibsWithTags: ["scope:shared", "scope:core"]
+            },
+            {
+              sourceTag: "scope:core",
+              onlyDependOnLibsWithTags: ["scope:core"]
+            },
+
+            // Type dimension: the same rules remain true even when a new scope is added.
+            {
+              sourceTag: "type:app",
+              onlyDependOnLibsWithTags: [
+                "type:app",
+                "type:domain",
+                "type:ui",
+                "type:platform",
+                "type:contract",
+                "type:util"
+              ]
+            },
+            {
+              sourceTag: "type:domain",
+              onlyDependOnLibsWithTags: ["type:domain", "type:contract", "type:util"]
+            },
+            {
+              sourceTag: "type:ui",
+              onlyDependOnLibsWithTags: ["type:ui", "type:util"]
+            },
+            {
+              sourceTag: "type:platform",
+              onlyDependOnLibsWithTags: ["type:platform", "type:contract", "type:util"]
+            },
+            {
+              sourceTag: "type:contract",
+              onlyDependOnLibsWithTags: ["type:contract", "type:util"]
+            },
+            {
+              sourceTag: "type:util",
+              onlyDependOnLibsWithTags: ["type:util"]
+            }
+          ]
+        }
+      ]
+    }
+  }
 ];
