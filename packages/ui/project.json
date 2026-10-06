@@ -6,6 +6,6 @@
   "projectType": "library",
   "tags": [
     "scope:ui",
-    "type:library"
+    "type:platform"
   ]
 }
