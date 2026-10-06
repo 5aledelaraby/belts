@@ -3,6 +3,7 @@
   "compilerOptions": {},
   "include": [
     "src",
-    "scripts"
+    "scripts",
+    "packages"
   ]
 }
