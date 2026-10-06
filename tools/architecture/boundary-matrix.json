@@ -1,0 +1,31 @@
+{
+  "allowed": {
+    "web": ["commerce", "content", "services", "ui", "seo", "analytics", "contracts", "core"],
+    "commerce": ["contracts", "core"],
+    "content": ["contracts", "core"],
+    "services": ["contracts", "core"],
+    "ui": ["core"],
+    "seo": ["contracts", "core"],
+    "analytics": ["contracts", "core"],
+    "contracts": ["core"],
+    "core": []
+  },
+  "forbidden": [
+    ["ui", "commerce"],
+    ["ui", "content"],
+    ["ui", "services"],
+    ["ui", "seo"],
+    ["ui", "analytics"],
+    ["commerce", "content"],
+    ["commerce", "services"],
+    ["content", "commerce"],
+    ["content", "services"],
+    ["services", "commerce"],
+    ["services", "content"],
+    ["commerce", "web"],
+    ["content", "web"],
+    ["services", "web"],
+    ["core", "commerce"],
+    ["contracts", "commerce"]
+  ]
+}
