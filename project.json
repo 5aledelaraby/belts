@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/nx/schemas/project-schema.json",
+  "name": "storefront",
+  "root": ".",
+  "sourceRoot": "src",
+  "projectType": "application",
+  "tags": [
+    "scope:storefront",
+    "type:app"
+  ],
+  "targets": {
+    "build": {
+      "command": "npm run build",
+      "outputs": [
+        "{workspaceRoot}/docs"
+      ]
+    },
+    "dev": {
+      "command": "npm run dev",
+      "continuous": true
+    },
+    "typecheck": {
+      "command": "npm run typecheck"
+    },
+    "graph": {
+      "command": "nx graph"
+    }
+  }
+}
