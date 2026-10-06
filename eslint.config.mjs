@@ -10,6 +10,17 @@ export default [
   {
     files: ["apps/**/*.{ts,tsx,js,jsx}", "packages/**/*.{ts,tsx,js,jsx}"],
     rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": [
+            {
+              "regex": "^@vicuna/[^/]+/src(?:/|$)",
+              "message": "Import workspace packages through their public package entry point, not an internal src path.",
+            },
+          ],
+        },
+      ],
       "@nx/enforce-module-boundaries": [
         "error",
         {
@@ -55,7 +66,8 @@ export default [
               onlyDependOnLibsWithTags: ["scope:core"]
             },
 
-            // Type dimension: the same rules remain true even when a new scope is added.
+            // Type dimension: domains may cross only through contracts/core.
+            // The scope dimension separately permits same-domain dependencies.
             {
               sourceTag: "type:app",
               onlyDependOnLibsWithTags: [
@@ -68,7 +80,7 @@ export default [
             },
             {
               sourceTag: "type:domain",
-              onlyDependOnLibsWithTags: ["type:domain", "type:contract", "type:util"]
+              onlyDependOnLibsWithTags: ["type:contract", "type:util"]
             },
             {
               sourceTag: "type:ui",
@@ -80,7 +92,7 @@ export default [
             },
             {
               sourceTag: "type:contract",
-              onlyDependOnLibsWithTags: ["type:contract", "type:util"]
+              onlyDependOnLibsWithTags: ["type:util"]
             },
             {
               sourceTag: "type:util",
