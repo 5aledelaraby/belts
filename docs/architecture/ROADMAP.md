@@ -13,8 +13,9 @@ This roadmap deliberately separates the **foundation** from the **migration**. T
 - ESLint module-boundary guardrails for workspace code.
 - Boundary verification fixtures outside production source.
 - Agent/developer rules.
-- Reproducible CI installation with npm lockfile.
+- npm installation baseline without a fabricated lockfile; switch CI to `npm ci` only after a valid lockfile is generated and verified.
 - Environment template without secrets.
+- Documented API-first, Cloudflare-compatible, and hybrid rendering boundaries.
 
 ## Phase 2 — Extract contracts
 
@@ -39,6 +40,7 @@ This roadmap deliberately separates the **foundation** from the **migration**. T
 Only when needed:
 
 - API application.
+- Application/use-case layer for a real use case.
 - Database adapter and migrations.
 - Authentication/identity.
 - Inventory/order backend.
