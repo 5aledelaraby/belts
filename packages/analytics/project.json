@@ -5,7 +5,7 @@
   "sourceRoot": "packages/analytics/src",
   "projectType": "library",
   "tags": [
-    "scope:analytics",
+    "scope:platform",
     "type:platform"
   ]
 }
