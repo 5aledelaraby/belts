@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@vicuna/commerce",
+  "root": "packages/commerce",
+  "sourceRoot": "packages/commerce/src",
+  "projectType": "library",
+  "tags": [
+    "scope:commerce",
+    "type:library"
+  ]
+}
