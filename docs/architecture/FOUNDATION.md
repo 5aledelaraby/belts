@@ -48,6 +48,44 @@ Interpret the rows as optional sets:
 
 The current source code does not need to import every allowed target. The dependency graph should reflect real imports, not the theoretical maximum permitted by the matrix.
 
+### Dependency direction diagram
+
+The arrows below mean **may depend on when required**; they do not imply that an import exists:
+
+```text
+web app
+  ├──→ commerce
+  ├──→ content
+  ├──→ services
+  ├──→ ui
+  ├──→ seo
+  ├──→ analytics
+  ├──→ contracts
+  └──→ core
+
+commerce ──→ contracts ──→ core   (each edge optional)
+         └──→ core                (optional)
+
+content  ──→ contracts ──→ core   (each edge optional)
+         └──→ core                (optional)
+
+services ──→ contracts ──→ core   (each edge optional)
+         └──→ core                (optional)
+
+ui        ──→ core                (optional)
+
+seo       ──→ contracts           (optional)
+          └──→ core               (optional)
+
+analytics ──→ contracts           (optional)
+          └──→ core               (optional)
+
+core      ──→ nothing
+```
+
+For `contracts`, the `contracts → core` edge is also optional: a contract package that uses no core primitive remains dependency-free.
+
+
 Domain packages do **not** depend on other domains or on UI/SEO/analytics. Contracts do not depend on business domains. Core is dependency-free.
 
 ## Tag matrix
