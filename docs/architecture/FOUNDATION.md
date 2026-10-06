@@ -17,6 +17,10 @@ The foundation is intentionally stronger than the current feature set. Empty bou
 - **Data:** introduce domain contracts before persistence; a database is a future seam, not a current dependency.
 - **Infrastructure:** Cloudflare remains the edge/integration layer; heavier infrastructure is introduced only when justified by scale or product requirements.
 
+## Project discovery and configuration authority
+
+The root `package.json` owns npm workspaces and package metadata. The root `project.json` is the explicit Nx configuration for the current `storefront` project. Each package `project.json` is the authoritative Nx project definition for that package's identity, tags and project metadata, while the sibling package `package.json` owns npm metadata and public exports. Nx combines same-root `package.json` and `project.json` configuration; they are not separate duplicate projects. The existing discovery mechanism is preserved.
+
 ## Dependency matrix
 
 Allowed means "may depend when a concrete import is needed", not "must depend".
