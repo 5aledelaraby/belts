@@ -13,13 +13,13 @@ The foundation is intentionally stronger than the current feature set. Empty bou
 - **Applications:** only the current root storefront is registered today. Future API/admin/web application boundaries are vocabulary and migration targets, not projects created now.
 - **Business domains:** commerce, content, services.
 - **Shared/platform capabilities:** core, contracts, UI, SEO, analytics.
-- **Rendering:** retain pre-rendered/static HTML for public crawlable content; add dynamic/API capabilities only where they create real value.
+- **Rendering:** retain pre-rendered/static HTML for public crawlable content; conceptually use SSG for stable landing/docs/article pages and SSR only for future user/session-dependent routes. Client-side interaction remains appropriate for local form state and non-SEO interactions. No current route is redesigned by this foundation.
 - **Data:** introduce domain contracts before persistence; a database is a future seam, not a current dependency.
 - **Infrastructure:** Cloudflare remains the edge/integration layer; heavier infrastructure is introduced only when justified by scale or product requirements.
 
 ## Project discovery and configuration authority
 
-The root `package.json` owns npm workspaces and package metadata. The root `project.json` is the explicit Nx configuration for the current `storefront` project. Each package `project.json` is the authoritative Nx project definition for that package's identity, tags and project metadata, while the sibling package `package.json` owns npm metadata and public exports. Nx combines same-root `package.json` and `project.json` configuration; they are not separate duplicate projects. The existing discovery mechanism is preserved.
+The root `package.json` owns npm workspaces and package metadata. The root `project.json` is the explicit Nx configuration for the current `storefront` project. Each package `project.json` is the authoritative Nx project definition for that package's identity, tags and project metadata, while the sibling package `package.json` owns npm metadata and public exports. Nx combines same-root `package.json` and `project.json` configuration; they are not separate duplicate projects. The existing discovery mechanism is preserved. Nx also reads the npm workspace patterns to discover workspace packages. citeturn0search0turn0search3
 
 ## Dependency matrix
 
@@ -88,23 +88,44 @@ Future scope vocabulary such as API or admin is not a current project.
 
 SEO and analytics are `type:platform` capabilities. They are independent from business domains and may use contracts/core when a real dependency exists.
 
+## API-first boundary
+
+API-first is a boundary rule, not a requirement to build a complete API now:
+
+- UI consumes explicit request/response contracts rather than persistence or ORM models.
+- Domain logic remains independent of HTTP and React.
+- Future API handlers translate transport input into application/domain inputs.
+- Future repositories expose domain-facing interfaces; PostgreSQL, Redis and queue adapters remain outside domains.
+- Only real current or explicitly approved use cases should introduce application/use-case layers or additional contracts.
+
+## Cloudflare compatibility
+
+The current Worker uses the Workers web runtime model and remains outside the domain packages. New domain/platform code should prefer web-standard APIs such as `fetch`, `Request`, `Response`, `URL`, Web Crypto and Web Streams rather than Node-only runtime assumptions. Cloudflare now provides a growing Node compatibility surface, but that is not a reason to make domain code depend on Node APIs; portability remains the safer architectural default. citeturn2search0turn2search7
+
+No domain package may import Cloudflare bindings, filesystem APIs, sockets, child-process APIs, database drivers, Redis clients or queue implementations.
+
 ## Public package APIs
 
 Workspace packages expose a public root entry point such as `@vicuna/commerce`. Do not import `@vicuna/commerce/src/...`.
 
-The existing TypeScript path aliases remain during this foundation phase so current imports are not broken. Package exports are added in parallel; aliases should only be removed after workspace package resolution is verified.
+The existing TypeScript path aliases remain during this foundation phase so current imports are not broken. Package exports are added in parallel; aliases should only be removed after workspace package resolution is verified. Nx's workspace guidance likewise recommends installing/linking workspace packages before removing path aliases. citeturn0search2
 
 ## Boundary enforcement
 
-Nx's ESLint module-boundary rule is configured with both scope and type dimensions. Scope isolates business domains; type rules provide a second guardrail so adding a new scope cannot silently reopen forbidden dependency directions.
+Nx's ESLint module-boundary rule is configured with both scope and type dimensions. Scope isolates business domains; the type dimension no longer contains a blanket domain-to-domain allowance. This prevents a future scope from silently reopening cross-domain dependency directions. The separate ESLint restriction rejects workspace package internal `src` imports.
 
-Boundary verification fixtures belong outside production source. They must test allowed and forbidden edges without adding fake imports to domain implementation.
+Boundary verification fixtures belong outside production source. They test allowed edges, the complete current forbidden package-edge complement, and internal package `src` imports without adding forbidden imports to real domain implementation.
+
+## Nx tasks and caching
+
+Workspace-level target defaults keep build, typecheck, test and lint cacheable. The current foundation does not add a TypeScript inference plugin or a new build system; the root typecheck explicitly includes the foundation packages so package source is checked without changing runtime behavior. A future package-level TypeScript plugin can be introduced when package-level build/typecheck tasks are actually needed. Nx's TypeScript plugin is the intended later path for inferred per-project typecheck/build tasks. citeturn3search0
 
 ## Reproducibility
 
 - Node baseline: 22.12.0+.
 - npm is the package manager.
-- CI uses `npm ci` and therefore requires a committed `package-lock.json`.
+- There is currently **no `package-lock.json`** on this branch, so CI correctly uses `npm install` rather than `npm ci`.
+- A lockfile should be generated only in an environment with registry access and committed only after `npm install`/lockfile validation and `npm ci` both succeed.
 - Do not upgrade unrelated dependencies as part of architecture work.
 
 ## Migration rule
